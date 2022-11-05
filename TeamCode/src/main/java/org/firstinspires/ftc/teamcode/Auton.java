@@ -74,8 +74,8 @@ public class Auton {
         int multiplier = 1;
         if(direction) { multiplier = -1; }
 
-        drive.setMotorPowers(0.1,0.1,0.1,0.1);
-        intake.setPosition(0.4);
+        drive.setMotorPowers(0,0,0,0);
+        intake.setPosition(0.6);
         // claw close
         // lift go up
 
@@ -85,6 +85,7 @@ public class Auton {
                 .forward(10)
                 .addDisplacementMarker(() -> {
                     // claw open
+                    intake.setPosition(0);
                     // lift go down to height of top cone on stack
                 })
                 .back(5)
@@ -94,6 +95,7 @@ public class Auton {
                 .forward(27)
                 .addDisplacementMarker(() -> {
                     // claw close
+                    intake.setPosition(0.6);
                     // lift go up
                 })
                 .back(5)
@@ -101,6 +103,7 @@ public class Auton {
                 .forward(8.5)
                 .addDisplacementMarker(() -> {
                     // claw open
+                    intake.setPosition(0);
                     // lift go down
                 })
                 .back(8.5)
@@ -120,8 +123,68 @@ public class Auton {
             drive.followTrajectory(park);
         }
     }
+    public void runAutonLeft(Robot drive, HardwareMap hardwareMap) {
+        Servo intake = hardwareMap.get(Servo.class, "intake");
+//        DcMotor motorLiftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
+//        DcMotor motorLiftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
 
-    public void runAutonMain(Robot drive, HardwareMap hardwareMap) {
+        int multiplier = 1;
+        if (direction) {
+            multiplier = -1;
+        }
+
+        drive.setMotorPowers(0, 0, 0, 0);
+        //intake.setPosition(0.6);
+        TrajectorySequence trajectorySequence = drive.trajectorySequenceBuilder(new Pose2d())
+                //go to medium goal
+                .strafeLeft(55)
+                .forward(5)
+                .addDisplacementMarker(() -> {
+                    // lift up to medium goal
+                    // claw open
+                    //intake.setPosition(0);
+                })
+                .back(5)
+                //go to cone stack
+                .strafeLeft(15)
+                .turn(Math.toRadians(-200))
+                .addDisplacementMarker(() -> {
+                    // lift go down to stack
+                })
+                .forward(24)
+                //grab cone from stack
+                .addDisplacementMarker(() -> {
+                    // claw grab cone
+                    //intake.setPosition(0.6);
+                    //lift goes up to low goal
+                })
+                //go to and turn to low goal
+                .back(20)
+                .turn(Math.toRadians(60))
+                .forward(8)
+                .addDisplacementMarker(() -> {
+                    // claw open
+                    //intake.setPosition(0);
+                })
+                .back(8)
+                .turn(Math.toRadians(-60))
+                .build();
+        drive.followTrajectorySequence(trajectorySequence);
+
+        if (parkingZone == 1) { // red
+            Trajectory park = drive.trajectoryBuilder(new Pose2d())
+                    .forward(20)
+                    .build();
+            drive.followTrajectory(park);
+        } else if (parkingZone == 3) { // blue
+            Trajectory park = drive.trajectoryBuilder(new Pose2d())
+                    .back(26)
+                    .build();
+            drive.followTrajectory(park);
+        }
+    }
+
+        public void runAutonRitvik(Robot drive, HardwareMap hardwareMap) {
         Servo intake = hardwareMap.get(Servo.class, "intake");
 //        DcMotor motorLiftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
 //        DcMotor motorLiftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
