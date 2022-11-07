@@ -39,13 +39,7 @@ public class Auton {
         drive.setMotorPowers(0.1,0.1,0.1,0.1);
         intake.setPosition(0.4);
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(2)
-                .turn(1)
-                .forward(1)
-                .waitSeconds(2)
-                .back(1)
-                .turn(-1)
-                .forward(23)
+                .forward(25)
                 .build();
         drive.followTrajectorySequence(trajSeq);
 
@@ -63,6 +57,128 @@ public class Auton {
             drive.followTrajectory(park);
         }
 
+    }
+
+    public void runAutonLeft(Robot drive, HardwareMap hardwareMap) {
+        Servo intake = hardwareMap.get(Servo.class, "intake");
+//        DcMotor motorLiftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
+//        DcMotor motorLiftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
+
+        drive.setMotorPowers(0, 0, 0, 0);
+        //intake.setPosition(0.6);
+        TrajectorySequence trajectorySequence = drive.trajectorySequenceBuilder(new Pose2d())
+                //go to medium goal
+                .strafeLeft(50)
+                .forward(5)
+                .addDisplacementMarker(() -> {
+                    // lift up to medium goal
+                    // claw open
+                    //intake.setPosition(0);
+                })
+                .back(5)
+                //go to cone stack
+                .strafeLeft(15)
+                .turn(Math.toRadians(-180))
+                .addDisplacementMarker(() -> {
+                    // lift go down to stack
+                })
+                .forward(24)
+                //grab cone from stack
+                .addDisplacementMarker(() -> {
+                    // claw grab cone
+                    //intake.setPosition(0.6);
+                    //lift goes up to low goal
+                })
+                //go to and turn to low goal
+                .back(20)
+                .turn(Math.toRadians(60))
+                .forward(8)
+                .addDisplacementMarker(() -> {
+                    // claw open
+                    //intake.setPosition(0);
+                })
+                .back(8)
+                .turn(Math.toRadians(-60))
+                .build();
+        drive.followTrajectorySequence(trajectorySequence);
+
+        if (parkingZone == 1) { // red
+            Trajectory park = drive.trajectoryBuilder(new Pose2d())
+                    .forward(20)
+                    .build();
+            drive.followTrajectory(park);
+        } else if (parkingZone == 3) { // blue
+            Trajectory park = drive.trajectoryBuilder(new Pose2d())
+                    .back(26)
+                    .build();
+            drive.followTrajectory(park);
+        }
+    }
+
+    public void runAutonRight(Robot drive, HardwareMap hardwareMap) {
+        Servo intake = hardwareMap.get(Servo.class, "intake");
+//        DcMotor motorLiftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
+//        DcMotor motorLiftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
+
+        drive.setMotorPowers(0, 0, 0, 0);
+        //intake.setPosition(0.6);
+        TrajectorySequence trajectorySequence = drive.trajectorySequenceBuilder(new Pose2d())
+                //go to medium goal
+                .strafeRight(50)
+                .forward(5)
+                .addDisplacementMarker(() -> {
+                    // lift up to medium goal
+                    // claw open
+                    //intake.setPosition(0);
+                })
+                .back(5)
+                //go to cone stack
+                .strafeRight(15)
+                .turn(Math.toRadians(180))
+                .addDisplacementMarker(() -> {
+                    // lift go down to stack
+                })
+                .forward(24)
+                //grab cone from stack
+                .addDisplacementMarker(() -> {
+                    // claw grab cone
+                    //intake.setPosition(0.6);
+                    //lift goes up to low goal
+                })
+                //go to and turn to low goal
+                .back(20)
+                .turn(Math.toRadians(-60))
+                .forward(8)
+                .addDisplacementMarker(() -> {
+                    // claw open
+                    //intake.setPosition(0);
+                })
+                .back(8)
+                .turn(Math.toRadians(60))
+                .build();
+        drive.followTrajectorySequence(trajectorySequence);
+
+        if (parkingZone == 1) { // red
+            Trajectory park = drive.trajectoryBuilder(new Pose2d())
+                    .back(20)
+                    .build();
+            drive.followTrajectory(park);
+        } else if (parkingZone == 3) { // blue
+            Trajectory park = drive.trajectoryBuilder(new Pose2d())
+                    .forward(26)
+                    .build();
+            drive.followTrajectory(park);
+        }
+    }
+
+    public void linSlidesLift() {
+        int n = 4;
+        double a = (200 / Math.pow(n, 2));
+        int m = 30;
+
+        double x = 0;
+        double y = 0;
+        double startPosition = 0;//replace with slides.getPosition();
     }
 
     public void runAutonWithConeNew(Robot drive, HardwareMap hardwareMap)
@@ -122,139 +238,5 @@ public class Auton {
                     .build();
             drive.followTrajectory(park);
         }
-    }
-    public void runAutonLeft(Robot drive, HardwareMap hardwareMap) {
-        Servo intake = hardwareMap.get(Servo.class, "intake");
-//        DcMotor motorLiftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
-//        DcMotor motorLiftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
-
-        int multiplier = 1;
-        if (direction) {
-            multiplier = -1;
-        }
-
-        drive.setMotorPowers(0, 0, 0, 0);
-        //intake.setPosition(0.6);
-        TrajectorySequence trajectorySequence = drive.trajectorySequenceBuilder(new Pose2d())
-                //go to medium goal
-                .strafeLeft(55)
-                .forward(5)
-                .addDisplacementMarker(() -> {
-                    // lift up to medium goal
-                    // claw open
-                    //intake.setPosition(0);
-                })
-                .back(5)
-                //go to cone stack
-                .strafeLeft(15)
-                .turn(Math.toRadians(-200))
-                .addDisplacementMarker(() -> {
-                    // lift go down to stack
-                })
-                .forward(24)
-                //grab cone from stack
-                .addDisplacementMarker(() -> {
-                    // claw grab cone
-                    //intake.setPosition(0.6);
-                    //lift goes up to low goal
-                })
-                //go to and turn to low goal
-                .back(20)
-                .turn(Math.toRadians(60))
-                .forward(8)
-                .addDisplacementMarker(() -> {
-                    // claw open
-                    //intake.setPosition(0);
-                })
-                .back(8)
-                .turn(Math.toRadians(-60))
-                .build();
-        drive.followTrajectorySequence(trajectorySequence);
-
-        if (parkingZone == 1) { // red
-            Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .forward(20)
-                    .build();
-            drive.followTrajectory(park);
-        } else if (parkingZone == 3) { // blue
-            Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .back(26)
-                    .build();
-            drive.followTrajectory(park);
-        }
-    }
-
-        public void runAutonRitvik(Robot drive, HardwareMap hardwareMap) {
-        Servo intake = hardwareMap.get(Servo.class, "intake");
-//        DcMotor motorLiftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
-//        DcMotor motorLiftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
-
-        int multiplier = 1;
-        if(direction) { multiplier = -1; }
-
-        drive.setMotorPowers(0.1,0.1,0.1,0.1);
-        intake.setPosition(0.4);
-
-        TrajectorySequence trajectorySequence = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeRight(29.5)
-                .forward(1.5)
-                .addDisplacementMarker(() -> {
-                    // claw open
-                    // lift go down to height of top cone on stack
-                })
-                .back(1.5)
-                .strafeRight(13.5)
-                .strafeLeft(2.5)
-                .forward(24)
-                .addDisplacementMarker(() -> {
-                    // claw close
-                    // lift go up
-                })
-                .back(48)
-                .turn(Math.toRadians(multiplier * -45))
-                .forward(1.5)
-                .addDisplacementMarker(() -> {
-                    // claw open
-                    // lift go down
-                })
-                .back(1.5)
-                .turn(Math.toRadians(multiplier * 135))
-                .strafeLeft(24)
-                .build();
-        drive.followTrajectorySequence(trajectorySequence);
-
-        if (parkingZone == 1) { // red
-            Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .strafeLeft(24)
-                    .build();
-            drive.followTrajectory(park);
-        } else if (parkingZone == 3) { // blue
-            Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .strafeRight(24)
-                    .build();
-            drive.followTrajectory(park);
-        }
-    }
-
-    public void linSlidesLift() {
-        int n = 4;
-        double a = (200 / Math.pow(n, 2));
-        int m = 30;
-
-        double x = 0;
-        double y = 0;
-        double startPosition = 0;//replace with slides.getPosition();
-    }
-
-    public void placeFirstCone() {
-        // places first cone
-    }
-
-    public void pickUpSecondCone() {
-        // picks up second cone
-    }
-
-    public void placeSecondCone() {
-        // places second cone
     }
 }

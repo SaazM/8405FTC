@@ -14,7 +14,7 @@ public class RightAuton extends LinearOpMode
     public void runOpMode()
     {
 
-        aprilTagsInit init = new aprilTagsInit(hardwareMap,telemetry);
+        aprilTagsInit init = new aprilTagsInit(hardwareMap, telemetry);
         init.initialize();
 
         while(!isStarted() && !isStopRequested())

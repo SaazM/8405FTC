@@ -31,6 +31,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
@@ -42,13 +44,34 @@ public class AutonTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        aprilTagsInit init = new aprilTagsInit(hardwareMap,telemetry);
-        init.initialize();
+        DcMotorEx rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
+        DcMotorEx leftLift = hardwareMap.get(DcMotorEx.class, "leftLift");
 
-        while(!isStarted() && !isStopRequested())
+        waitForStart();
+        while(opModeIsActive())
         {
-            init.search();
-            sleep(20);
+            if(gamepad1.triangle)
+            {
+                rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rightLift.setPower(0.3);
+                leftLift.setPower(0.3);
+            }
+            else if(gamepad1.x)
+            {
+                rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rightLift.setPower(-0.3);
+                leftLift.setPower(-0.3);
+            }
+            else
+            {
+                rightLift.setTargetPosition(rightLift.getCurrentPosition());
+                leftLift.setTargetPosition(leftLift.getCurrentPosition());
+                rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            }
         }
     }
 }

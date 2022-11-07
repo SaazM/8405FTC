@@ -7,11 +7,13 @@ import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @TeleOp
-public class LeftAuton extends LinearOpMode
+public class ParkAuton extends LinearOpMode
 {
+
     @Override
     public void runOpMode()
     {
+
         aprilTagsInit init = new aprilTagsInit(hardwareMap, telemetry);
         init.initialize();
 
@@ -24,7 +26,8 @@ public class LeftAuton extends LinearOpMode
         int finalID = init.stopAndSave();
         telemetry.addLine(Integer.toString(finalID));
         telemetry.update();
-        Auton auton = new Auton(true, finalID);
-        auton.runAutonLeft(new Robot(hardwareMap), hardwareMap);
+        Auton auton = new Auton(false, finalID);
+        auton.runAutonParkOnly(new Robot(hardwareMap), hardwareMap);
     }
+
 }
