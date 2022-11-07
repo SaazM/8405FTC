@@ -15,7 +15,7 @@ public class LeftAuton extends LinearOpMode
         aprilTagsInit init = new aprilTagsInit(hardwareMap, telemetry);
         init.initialize();
 
-        while(!isStarted() && !isStopRequested())
+        while (!isStarted() && !isStopRequested())
         {
             init.search();
             sleep(20);

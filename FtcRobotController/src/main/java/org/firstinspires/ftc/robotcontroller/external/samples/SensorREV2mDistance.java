@@ -70,7 +70,7 @@ public class SensorREV2mDistance extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-        while(opModeIsActive()) {
+        while (opModeIsActive()) {
             // generic DistanceSensor methods.
             telemetry.addData("deviceName",sensorRange.getDeviceName() );
             telemetry.addData("range", String.format("%.01f mm", sensorRange.getDistance(DistanceUnit.MM)));

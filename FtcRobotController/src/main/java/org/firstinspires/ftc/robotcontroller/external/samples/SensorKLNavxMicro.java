@@ -111,7 +111,7 @@ public class SensorKLNavxMicro extends LinearOpMode {
                 .addData("pitch", "%s deg", formatAngle(angles.angleUnit, angles.thirdAngle));
             telemetry.update();
 
-            idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
+            idle(); // Always call idle() at the bottom of your while (opModeIsActive()) loop
         }
     }
 
@@ -123,7 +123,7 @@ public class SensorKLNavxMicro extends LinearOpMode {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
 
-    String formatDegrees(double degrees){
+    String formatDegrees(double degrees) {
         return String.format("%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 }

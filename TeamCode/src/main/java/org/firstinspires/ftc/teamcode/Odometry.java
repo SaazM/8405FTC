@@ -35,7 +35,7 @@ public class Odometry {
     }
 
     // run odometry and return list of doubles in form [x, y, heading]
-    public void runOdom(){
+    public void runOdom() {
         double left_encoder_pos = leftEncoder.getCurrentPosition()/ticks_per_revolution * wheel_circumference_inches;//inches
         double right_encoder_pos = rightEncoder.getCurrentPosition()/ticks_per_revolution * wheel_circumference_inches;
         double perpendicular_encoder_pos = perpendicularEncoder.getCurrentPosition()/ticks_per_revolution * wheel_circumference_inches;
@@ -93,7 +93,7 @@ public class Odometry {
         heading = value;
     }
 
-    public void reset(){
+    public void reset() {
         leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         perpendicularEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

@@ -77,7 +77,7 @@ public class ConceptScanServo extends LinearOpMode {
 
 
         // Scan servo till stop pressed.
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
 
             // slew the servo, according to the rampUp (direction) variable.
             if (rampUp) {

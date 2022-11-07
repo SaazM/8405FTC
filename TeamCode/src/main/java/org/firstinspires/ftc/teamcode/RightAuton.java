@@ -17,7 +17,7 @@ public class RightAuton extends LinearOpMode
         aprilTagsInit init = new aprilTagsInit(hardwareMap, telemetry);
         init.initialize();
 
-        while(!isStarted() && !isStopRequested())
+        while (!isStarted() && !isStopRequested())
         {
             init.search();
             sleep(20);
@@ -27,7 +27,7 @@ public class RightAuton extends LinearOpMode
         telemetry.addLine(Integer.toString(finalID));
         telemetry.update();
         Auton auton = new Auton(false, finalID);
-        auton.runAutonParkOnly(new Robot(hardwareMap), hardwareMap);
+        auton.runAutonRight(new Robot(hardwareMap), hardwareMap);
     }
 
 }

@@ -93,7 +93,7 @@ public class ConceptSoundsSKYSTONE extends LinearOpMode {
             if (gamepad1.right_bumper && !soundPlaying) {
 
                 // Determine Resource IDs for the sounds you want to play, and make sure it's valid.
-                if ((soundID = myApp.getResources().getIdentifier(sounds[soundIndex], "raw", myApp.getPackageName())) != 0){
+                if ((soundID = myApp.getResources().getIdentifier(sounds[soundIndex], "raw", myApp.getPackageName())) != 0) {
 
                     // Signal that the sound is now playing.
                     soundPlaying = true;

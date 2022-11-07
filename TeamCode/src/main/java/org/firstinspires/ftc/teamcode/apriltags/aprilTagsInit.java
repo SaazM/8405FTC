@@ -63,31 +63,31 @@ public class aprilTagsInit {
     public void search()
     {
         ArrayList<AprilTagDetection> currentDetections = aprilTagDetect.getLatestDetections();
-        if(currentDetections.size() != 0)
+        if (currentDetections.size() != 0)
         {
             boolean tagFound = false;
-            for(AprilTagDetection tag : currentDetections)
+            for (AprilTagDetection tag : currentDetections)
             {
-                if(tag.id == ID_LEFT || tag.id == ID_MIDDLE || tag.id == ID_RIGHT) {
+                if (tag.id == ID_LEFT || tag.id == ID_MIDDLE || tag.id == ID_RIGHT) {
 
 
                     tagOfInterest = tag;
                     int temp = tag.id+1;
-                    if(temp == 1)
+                    if (temp == 1)
                     {
                         temp = 2;
                     }
-                    else if(temp==2){temp=1;}
+                    else if (temp==2) {temp=1; }
                     tm.addData("Tag of interest is in sight!\n\nparking:", temp);
                     tagFound = true;
                     break;
                 }
             }
-            if(!tagFound)
+            if (!tagFound)
             {
                 tm.addLine("Tag of interest not in sight, but there has been a tag spotted!");
 
-                if(tagOfInterest == null)
+                if (tagOfInterest == null)
                 {
                     tm.addLine("(The tags you are looking for have never been seen)");
                 }
@@ -101,7 +101,7 @@ public class aprilTagsInit {
         else
         {
             tm.addLine("Don't see any tags");
-            if(tagOfInterest != null)
+            if (tagOfInterest != null)
             {
                 tm.addLine("Last tag seen: " + tagOfInterest.id);
             }

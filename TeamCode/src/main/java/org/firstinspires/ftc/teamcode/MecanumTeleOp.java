@@ -82,7 +82,7 @@ public class MecanumTeleOp extends LinearOpMode {
                 robot.claw(true);
             }
 
-            if (gamepad1.triangle){
+            if (gamepad1.triangle) {
                 robot.claw(false);
             }
 
@@ -99,11 +99,11 @@ public class MecanumTeleOp extends LinearOpMode {
                 robot.motorLiftLeft.setPower(-0.2);
             } else {
                 // hold if pos is within range, otherwise set to 0 - but will this cause a situation where you can never move the lift?
-                if(currentPos>10 && currentPos<650) {
+                if (currentPos>10 && currentPos<650) {
                     robot.motorLiftRight.setPower(0.12);
                     robot.motorLiftLeft.setPower(0.12);
                 }
-                else{
+                else {
                     robot.motorLiftRight.setPower(0);
                     robot.motorLiftLeft.setPower(0);
                 }

@@ -74,7 +74,7 @@ public class ConceptRampMotorSpeed extends LinearOpMode {
         waitForStart();
 
         // Ramp motor speeds till stop pressed.
-        while(opModeIsActive()) {
+        while (opModeIsActive()) {
 
             // Ramp the motors, according to the rampUp variable.
             if (rampUp) {

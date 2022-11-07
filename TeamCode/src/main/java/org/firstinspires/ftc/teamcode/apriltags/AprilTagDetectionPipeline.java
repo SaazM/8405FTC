@@ -70,7 +70,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
     public void finalize()
     {
         // Might be null if createApriltagDetector() threw an exception
-        if(nativeApriltagPtr != 0)
+        if (nativeApriltagPtr != 0)
         {
             // Delete the native context we created in the constructor
             AprilTagDetectorJNI.releaseApriltagDetector(nativeApriltagPtr);
@@ -90,7 +90,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
 
         synchronized (decimationSync)
         {
-            if(needToSetDecimation)
+            if (needToSetDecimation)
             {
                 AprilTagDetectorJNI.setApriltagDetectorDecimation(nativeApriltagPtr, decimation);
                 needToSetDecimation = false;
@@ -107,7 +107,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
 
         // For fun, use OpenCV to draw 6DOF markers on the image. We actually recompute the pose using
         // OpenCV because I haven't yet figured out how to re-use AprilTag's pose in OpenCV.
-        for(AprilTagDetection detection : detections)
+        for (AprilTagDetection detection : detections)
         {
             Pose pose = poseFromTrapezoid(detection.corners, cameraMatrix, tagsizeX, tagsizeY);
             drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
@@ -223,7 +223,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
         Point[] projectedPoints = matProjectedPoints.toArray();
 
         // Pillars
-        for(int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
             Imgproc.line(buf, projectedPoints[i], projectedPoints[i+4], blue, thickness);
         }
