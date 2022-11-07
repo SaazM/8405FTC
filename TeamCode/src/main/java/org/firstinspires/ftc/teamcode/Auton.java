@@ -181,8 +181,8 @@ public class Auton {
     }
 
     public void goToTopOfStack(DcMotor left, DcMotor right) {
-        left.setTargetPosition(200);
-        right.setTargetPosition(200);
+        left.setTargetPosition(100);
+        right.setTargetPosition(100);
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
