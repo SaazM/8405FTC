@@ -40,30 +40,27 @@ public class MecanumTeleOp extends LinearOpMode {
         if (isStopRequested()) return;
 
         //temporary variables
-        int fieldCentricTrigger = 0;
-        boolean liftToggled = true;
-        robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorLiftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.motorLiftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.motorLiftRight.setDirection(DcMotor.Direction.REVERSE);
-        robot.motorLiftLeft.setDirection(DcMotor.Direction.REVERSE);
-
+        int holding_pos_left = -1;
+        int holding_pos_right = -1;
+        double toPosition = -1;
+        boolean isBusy = false;
         while (opModeIsActive()) {
 
             double power = -gamepad1.left_stick_y; // Remember, this is reversed!
             double strafe = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-
-            if (rounded) {
-                double temp_strafe = (strafe + 0.05) * round_coefficient; // rounds strafing to the nearest []th, which means the driver doesn't have to be as exact when moving straight
-                strafe = (int) temp_strafe / round_coefficient;
-            }
-
-
             double turn = gamepad1.right_stick_x;
+            //Field Centric
             if (gamepad1.right_bumper) {
                 robot.isFieldCentric = !robot.isFieldCentric;
             }
+
+            //Speed Multiplier
             double speedMultiplier = 0.5;
 
             if (gamepad1.left_bumper && robot.speedMultiplier != speedMultiplier) {
@@ -78,36 +75,72 @@ public class MecanumTeleOp extends LinearOpMode {
             } else {
                 robot.mecanum(power, strafe, turn);
             }
-            if (gamepad1.square) {
+
+
+            //Claw Movements
+            if (gamepad1.left_trigger > 0.1) {
                 robot.claw(true);
             }
 
-            if (gamepad1.triangle) {
+
+            if (gamepad1.right_trigger > 0.1){
                 robot.claw(false);
             }
 
-            robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            double currentPos = robot.motorLiftRight.getCurrentPosition();
-            robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            if (gamepad1.right_trigger>0.3 && currentPos < 650) {
-                robot.motorLiftRight.setPower(0.55);
-                robot.motorLiftLeft.setPower(0.55);
-            } else if (gamepad1.left_trigger>0.3 && currentPos > 0) {
-                telemetry.addData("down",gamepad1.left_trigger);
-                robot.motorLiftRight.setPower(-0.2);
-                robot.motorLiftLeft.setPower(-0.2);
-            } else {
-                // hold if pos is within range, otherwise set to 0 - but will this cause a situation where you can never move the lift?
-                if (currentPos>10 && currentPos<650) {
-                    robot.motorLiftRight.setPower(0.12);
-                    robot.motorLiftLeft.setPower(0.12);
-                }
-                else {
-                    robot.motorLiftRight.setPower(0);
-                    robot.motorLiftLeft.setPower(0);
-                }
+            //Lift Macros
 
+            if(gamepad1.square)
+            {
+                holding_pos_left = 600;
+                holding_pos_right = 600;
+
+            }
+            else if(gamepad1.circle)
+            {
+                holding_pos_left = 380;
+                holding_pos_right = 380;
+
+
+            }
+            else if(gamepad1.cross)
+            {
+                holding_pos_left = 100;
+                holding_pos_right = 100;
+
+            }
+            else if(gamepad1.dpad_up)
+            {
+                robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.motorLiftLeft.setPower(0.5);
+                robot.motorLiftRight.setPower(0.5);
+                holding_pos_left = -1;
+                holding_pos_right = -1;
+            }
+            else if(gamepad1.dpad_down)
+            {
+                robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.motorLiftLeft.setPower(-0.5);
+                robot.motorLiftRight.setPower(-0.5);
+                holding_pos_left = -1;
+                holding_pos_right = -1;
+            }
+
+
+            else if(robot.motorLiftRight.getCurrentPosition() > 30 && robot.motorLiftRight.getMode() == DcMotor.RunMode.RUN_USING_ENCODER)
+            {
+                if(holding_pos_left ==-1)
+                {
+                    holding_pos_left = robot.motorLiftLeft.getCurrentPosition();
+                    holding_pos_right = robot.motorLiftRight.getCurrentPosition();
+                }
+            }
+
+            if(holding_pos_left != -1)
+            {
+                liftToPosition(robot, holding_pos_left, holding_pos_right);
             }
 
 
@@ -116,7 +149,28 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.addData("IMU Heading: ", -robot.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.isFieldCentric);
             telemetry.addData("speed multiplier: ", robot.speedMultiplier);
+            telemetry.addData("LEncoder", robot.motorLiftLeft.getCurrentPosition());
+            telemetry.addData("REncoder", robot.motorLiftRight.getCurrentPosition());
+            telemetry.addData("Lift in Moving: ", robot.motorLiftRight.isBusy());
             telemetry.update();
         }
+    }
+    private static void liftToPosition(Robot robot, int pos)
+    {
+        robot.motorLiftRight.setTargetPosition(pos);
+        robot.motorLiftLeft.setTargetPosition(pos);
+        robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.motorLiftRight.setPower(0.5);
+        robot.motorLiftLeft.setPower(0.5);
+    }
+    private static void liftToPosition(Robot robot, int pos_left, int pos_right)
+    {
+        robot.motorLiftRight.setTargetPosition(pos_right);
+        robot.motorLiftLeft.setTargetPosition(pos_left);
+        robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.motorLiftRight.setPower(0.5);
+        robot.motorLiftLeft.setPower(0.5);
     }
 }
