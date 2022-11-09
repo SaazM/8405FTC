@@ -60,12 +60,12 @@ public class Auton {
 
         intake.setPosition(0.6);
         TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeLeft(50)
+                .strafeLeft(48)
                 .build();
         drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
         TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(5)
+                .forward(7)
                 .build();
         drive.followTrajectorySequence(trajSeq2);
         intake.setPosition(0);
@@ -116,12 +116,12 @@ public class Auton {
 
         intake.setPosition(0.6);
         TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeRight(50)
+                .strafeRight(48)
                 .build();
         drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
         TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(5)
+                .forward(7)
                 .build();
         drive.followTrajectorySequence(trajSeq2);
         intake.setPosition(0);
