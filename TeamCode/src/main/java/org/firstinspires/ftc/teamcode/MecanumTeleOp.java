@@ -128,7 +128,15 @@ public class MecanumTeleOp extends LinearOpMode {
                 holding_pos_right = -1;
             }
 
-
+            else if(gamepad1.dpad_right)
+            {
+                robot.motorLiftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.motorLiftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.motorLiftLeft.setPower(0);
+                robot.motorLiftRight.setPower(0);
+                holding_pos_left = -1;
+                holding_pos_right = -1;
+            }
             else if(robot.motorLiftRight.getCurrentPosition() > 30 && robot.motorLiftRight.getMode() == DcMotor.RunMode.RUN_USING_ENCODER)
             {
                 if(holding_pos_left ==-1)

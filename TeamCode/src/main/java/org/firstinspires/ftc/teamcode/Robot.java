@@ -66,10 +66,10 @@ public class Robot extends MecanumDrive {
     public DcMotorEx rightRear;
     public Servo intake;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.5, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1;
+    public static double LATERAL_MULTIPLIER = 1.153846;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -111,30 +111,35 @@ public class Robot extends MecanumDrive {
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
         leftFront.setDirection(DcMotor.Direction.REVERSE); // motor direction
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // Braking behavior
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // We don't want to use PID for the motors using the encoders
-
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // We don't want to use PID for the motors using the encoders
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
         leftRear.setDirection(DcMotor.Direction.REVERSE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
         rightRear.setDirection(DcMotor.Direction.FORWARD);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         motorLiftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
         motorLiftRight.setDirection(DcMotor.Direction.FORWARD);
         motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorLiftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         motorLiftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
         motorLiftLeft.setDirection(DcMotor.Direction.FORWARD);
         motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorLiftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         intake = hardwareMap.get(Servo.class, "intake");
 

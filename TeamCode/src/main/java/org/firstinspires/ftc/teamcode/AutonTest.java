@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -37,6 +38,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+
 
 @TeleOp(name="AutonTest")
 //@Disabled
@@ -46,32 +49,12 @@ public class AutonTest extends LinearOpMode {
     public void runOpMode() {
         DcMotorEx rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
         DcMotorEx leftLift = hardwareMap.get(DcMotorEx.class, "leftLift");
-
         waitForStart();
-        while (opModeIsActive())
-        {
-            if (gamepad1.triangle)
-            {
-                rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightLift.setPower(0.3);
-                leftLift.setPower(0.3);
-            }
-            else if (gamepad1.x)
-            {
-                rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightLift.setPower(-0.3);
-                leftLift.setPower(-0.3);
-            }
-            else
-            {
-                rightLift.setTargetPosition(rightLift.getCurrentPosition());
-                leftLift.setTargetPosition(leftLift.getCurrentPosition());
-                rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Robot drive = new Robot(hardwareMap);
 
-            }
-        }
+        TrajectorySequence trajectorySequence = drive.trajectorySequenceBuilder(new Pose2d())
+                .strafeLeft(55)
+                .build();
+        drive.followTrajectorySequence(trajectorySequence);
     }
 }
