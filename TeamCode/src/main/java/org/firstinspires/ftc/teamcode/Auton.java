@@ -56,49 +56,48 @@ public class Auton {
         Servo intake = hardwareMap.get(Servo.class, "intake");
         DcMotor liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
         DcMotor liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
-
         drive.setMotorPowers(0, 0, 0, 0);
+
         intake.setPosition(0.6);
-        TrajectorySequence trajectorySequence = drive.trajectorySequenceBuilder(new Pose2d())
-                // go to medium goal
+        TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
                 .strafeLeft(50)
-                // raise lift
-                .addDisplacementMarker(() -> {
-                    goToMediumGoal(liftLeft, liftRight);
-                })
+                .build();
+        drive.followTrajectorySequence(trajSeq1);
+        goToMediumGoal(liftLeft, liftRight);
+        TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(new Pose2d())
                 .forward(5)
-                // close claw
-                .addDisplacementMarker(() -> {
-                    intake.setPosition(0);
-                })
+                .build();
+        drive.followTrajectorySequence(trajSeq2);
+        intake.setPosition(0);
+        TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(new Pose2d())
                 .back(5)
-                // go to cone stack
                 .strafeLeft(15)
                 .turn(Math.toRadians(-180))
-                .addDisplacementMarker(() -> {
-                    goToTopOfStack(liftLeft, liftRight);
-                })
+                .build();
+        drive.followTrajectorySequence(trajSeq3);
+        goToTopOfStack(liftLeft, liftRight);
+        TrajectorySequence trajSeq4 = drive.trajectorySequenceBuilder(new Pose2d())
                 .forward(24)
-                //grab cone from stack
-                .addDisplacementMarker(() -> {
-                    intake.setPosition(0.6);
-                    goToLowGoal(liftLeft, liftRight);
-                })
-                //go to and turn to low goal
+                .build();
+        drive.followTrajectorySequence(trajSeq4);
+        intake.setPosition(0.6);
+        goToLowGoal(liftLeft, liftRight);
+        TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(new Pose2d())
                 .back(20)
                 .turn(Math.toRadians(60))
                 .forward(8)
-                .addDisplacementMarker(() -> {
-                    intake.setPosition(0);
-                })
+                .build();
+        drive.followTrajectorySequence(trajSeq5);
+        intake.setPosition(0);
+        TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(new Pose2d())
                 .back(8)
                 .turn(Math.toRadians(-60))
                 .build();
-        drive.followTrajectorySequence(trajectorySequence);
+        drive.followTrajectorySequence(trajSeq6);
 
         if (parkingZone == 1) { // red
             Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .forward(20)
+                    .forward(26)
                     .build();
             drive.followTrajectory(park);
         } else if (parkingZone == 3) { // blue
@@ -113,49 +112,48 @@ public class Auton {
         Servo intake = hardwareMap.get(Servo.class, "intake");
         DcMotor liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
         DcMotor liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
-
         drive.setMotorPowers(0, 0, 0, 0);
+
         intake.setPosition(0.6);
-        TrajectorySequence trajectorySequence = drive.trajectorySequenceBuilder(new Pose2d())
-                // go to medium goal
+        TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
                 .strafeRight(50)
-                // raise lift
-                .addDisplacementMarker(() -> {
-                    goToMediumGoal(liftLeft, liftRight);
-                })
+                .build();
+        drive.followTrajectorySequence(trajSeq1);
+        goToMediumGoal(liftLeft, liftRight);
+        TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(new Pose2d())
                 .forward(5)
-                // close claw
-                .addDisplacementMarker(() -> {
-                    intake.setPosition(0);
-                })
+                .build();
+        drive.followTrajectorySequence(trajSeq2);
+        intake.setPosition(0);
+        TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(new Pose2d())
                 .back(5)
-                // go to cone stack
                 .strafeRight(15)
                 .turn(Math.toRadians(180))
-                .addDisplacementMarker(() -> {
-                    goToTopOfStack(liftLeft, liftRight);
-                })
+                .build();
+        drive.followTrajectorySequence(trajSeq3);
+        goToTopOfStack(liftLeft, liftRight);
+        TrajectorySequence trajSeq4 = drive.trajectorySequenceBuilder(new Pose2d())
                 .forward(24)
-                //grab cone from stack
-                .addDisplacementMarker(() -> {
-                    intake.setPosition(0.6);
-                    goToLowGoal(liftLeft, liftRight);
-                })
-                //go to and turn to low goal
+                .build();
+        drive.followTrajectorySequence(trajSeq4);
+        intake.setPosition(0.6);
+        goToLowGoal(liftLeft, liftRight);
+        TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(new Pose2d())
                 .back(20)
                 .turn(Math.toRadians(-60))
                 .forward(8)
-                .addDisplacementMarker(() -> {
-                    intake.setPosition(0);
-                })
+                .build();
+        drive.followTrajectorySequence(trajSeq5);
+        intake.setPosition(0);
+        TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(new Pose2d())
                 .back(8)
                 .turn(Math.toRadians(60))
                 .build();
-        drive.followTrajectorySequence(trajectorySequence);
+        drive.followTrajectorySequence(trajSeq6);
 
         if (parkingZone == 1) { // red
             Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .back(20)
+                    .back(26)
                     .build();
             drive.followTrajectory(park);
         } else if (parkingZone == 3) { // blue
