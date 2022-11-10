@@ -78,13 +78,11 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
             //Claw Movements
-            if (gamepad1.left_trigger > 0.1) {
-                robot.claw(true);
-            }
-
-
-            if (gamepad1.right_trigger > 0.1){
+            if(gamepad1.triangle){
                 robot.claw(false);
+            }
+            if(gamepad1.cross){
+                robot.claw(true);
             }
 
 
@@ -103,13 +101,8 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
             }
-            else if(gamepad1.cross)
-            {
-                holding_pos_left = 100;
-                holding_pos_right = 100;
 
-            }
-            else if(gamepad1.dpad_up)
+            else if(gamepad1.right_trigger > 0.5)
             {
                 robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -118,7 +111,7 @@ public class MecanumTeleOp extends LinearOpMode {
                 holding_pos_left = -1;
                 holding_pos_right = -1;
             }
-            else if(gamepad1.dpad_down)
+            else if(gamepad1.left_trigger > 0.5)
             {
                 robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

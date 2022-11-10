@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+import java.lang.*;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -52,27 +53,28 @@ public class Auton {
 
     }
 
-    public void runAutonLeft(Robot drive, HardwareMap hardwareMap) {
-        Servo intake = hardwareMap.get(Servo.class, "intake");
-        DcMotor liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
-        DcMotor liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
+    public void runAutonLeft(Robot drive, HardwareMap hardwareMap) throws InterruptedException {
+        DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
+        DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
         drive.setMotorPowers(0, 0, 0, 0);
-
-        intake.setPosition(0.6);
+        drive.claw(false);
         TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeLeft(48)
+                .strafeLeft(6)
+                .forward(6)
+                .turn(Math.toRadians(-94))
+                .strafeLeft(45)
                 .build();
         drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
         TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(7)
+                .forward(3)
                 .build();
         drive.followTrajectorySequence(trajSeq2);
-        intake.setPosition(0);
+        drive.claw(true);
         TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(new Pose2d())
-                .back(5)
+                .back(3)
                 .strafeLeft(15)
-                .turn(Math.toRadians(-180))
+                .turn(Math.toRadians(-184))
                 .build();
         drive.followTrajectorySequence(trajSeq3);
         goToTopOfStack(liftLeft, liftRight);
@@ -80,20 +82,24 @@ public class Auton {
                 .forward(24)
                 .build();
         drive.followTrajectorySequence(trajSeq4);
-        intake.setPosition(0.6);
-        goToLowGoal(liftLeft, liftRight);
+        drive.claw(false);
         TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(new Pose2d())
+                        .waitSeconds(2)
+                        .build();
+        drive.followTrajectorySequence(trajSeq5);
+        goToLowGoal(liftLeft, liftRight);
+        TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(new Pose2d())
                 .back(20)
                 .turn(Math.toRadians(60))
-                .forward(8)
-                .build();
-        drive.followTrajectorySequence(trajSeq5);
-        intake.setPosition(0);
-        TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(new Pose2d())
-                .back(8)
-                .turn(Math.toRadians(-60))
+                .forward(5)
                 .build();
         drive.followTrajectorySequence(trajSeq6);
+        drive.claw(true);
+        TrajectorySequence trajSeq7 = drive.trajectorySequenceBuilder(new Pose2d())
+                .back(5)
+                .turn(Math.toRadians(-60))
+                .build();
+        drive.followTrajectorySequence(trajSeq7);
 
         if (parkingZone == 1) { // red
             Trajectory park = drive.trajectoryBuilder(new Pose2d())
@@ -106,27 +112,33 @@ public class Auton {
                     .build();
             drive.followTrajectory(park);
         }
+        else{
+            Trajectory park = drive.trajectoryBuilder(new Pose2d())
+                    .back(3)
+                    .build();
+            drive.followTrajectory(park);
+        }
     }
 
     public void runAutonRight(Robot drive, HardwareMap hardwareMap) {
         Servo intake = hardwareMap.get(Servo.class, "intake");
-        DcMotor liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
-        DcMotor liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
+        DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
+        DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
         drive.setMotorPowers(0, 0, 0, 0);
 
         intake.setPosition(0.6);
         TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeRight(48)
+                .strafeRight(58)
                 .build();
         drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
         TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(7)
+                .forward(3)
                 .build();
         drive.followTrajectorySequence(trajSeq2);
         intake.setPosition(0);
         TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(new Pose2d())
-                .back(5)
+                .back(3)
                 .strafeRight(15)
                 .turn(Math.toRadians(180))
                 .build();
@@ -164,24 +176,29 @@ public class Auton {
         }
     }
 
-    public void goToMediumGoal(DcMotor left, DcMotor right) {
-        left.setTargetPosition(600);
-        right.setTargetPosition(600);
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    public void goToMediumGoal(DcMotorEx left, DcMotorEx right) {
+        liftToPosition(left,right, 615, 615);
+
     }
 
-    public void goToLowGoal(DcMotor left, DcMotor right) {
-        left.setTargetPosition(380);
-        right.setTargetPosition(380);
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    public void goToLowGoal(DcMotorEx left, DcMotorEx right) {
+        liftToPosition(left,right, 380, 380);
+
     }
 
-    public void goToTopOfStack(DcMotor left, DcMotor right) {
-        left.setTargetPosition(100);
-        right.setTargetPosition(100);
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    public void goToTopOfStack(DcMotorEx left, DcMotorEx right) {
+        liftToPosition(left,right, 100, 100);
+
+    }
+    private static void liftToPosition(DcMotorEx left, DcMotorEx right,int pos_left, int pos_right)
+    {
+        while ((right.getCurrentPosition() < pos_right-5 || right.getCurrentPosition() >pos_right+5)&&(left.getCurrentPosition() < pos_left-5 || left.getCurrentPosition() >pos_left+5)) {
+            right.setTargetPosition(pos_right);
+            left.setTargetPosition(pos_left);
+            right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            right.setVelocity(600);
+            left.setPower(600);
+        }
     }
 }

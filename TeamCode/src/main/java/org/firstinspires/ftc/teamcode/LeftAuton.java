@@ -10,8 +10,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class LeftAuton extends LinearOpMode
 {
     @Override
-    public void runOpMode()
-    {
+    public void runOpMode() throws InterruptedException {
         aprilTagsInit init = new aprilTagsInit(hardwareMap, telemetry);
         init.initialize();
 

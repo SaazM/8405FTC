@@ -44,34 +44,15 @@ public class AutonTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        DcMotorEx rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
-        DcMotorEx leftLift = hardwareMap.get(DcMotorEx.class, "leftLift");
 
+        Servo intake = hardwareMap.get(Servo.class, "intake");
         waitForStart();
-        while (opModeIsActive())
+        while(opModeIsActive())
         {
-            if (gamepad1.triangle)
-            {
-                rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightLift.setPower(0.3);
-                leftLift.setPower(0.3);
-            }
-            else if (gamepad1.x)
-            {
-                rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightLift.setPower(-0.3);
-                leftLift.setPower(-0.3);
-            }
-            else
-            {
-                rightLift.setTargetPosition(rightLift.getCurrentPosition());
-                leftLift.setTargetPosition(leftLift.getCurrentPosition());
-                rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            intake.setPosition(0.4);
+            //0.7, 0.4(open)
 
-            }
         }
+
     }
 }

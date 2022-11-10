@@ -137,6 +137,7 @@ public class Robot extends MecanumDrive {
         motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         intake = hardwareMap.get(Servo.class, "intake");
+        intake.resetDeviceConfigurationForOpMode();
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -197,9 +198,9 @@ public class Robot extends MecanumDrive {
 
     public void claw(boolean open) {
         if (open) {
-            intake.setPosition(0);
+            intake.setPosition(0.4);
         } else {
-            intake.setPosition(0.6);
+            intake.setPosition(0.9);
         }
     }
 
