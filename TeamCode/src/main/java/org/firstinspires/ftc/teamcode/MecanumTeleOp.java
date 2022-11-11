@@ -50,6 +50,8 @@ public class MecanumTeleOp extends LinearOpMode {
         int holding_pos_right = -1;
         double toPosition = -1;
         boolean isBusy = false;
+        boolean kill = false;
+        double startTime= System.currentTimeMillis();
         while (opModeIsActive()) {
 
             double power = -gamepad1.left_stick_y; // Remember, this is reversed!
@@ -78,10 +80,10 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
             //Claw Movements
-            if(gamepad1.triangle){
+            if(gamepad1.cross){
                 robot.claw(false);
             }
-            if(gamepad1.cross){
+            if(gamepad1.triangle){
                 robot.claw(true);
             }
 
@@ -90,12 +92,16 @@ public class MecanumTeleOp extends LinearOpMode {
 
             if(gamepad1.square)
             {
+                startTime = System.currentTimeMillis();
+                kill = false;
                 holding_pos_left = 600;
                 holding_pos_right = 600;
 
             }
             else if(gamepad1.circle)
             {
+                startTime = System.currentTimeMillis();
+                kill = false;
                 holding_pos_left = 380;
                 holding_pos_right = 380;
 
@@ -104,6 +110,8 @@ public class MecanumTeleOp extends LinearOpMode {
 
             else if(gamepad1.right_trigger > 0.5)
             {
+                startTime = System.currentTimeMillis();
+                kill=false;
                 robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.motorLiftLeft.setPower(0.5);
@@ -113,6 +121,8 @@ public class MecanumTeleOp extends LinearOpMode {
             }
             else if(gamepad1.left_trigger > 0.5)
             {
+                startTime = System.currentTimeMillis();
+                kill = false;
                 robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 robot.motorLiftLeft.setPower(-0.5);
@@ -131,10 +141,18 @@ public class MecanumTeleOp extends LinearOpMode {
                 }
             }
 
-            if(holding_pos_left != -1)
+            if(holding_pos_left != -1 && !kill)
             {
                 liftToPosition(robot, holding_pos_left, holding_pos_right);
             }
+
+            if(gamepad1.dpad_down || ((System.currentTimeMillis() - startTime)>15000)){
+                liftToPosition(robot, 0, 0);
+                robot.motorLiftRight.setPower(0);
+                robot.motorLiftLeft.setPower(0);
+                kill=true;
+            }
+
 
 
             //telemetry.addData("Power: ", power);
@@ -145,6 +163,10 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.addData("LEncoder", robot.motorLiftLeft.getCurrentPosition());
             telemetry.addData("REncoder", robot.motorLiftRight.getCurrentPosition());
             telemetry.addData("Lift in Moving: ", robot.motorLiftRight.isBusy());
+            telemetry.addData("Kill: ", kill);
+            telemetry.addData("Start Time: ", startTime);
+            telemetry.addData("Time: ", System.currentTimeMillis());
+
             telemetry.update();
         }
     }

@@ -9,16 +9,12 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @TeleOp
 public class RightAuton extends LinearOpMode
 {
-
     @Override
-    public void runOpMode()
-    {
-
+    public void runOpMode() throws InterruptedException {
         aprilTagsInit init = new aprilTagsInit(hardwareMap, telemetry);
         init.initialize();
 
-        while (!isStarted() && !isStopRequested())
-        {
+        while (!isStarted() && !isStopRequested()) {
             init.search();
             sleep(20);
         }

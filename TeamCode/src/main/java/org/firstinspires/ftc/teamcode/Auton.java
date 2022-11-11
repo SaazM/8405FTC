@@ -62,7 +62,7 @@ public class Auton {
                 .strafeLeft(6)
                 .forward(6)
                 .turn(Math.toRadians(-94))
-                .strafeLeft(45)
+                .strafeLeft(44)
                 .build();
         drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
@@ -73,8 +73,8 @@ public class Auton {
         drive.claw(true);
         TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(new Pose2d())
                 .back(3)
-                .strafeLeft(15)
-                .turn(Math.toRadians(-184))
+                .strafeLeft(18)
+                .turn(Math.toRadians(-183))
                 .build();
         drive.followTrajectorySequence(trajSeq3);
         goToTopOfStack(liftLeft, liftRight);
@@ -90,29 +90,28 @@ public class Auton {
         goToLowGoal(liftLeft, liftRight);
         TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(new Pose2d())
                 .back(20)
-                .turn(Math.toRadians(60))
-                .forward(5)
+                .turn(Math.toRadians(65))
+                .forward(7)
                 .build();
         drive.followTrajectorySequence(trajSeq6);
         drive.claw(true);
         TrajectorySequence trajSeq7 = drive.trajectorySequenceBuilder(new Pose2d())
-                .back(5)
-                .turn(Math.toRadians(-60))
+                .back(7)
+                .turn(Math.toRadians(-65))
                 .build();
         drive.followTrajectorySequence(trajSeq7);
 
         if (parkingZone == 1) { // red
             Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .forward(26)
+                    .forward(20)
                     .build();
             drive.followTrajectory(park);
         } else if (parkingZone == 3) { // blue
             Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .back(26)
+                    .back(20)
                     .build();
             drive.followTrajectory(park);
-        }
-        else{
+        } else {
             Trajectory park = drive.trajectoryBuilder(new Pose2d())
                     .back(3)
                     .build();
@@ -120,15 +119,16 @@ public class Auton {
         }
     }
 
-    public void runAutonRight(Robot drive, HardwareMap hardwareMap) {
-        Servo intake = hardwareMap.get(Servo.class, "intake");
+    public void runAutonRight(Robot drive, HardwareMap hardwareMap) throws InterruptedException {
         DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
         DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
         drive.setMotorPowers(0, 0, 0, 0);
-
-        intake.setPosition(0.6);
+        drive.claw(false);
         TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeRight(58)
+                .strafeRight(6)
+                .forward(6)
+                .turn(Math.toRadians(94))
+                .strafeRight(44)
                 .build();
         drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
@@ -136,11 +136,11 @@ public class Auton {
                 .forward(3)
                 .build();
         drive.followTrajectorySequence(trajSeq2);
-        intake.setPosition(0);
+        drive.claw(true);
         TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(new Pose2d())
                 .back(3)
-                .strafeRight(15)
-                .turn(Math.toRadians(180))
+                .strafeRight(18)
+                .turn(Math.toRadians(-183))
                 .build();
         drive.followTrajectorySequence(trajSeq3);
         goToTopOfStack(liftLeft, liftRight);
@@ -148,46 +148,55 @@ public class Auton {
                 .forward(24)
                 .build();
         drive.followTrajectorySequence(trajSeq4);
-        intake.setPosition(0.6);
-        goToLowGoal(liftLeft, liftRight);
+        drive.claw(false);
         TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(new Pose2d())
-                .back(20)
-                .turn(Math.toRadians(-60))
-                .forward(8)
+                .waitSeconds(2)
                 .build();
         drive.followTrajectorySequence(trajSeq5);
-        intake.setPosition(0);
+        goToLowGoal(liftLeft, liftRight);
         TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(new Pose2d())
-                .back(8)
-                .turn(Math.toRadians(60))
+                .back(20)
+                .turn(Math.toRadians(-65))
+                .forward(7)
                 .build();
         drive.followTrajectorySequence(trajSeq6);
+        drive.claw(true);
+        TrajectorySequence trajSeq7 = drive.trajectorySequenceBuilder(new Pose2d())
+                .back(7)
+                .turn(Math.toRadians(65))
+                .build();
+        drive.followTrajectorySequence(trajSeq7);
 
         if (parkingZone == 1) { // red
             Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .back(26)
+                    .back(20)
                     .build();
             drive.followTrajectory(park);
         } else if (parkingZone == 3) { // blue
             Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .forward(26)
+                    .forward(20)
+                    .build();
+            drive.followTrajectory(park);
+        } else {
+            Trajectory park = drive.trajectoryBuilder(new Pose2d())
+                    .forward(3)
                     .build();
             drive.followTrajectory(park);
         }
     }
 
     public void goToMediumGoal(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 615, 615);
+        liftToPosition(left,right, 625, 625);
 
     }
 
     public void goToLowGoal(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 380, 380);
+        liftToPosition(left,right, 400, 400);
 
     }
 
     public void goToTopOfStack(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 100, 100);
+        liftToPosition(left,right, 120, 120);
 
     }
     private static void liftToPosition(DcMotorEx left, DcMotorEx right,int pos_left, int pos_right)
