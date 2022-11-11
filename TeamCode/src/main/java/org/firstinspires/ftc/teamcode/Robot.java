@@ -66,10 +66,10 @@ public class Robot extends MecanumDrive {
     public DcMotorEx rightRear;
     public Servo intake;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.5, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1;
+    public static double LATERAL_MULTIPLIER = 1;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
