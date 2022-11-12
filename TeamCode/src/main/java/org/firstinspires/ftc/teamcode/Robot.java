@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_VEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
@@ -164,6 +165,13 @@ public class Robot extends MecanumDrive {
 
     public void setSpeedMultipler(double x) {
         speedMultiplier = x;
+    }
+
+    public void turnToPosition(double rotation) {
+        while(this.imu.getAngularOrientation().firstAngle < rotation) {
+        this.mecanum(0, 0, 1);
+        telemetry.addData("Rotation: ", this.imu.getAngularOrientation().firstAngle);
+      }
     }
 
     public void mecanum(double power, double strafe, double turn) {
