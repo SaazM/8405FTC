@@ -130,7 +130,7 @@ public class Auton {
         drive.setMotorPowers(0, 0, 0, 0);
         drive.claw(false);
         TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeRight(49.5)
+                .strafeRight(50)
                 .build();
         drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
@@ -182,11 +182,6 @@ public class Auton {
         } else if (parkingZone == 3) { // blue
             Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
                     .forward(20)
-                    .build();
-            drive.followTrajectory(park);
-        } else {
-            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
-                    .back(3)
                     .build();
             drive.followTrajectory(park);
         }
