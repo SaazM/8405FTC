@@ -209,13 +209,28 @@ public class Auton {
     private static void liftToPosition(DcMotorEx left, DcMotorEx right,int pos_left, int pos_right)
     {
         double startTime = System.currentTimeMillis();
-        while (((right.getCurrentPosition() < pos_right-10 || right.getCurrentPosition() >pos_right+10)&&(left.getCurrentPosition() < pos_left-10 || left.getCurrentPosition() >pos_left+10)) || System.currentTimeMillis() - startTime > 3000){
+        while (((right.getCurrentPosition() < pos_right-10 || right.getCurrentPosition() >pos_right+10)&&(left.getCurrentPosition() < pos_left-10 || left.getCurrentPosition() >pos_left+10))){
             right.setTargetPosition(pos_right);
             left.setTargetPosition(pos_left);
             right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             right.setPower(1);
             left.setPower(1);
+            if(System.currentTimeMillis()-startTime>3000){
+                double startTime2 = System.currentTimeMillis();
+                while(true){
+                    right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    right.setPower(1);
+                    left.setPower(1);
+
+                    if(System.currentTimeMillis()-startTime2>2000) {
+                        break;
+                    }
+
+                }
+                break;
+            }
         }
     }
 }
