@@ -181,7 +181,7 @@ public class Auton {
             drive.followTrajectory(park);
         } else if (parkingZone == 3) { // blue
             Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
-                    .forward(18)
+                    .forward(20)
                     .build();
             drive.followTrajectory(park);
         } else {
