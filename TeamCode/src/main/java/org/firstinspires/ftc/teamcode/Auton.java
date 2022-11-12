@@ -58,61 +58,66 @@ public class Auton {
         DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
         drive.setMotorPowers(0, 0, 0, 0);
         drive.claw(false);
+        //medium goal
         TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeLeft(6)
-                .forward(6)
-                .turn(Math.toRadians(-94))
-                .strafeLeft(44)
+                .strafeLeft(49)
                 .build();
         drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
-        TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(3)
+        TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(trajSeq1.end())
+                .forward(2.5)
                 .build();
         drive.followTrajectorySequence(trajSeq2);
         drive.claw(true);
-        TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(new Pose2d())
-                .back(3)
-                .strafeLeft(18)
-                .turn(Math.toRadians(-183))
+        //get cone from stack
+        TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(trajSeq2.end())
+                .back(2.5)
+                .strafeLeft(16)
+                .turn(Math.toRadians(-169))
                 .build();
         drive.followTrajectorySequence(trajSeq3);
         goToTopOfStack(liftLeft, liftRight);
-        TrajectorySequence trajSeq4 = drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(24)
+        Trajectory trajSeq4 = drive.trajectoryBuilder(trajSeq3.end(), 80.4828434*0.95*0.6, 73.17330064499293*0.6)
+                .forward(25.5)
                 .build();
-        drive.followTrajectorySequence(trajSeq4);
+        drive.followTrajectory(trajSeq4);
         drive.claw(false);
-        TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(new Pose2d())
-                        .waitSeconds(2)
+        TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(trajSeq4.end())
+                        .waitSeconds(1.5)
+                        .back(1)
                         .build();
         drive.followTrajectorySequence(trajSeq5);
+        //low goal
         goToLowGoal(liftLeft, liftRight);
-        TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(new Pose2d())
+        TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(trajSeq5.end())
                 .back(20)
-                .turn(Math.toRadians(65))
+                .turn(Math.toRadians(52))
                 .forward(7)
                 .build();
         drive.followTrajectorySequence(trajSeq6);
         drive.claw(true);
-        TrajectorySequence trajSeq7 = drive.trajectorySequenceBuilder(new Pose2d())
-                .back(7)
-                .turn(Math.toRadians(-65))
+        TrajectorySequence trajSeq7 = drive.trajectorySequenceBuilder(trajSeq6.end())
+                .waitSeconds(1)
                 .build();
         drive.followTrajectorySequence(trajSeq7);
+        TrajectorySequence trajSeq8 = drive.trajectorySequenceBuilder(trajSeq7.end())
+                .back(6)
+                .turn(Math.toRadians(-55))
+                .build();
+        drive.followTrajectorySequence(trajSeq8);
 
         if (parkingZone == 1) { // red
-            Trajectory park = drive.trajectoryBuilder(new Pose2d())
+            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
                     .forward(20)
                     .build();
             drive.followTrajectory(park);
         } else if (parkingZone == 3) { // blue
-            Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .back(20)
+            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
+                    .back(26)
                     .build();
             drive.followTrajectory(park);
         } else {
-            Trajectory park = drive.trajectoryBuilder(new Pose2d())
+            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
                     .back(3)
                     .build();
             drive.followTrajectory(park);
@@ -125,89 +130,92 @@ public class Auton {
         drive.setMotorPowers(0, 0, 0, 0);
         drive.claw(false);
         TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeRight(6)
-                .forward(6)
-                .turn(Math.toRadians(94))
-                .strafeRight(44)
+                .strafeRight(49.5)
                 .build();
         drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
-        TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(new Pose2d())
+        TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(trajSeq1.end())
                 .forward(3)
                 .build();
         drive.followTrajectorySequence(trajSeq2);
         drive.claw(true);
-        TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(new Pose2d())
+        TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(trajSeq2.end())
                 .back(3)
-                .strafeRight(18)
-                .turn(Math.toRadians(-183))
+                .strafeRight(16)
+                .turn(Math.toRadians(184))
                 .build();
         drive.followTrajectorySequence(trajSeq3);
         goToTopOfStack(liftLeft, liftRight);
-        TrajectorySequence trajSeq4 = drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(24)
+        Trajectory trajSeq4 = drive.trajectoryBuilder(trajSeq3.end(), 80.4828434*0.95*0.6, 73.17330064499293*0.6)
+                .forward(25.5)
                 .build();
-        drive.followTrajectorySequence(trajSeq4);
+        drive.followTrajectory(trajSeq4);
         drive.claw(false);
-        TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(new Pose2d())
-                .waitSeconds(2)
+        TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(trajSeq4.end())
+                .waitSeconds(1.5)
+                .back(1)
                 .build();
         drive.followTrajectorySequence(trajSeq5);
         goToLowGoal(liftLeft, liftRight);
-        TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(new Pose2d())
+        TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(trajSeq5.end())
                 .back(20)
-                .turn(Math.toRadians(-65))
-                .forward(7)
+                .turn(Math.toRadians(-54))
+                .forward(4)
                 .build();
         drive.followTrajectorySequence(trajSeq6);
         drive.claw(true);
-        TrajectorySequence trajSeq7 = drive.trajectorySequenceBuilder(new Pose2d())
-                .back(7)
-                .turn(Math.toRadians(65))
+        TrajectorySequence trajSeq7 = drive.trajectorySequenceBuilder(trajSeq6.end())
+                .waitSeconds(1)
                 .build();
         drive.followTrajectorySequence(trajSeq7);
+        TrajectorySequence trajSeq8 = drive.trajectorySequenceBuilder(trajSeq7.end())
+                .back(6)
+                .turn(Math.toRadians(54))
+                .build();
+        drive.followTrajectorySequence(trajSeq8);
 
         if (parkingZone == 1) { // red
-            Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .back(20)
+            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
+                    .back(26)
                     .build();
             drive.followTrajectory(park);
         } else if (parkingZone == 3) { // blue
-            Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .forward(20)
+            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
+                    .forward(18)
                     .build();
             drive.followTrajectory(park);
         } else {
-            Trajectory park = drive.trajectoryBuilder(new Pose2d())
-                    .forward(3)
+            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
+                    .back(3)
                     .build();
             drive.followTrajectory(park);
         }
     }
 
     public void goToMediumGoal(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 625, 625);
+        liftToPosition(left,right, 620, 620);
 
     }
 
     public void goToLowGoal(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 400, 400);
+        liftToPosition(left,right, 440, 440);
 
     }
 
     public void goToTopOfStack(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 120, 120);
+        liftToPosition(left,right, 145, 145);
 
     }
     private static void liftToPosition(DcMotorEx left, DcMotorEx right,int pos_left, int pos_right)
     {
-        while ((right.getCurrentPosition() < pos_right-5 || right.getCurrentPosition() >pos_right+5)&&(left.getCurrentPosition() < pos_left-5 || left.getCurrentPosition() >pos_left+5)) {
+        double startTime = System.currentTimeMillis();
+        while (((right.getCurrentPosition() < pos_right-10 || right.getCurrentPosition() >pos_right+10)&&(left.getCurrentPosition() < pos_left-10 || left.getCurrentPosition() >pos_left+10)) || System.currentTimeMillis() - startTime > 3000){
             right.setTargetPosition(pos_right);
             left.setTargetPosition(pos_left);
             right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            right.setVelocity(600);
-            left.setPower(600);
+            right.setPower(1);
+            left.setPower(1);
         }
     }
 }

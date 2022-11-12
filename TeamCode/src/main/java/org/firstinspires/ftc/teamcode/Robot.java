@@ -93,9 +93,10 @@ public class Robot extends MecanumDrive {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
-                new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
+                new Pose2d(0.5, 0.5, Math.toRadians(0.5)), 0.5);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
+
 
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
@@ -215,7 +216,16 @@ public class Robot extends MecanumDrive {
     /* ---------- ROADRUNNER METHODS ---------- */
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
+
         return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
+    }
+    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, double maxVelo, double maxAccel) {
+        MinVelocityConstraint myVelConstraint = new MinVelocityConstraint(Arrays.asList(
+                new AngularVelocityConstraint(maxAccel),
+                new MecanumVelocityConstraint(maxVelo, TRACK_WIDTH)
+        ));
+        ProfileAccelerationConstraint myAccelConstraint = new ProfileAccelerationConstraint(maxAccel);
+        return new TrajectoryBuilder(startPose, myVelConstraint, myAccelConstraint);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, boolean reversed) {
@@ -365,7 +375,7 @@ public class Robot extends MecanumDrive {
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getAngularVelocity().zRotationRate;
+        return (double) imu.getAngularVelocity().yRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

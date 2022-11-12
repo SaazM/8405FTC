@@ -107,6 +107,13 @@ public class MecanumTeleOp extends LinearOpMode {
 
 
             }
+            else if(gamepad1.dpad_up)
+            {
+                startTime = System.currentTimeMillis();
+                kill = false;
+                holding_pos_left = 125;
+                holding_pos_right = 125;
+            }
 
             else if(gamepad1.right_trigger > 0.5)
             {
@@ -130,6 +137,7 @@ public class MecanumTeleOp extends LinearOpMode {
                 holding_pos_left = -1;
                 holding_pos_right = -1;
             }
+
 
 
             else if(robot.motorLiftRight.getCurrentPosition() > 30 && robot.motorLiftRight.getMode() == DcMotor.RunMode.RUN_USING_ENCODER)
@@ -179,6 +187,7 @@ public class MecanumTeleOp extends LinearOpMode {
         robot.motorLiftRight.setPower(0.5);
         robot.motorLiftLeft.setPower(0.5);
     }
+
     private static void liftToPosition(Robot robot, int pos_left, int pos_right)
     {
         robot.motorLiftRight.setTargetPosition(pos_right);
