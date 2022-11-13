@@ -78,7 +78,7 @@ public class Auton {
         drive.followTrajectorySequence(trajSeq3);
         goToTopOfStack(liftLeft, liftRight);
         Trajectory trajSeq4 = drive.trajectoryBuilder(trajSeq3.end(), 80.4828434*0.95*0.6, 73.17330064499293*0.6)
-                .forward(25.5)
+                .forward(26.5)
                 .build();
         drive.followTrajectory(trajSeq4);
         drive.claw(false);
@@ -130,24 +130,24 @@ public class Auton {
         drive.setMotorPowers(0, 0, 0, 0);
         drive.claw(false);
         TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
-                .strafeRight(50)
+                .strafeRight(48)
                 .build();
         drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
         TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(trajSeq1.end())
-                .forward(3)
+                .forward(2)
                 .build();
         drive.followTrajectorySequence(trajSeq2);
         drive.claw(true);
         TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(trajSeq2.end())
-                .back(3)
+                .back(2)
                 .strafeRight(16)
                 .turn(Math.toRadians(184))
                 .build();
         drive.followTrajectorySequence(trajSeq3);
         goToTopOfStack(liftLeft, liftRight);
         Trajectory trajSeq4 = drive.trajectoryBuilder(trajSeq3.end(), 80.4828434*0.95*0.6, 73.17330064499293*0.6)
-                .forward(25.5)
+                .forward(27)
                 .build();
         drive.followTrajectory(trajSeq4);
         drive.claw(false);
@@ -159,8 +159,8 @@ public class Auton {
         goToLowGoal(liftLeft, liftRight);
         TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(trajSeq5.end())
                 .back(20)
-                .turn(Math.toRadians(-54))
-                .forward(4)
+                .turn(Math.toRadians(-51.5))
+                .forward(4.5)
                 .build();
         drive.followTrajectorySequence(trajSeq6);
         drive.claw(true);
@@ -169,14 +169,14 @@ public class Auton {
                 .build();
         drive.followTrajectorySequence(trajSeq7);
         TrajectorySequence trajSeq8 = drive.trajectorySequenceBuilder(trajSeq7.end())
-                .back(6)
-                .turn(Math.toRadians(54))
+                .back(6.5)
+                .turn(Math.toRadians(48))
                 .build();
         drive.followTrajectorySequence(trajSeq8);
 
         if (parkingZone == 1) { // red
             Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
-                    .back(26)
+                    .back(24)
                     .build();
             drive.followTrajectory(park);
         } else if (parkingZone == 3) { // blue
@@ -198,7 +198,7 @@ public class Auton {
     }
 
     public void goToTopOfStack(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 145, 145);
+        liftToPosition(left,right, 150, 150);
 
     }
     private static void liftToPosition(DcMotorEx left, DcMotorEx right,int pos_left, int pos_right)

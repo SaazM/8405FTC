@@ -65,10 +65,10 @@ public class MecanumTeleOp extends LinearOpMode {
             //Speed Multiplier
             double speedMultiplier = 0.5;
 
-            if (gamepad1.left_bumper && robot.speedMultiplier != speedMultiplier) {
-                robot.setSpeedMultipler(speedMultiplier); // reset it back to slow mode
-            } else if (gamepad1.left_bumper) {
-                robot.setSpeedMultipler(1);
+            if (gamepad1.left_bumper) {
+                robot.setSpeedMultipler(1); // reset it back to slow mode
+            } else {
+                robot.setSpeedMultipler(0.5);
             }
 
 
@@ -111,8 +111,8 @@ public class MecanumTeleOp extends LinearOpMode {
             {
                 startTime = System.currentTimeMillis();
                 kill = false;
-                holding_pos_left = 125;
-                holding_pos_right = 125;
+                holding_pos_left = 135;
+                holding_pos_right = 135;
             }
 
             else if(gamepad1.right_trigger > 0.5)
