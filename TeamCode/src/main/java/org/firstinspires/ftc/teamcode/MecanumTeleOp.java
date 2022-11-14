@@ -81,10 +81,10 @@ public class MecanumTeleOp extends LinearOpMode {
 
             //Claw Movements
             if(gamepad1.cross){
-                robot.claw(false);
+                robot.intake.close();
             }
             if(gamepad1.triangle){
-                robot.claw(true);
+                robot.intake.open();
             }
 
 

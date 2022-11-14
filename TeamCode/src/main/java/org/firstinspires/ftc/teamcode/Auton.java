@@ -28,10 +28,10 @@ public class Auton {
     }
 
     public void runAutonParkOnly(Robot drive, HardwareMap hardwareMap) {
-        Servo intake = hardwareMap.get(Servo.class, "intake");
+        Intake intake = new Intake(hardwareMap);
 
         drive.setMotorPowers(0.1,0.1,0.1,0.1);
-        intake.setPosition(0.4);
+        intake.close();
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(new Pose2d())
                 .forward(25)
                 .build();
@@ -57,7 +57,8 @@ public class Auton {
         DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
         DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
         drive.setMotorPowers(0, 0, 0, 0);
-        drive.claw(false);
+        Intake intake = new Intake(hardwareMap);
+        intake.close();
         //medium goal
         TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
                 .strafeLeft(49)
@@ -68,7 +69,7 @@ public class Auton {
                 .forward(2.5)
                 .build();
         drive.followTrajectorySequence(trajSeq2);
-        drive.claw(true);
+        intake.open();
         //get cone from stack
         TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(trajSeq2.end())
                 .back(2.5)
@@ -81,7 +82,7 @@ public class Auton {
                 .forward(26.5)
                 .build();
         drive.followTrajectory(trajSeq4);
-        drive.claw(false);
+        intake.close();
         TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(trajSeq4.end())
                         .waitSeconds(1.5)
                         .back(1)
@@ -95,7 +96,7 @@ public class Auton {
                 .forward(7)
                 .build();
         drive.followTrajectorySequence(trajSeq6);
-        drive.claw(true);
+        intake.open();
         TrajectorySequence trajSeq7 = drive.trajectorySequenceBuilder(trajSeq6.end())
                 .waitSeconds(1)
                 .build();
@@ -128,7 +129,8 @@ public class Auton {
         DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
         DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
         drive.setMotorPowers(0, 0, 0, 0);
-        drive.claw(false);
+        Intake intake = new Intake(hardwareMap);
+        intake.close();
         TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
                 .strafeRight(48)
                 .build();
@@ -138,7 +140,7 @@ public class Auton {
                 .forward(2)
                 .build();
         drive.followTrajectorySequence(trajSeq2);
-        drive.claw(true);
+        intake.open();
         TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(trajSeq2.end())
                 .back(2)
                 .strafeRight(16)
@@ -150,7 +152,7 @@ public class Auton {
                 .forward(27)
                 .build();
         drive.followTrajectory(trajSeq4);
-        drive.claw(false);
+        intake.close();
         TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(trajSeq4.end())
                 .waitSeconds(1.5)
                 .back(1)
@@ -163,7 +165,7 @@ public class Auton {
                 .forward(4.5)
                 .build();
         drive.followTrajectorySequence(trajSeq6);
-        drive.claw(true);
+        intake.open();
         TrajectorySequence trajSeq7 = drive.trajectorySequenceBuilder(trajSeq6.end())
                 .waitSeconds(1)
                 .build();

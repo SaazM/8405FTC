@@ -65,7 +65,7 @@ public class Robot extends MecanumDrive {
     public DcMotorEx leftRear;
     public DcMotorEx rightFront;
     public DcMotorEx rightRear;
-    public Servo intake;
+    public Intake intake;
 
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.5, 0, 0);
@@ -138,8 +138,8 @@ public class Robot extends MecanumDrive {
         motorLiftLeft.setDirection(DcMotor.Direction.FORWARD);
         motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        intake = hardwareMap.get(Servo.class, "intake");
-        intake.resetDeviceConfigurationForOpMode();
+        intake = new Intake(hardwareMap);
+        intake.claw.resetDeviceConfigurationForOpMode();
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -203,14 +203,6 @@ public class Robot extends MecanumDrive {
         leftRear.setPower(backLeftPower*speedMultiplier);
         rightFront.setPower(frontRightPower*speedMultiplier);
         rightRear.setPower(backRightPower*speedMultiplier);
-    }
-
-    public void claw(boolean open) {
-        if (open) {
-            intake.setPosition(0.4);
-        } else {
-            intake.setPosition(0.9);
-        }
     }
 
     /* ---------- ROADRUNNER METHODS ---------- */
