@@ -27,162 +27,165 @@ public class Auton {
         }
     }
 
-    public void runAutonParkOnly(Robot robot, HardwareMap hardwareMap) {
+    public void runAutonParkOnly(Robot drive, HardwareMap hardwareMap) {
+        Intake intake = new Intake(hardwareMap);
 
-        robot.setMotorPowers(0.1,0.1,0.1,0.1);
-        robot.intake.close();
-        TrajectorySequence trajSeq = robot.trajectorySequenceBuilder(new Pose2d())
+        drive.setMotorPowers(0.1,0.1,0.1,0.1);
+        intake.close();
+        TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(new Pose2d())
                 .forward(25)
                 .build();
-        robot.followTrajectorySequence(trajSeq);
+        drive.followTrajectorySequence(trajSeq);
 
 
 
         if (parkingZone == 1) { // red
-            Trajectory park = robot.trajectoryBuilder(new Pose2d())
+            Trajectory park = drive.trajectoryBuilder(new Pose2d())
                     .strafeLeft(36)
                     .build();
-            robot.followTrajectory(park);
+            drive.followTrajectory(park);
         } else if (parkingZone == 3) { // blue
-            Trajectory park = robot.trajectoryBuilder(new Pose2d())
+            Trajectory park = drive.trajectoryBuilder(new Pose2d())
                     .strafeRight(36)
                     .build();
-            robot.followTrajectory(park);
+            drive.followTrajectory(park);
         }
 
     }
 
-    public void runAutonLeft(Robot robot, HardwareMap hardwareMap) throws InterruptedException {
+    public void runAutonLeft(Robot drive, HardwareMap hardwareMap) throws InterruptedException {
         DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
         DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
-        robot.setMotorPowers(0, 0, 0, 0);
-        robot.intake.close();
+        drive.setMotorPowers(0, 0, 0, 0);
+        Intake intake = new Intake(hardwareMap);
+        intake.close();
         //medium goal
-        TrajectorySequence trajSeq1 = robot.trajectorySequenceBuilder(new Pose2d())
+        TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
                 .strafeLeft(49)
                 .build();
-        robot.followTrajectorySequence(trajSeq1);
+        drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
-        TrajectorySequence trajSeq2 = robot.trajectorySequenceBuilder(trajSeq1.end())
+        TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(trajSeq1.end())
                 .forward(2.5)
                 .build();
-        robot.followTrajectorySequence(trajSeq2);
-        robot.intake.open();
+        drive.followTrajectorySequence(trajSeq2);
+        intake.open();
         //get cone from stack
-        TrajectorySequence trajSeq3 = robot.trajectorySequenceBuilder(trajSeq2.end())
+        TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(trajSeq2.end())
                 .back(2.5)
                 .strafeLeft(16)
                 .turn(Math.toRadians(-169))
                 .build();
-        robot.followTrajectorySequence(trajSeq3);
+        drive.followTrajectorySequence(trajSeq3);
         goToTopOfStack(liftLeft, liftRight);
-        Trajectory trajSeq4 = robot.trajectoryBuilder(trajSeq3.end(), 80.4828434*0.95*0.6, 73.17330064499293*0.6)
+        Trajectory trajSeq4 = drive.trajectoryBuilder(trajSeq3.end(), 80.4828434*0.95*0.6, 73.17330064499293*0.6)
                 .forward(26.5)
                 .build();
-        robot.followTrajectory(trajSeq4);
-        robot.intake.close();
-        TrajectorySequence trajSeq5 = robot.trajectorySequenceBuilder(trajSeq4.end())
+        drive.followTrajectory(trajSeq4);
+        intake.close();
+        TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(trajSeq4.end())
                         .waitSeconds(1.5)
                         .back(1)
                         .build();
-        robot.followTrajectorySequence(trajSeq5);
+        drive.followTrajectorySequence(trajSeq5);
         //low goal
         goToLowGoal(liftLeft, liftRight);
-        TrajectorySequence trajSeq6 = robot.trajectorySequenceBuilder(trajSeq5.end())
+        TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(trajSeq5.end())
                 .back(20)
                 .turn(Math.toRadians(52))
                 .forward(7)
                 .build();
-        robot.followTrajectorySequence(trajSeq6);
-        robot.intake.open();
-        TrajectorySequence trajSeq7 = robot.trajectorySequenceBuilder(trajSeq6.end())
+        drive.followTrajectorySequence(trajSeq6);
+        intake.open();
+        TrajectorySequence trajSeq7 = drive.trajectorySequenceBuilder(trajSeq6.end())
                 .waitSeconds(1)
                 .build();
-        robot.followTrajectorySequence(trajSeq7);
-        TrajectorySequence trajSeq8 = robot.trajectorySequenceBuilder(trajSeq7.end())
+        drive.followTrajectorySequence(trajSeq7);
+        TrajectorySequence trajSeq8 = drive.trajectorySequenceBuilder(trajSeq7.end())
                 .back(6)
                 .turn(Math.toRadians(-55))
                 .build();
-        robot.followTrajectorySequence(trajSeq8);
+        drive.followTrajectorySequence(trajSeq8);
 
         if (parkingZone == 1) { // red
-            Trajectory park = robot.trajectoryBuilder(trajSeq8.end())
+            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
                     .forward(20)
                     .build();
-            robot.followTrajectory(park);
+            drive.followTrajectory(park);
         } else if (parkingZone == 3) { // blue
-            Trajectory park = robot.trajectoryBuilder(trajSeq8.end())
+            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
                     .back(26)
                     .build();
-            robot.followTrajectory(park);
+            drive.followTrajectory(park);
         } else {
-            Trajectory park = robot.trajectoryBuilder(trajSeq8.end())
+            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
                     .back(3)
                     .build();
-            robot.followTrajectory(park);
+            drive.followTrajectory(park);
         }
     }
 
-    public void runAutonRight(Robot robot, HardwareMap hardwareMap) throws InterruptedException {
+    public void runAutonRight(Robot drive, HardwareMap hardwareMap) throws InterruptedException {
         DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
         DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
-        robot.setMotorPowers(0, 0, 0, 0);
-        robot.intake.close();
-        TrajectorySequence trajSeq1 = robot.trajectorySequenceBuilder(new Pose2d())
+        drive.setMotorPowers(0, 0, 0, 0);
+        Intake intake = new Intake(hardwareMap);
+        intake.close();
+        TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
                 .strafeRight(48)
                 .build();
-        robot.followTrajectorySequence(trajSeq1);
+        drive.followTrajectorySequence(trajSeq1);
         goToMediumGoal(liftLeft, liftRight);
-        TrajectorySequence trajSeq2 = robot.trajectorySequenceBuilder(trajSeq1.end())
+        TrajectorySequence trajSeq2 = drive.trajectorySequenceBuilder(trajSeq1.end())
                 .forward(2)
                 .build();
-        robot.followTrajectorySequence(trajSeq2);
-        robot.intake.open();
-        TrajectorySequence trajSeq3 = robot.trajectorySequenceBuilder(trajSeq2.end())
+        drive.followTrajectorySequence(trajSeq2);
+        intake.open();
+        TrajectorySequence trajSeq3 = drive.trajectorySequenceBuilder(trajSeq2.end())
                 .back(2)
                 .strafeRight(16)
                 .turn(Math.toRadians(184))
                 .build();
-        robot.followTrajectorySequence(trajSeq3);
+        drive.followTrajectorySequence(trajSeq3);
         goToTopOfStack(liftLeft, liftRight);
-        Trajectory trajSeq4 = robot.trajectoryBuilder(trajSeq3.end(), 80.4828434*0.95*0.6, 73.17330064499293*0.6)
+        Trajectory trajSeq4 = drive.trajectoryBuilder(trajSeq3.end(), 80.4828434*0.95*0.6, 73.17330064499293*0.6)
                 .forward(27)
                 .build();
-        robot.followTrajectory(trajSeq4);
-        robot.intake.close();
-        TrajectorySequence trajSeq5 = robot.trajectorySequenceBuilder(trajSeq4.end())
+        drive.followTrajectory(trajSeq4);
+        intake.close();
+        TrajectorySequence trajSeq5 = drive.trajectorySequenceBuilder(trajSeq4.end())
                 .waitSeconds(1.5)
                 .back(1)
                 .build();
-        robot.followTrajectorySequence(trajSeq5);
+        drive.followTrajectorySequence(trajSeq5);
         goToLowGoal(liftLeft, liftRight);
-        TrajectorySequence trajSeq6 = robot.trajectorySequenceBuilder(trajSeq5.end())
+        TrajectorySequence trajSeq6 = drive.trajectorySequenceBuilder(trajSeq5.end())
                 .back(20)
                 .turn(Math.toRadians(-51.5))
                 .forward(4.5)
                 .build();
-        robot.followTrajectorySequence(trajSeq6);
-        robot.intake.open();
-        TrajectorySequence trajSeq7 = robot.trajectorySequenceBuilder(trajSeq6.end())
+        drive.followTrajectorySequence(trajSeq6);
+        intake.open();
+        TrajectorySequence trajSeq7 = drive.trajectorySequenceBuilder(trajSeq6.end())
                 .waitSeconds(1)
                 .build();
-        robot.followTrajectorySequence(trajSeq7);
-        TrajectorySequence trajSeq8 = robot.trajectorySequenceBuilder(trajSeq7.end())
+        drive.followTrajectorySequence(trajSeq7);
+        TrajectorySequence trajSeq8 = drive.trajectorySequenceBuilder(trajSeq7.end())
                 .back(6.5)
                 .turn(Math.toRadians(48))
                 .build();
-        robot.followTrajectorySequence(trajSeq8);
+        drive.followTrajectorySequence(trajSeq8);
 
         if (parkingZone == 1) { // red
-            Trajectory park = robot.trajectoryBuilder(trajSeq8.end())
+            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
                     .back(24)
                     .build();
-            robot.followTrajectory(park);
+            drive.followTrajectory(park);
         } else if (parkingZone == 3) { // blue
-            Trajectory park = robot.trajectoryBuilder(trajSeq8.end())
+            Trajectory park = drive.trajectoryBuilder(trajSeq8.end())
                     .forward(20)
                     .build();
-            robot.followTrajectory(park);
+            drive.followTrajectory(park);
         }
     }
 

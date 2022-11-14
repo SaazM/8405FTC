@@ -66,9 +66,9 @@ public class MecanumTeleOp extends LinearOpMode {
             double speedMultiplier = 0.5;
 
             if (gamepad1.left_bumper) {
-                robot.setSpeedMultiplier(1); // reset it back to slow mode
+                robot.setSpeedMultipler(1); // reset it back to slow mode
             } else {
-                robot.setSpeedMultiplier(0.5);
+                robot.setSpeedMultipler(0.5);
             }
 
 
