@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import java.lang.*;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -15,7 +17,8 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class Auton {
     private boolean direction;
     private int parkingZone;
-    public Auton(boolean left, int tag_id) {
+    private Robot robot;
+    public Auton(boolean left, int tag_id, Robot rob) {
         this.direction = left;
         tag_id++;
         if (tag_id == 2) {
@@ -25,9 +28,11 @@ public class Auton {
         } else if (tag_id == 3) {
             parkingZone = 3;
         }
+
+        robot = rob;
     }
 
-    public void runAutonParkOnly(Robot robot, HardwareMap hardwareMap) {
+    public void runAutonParkOnly() {
 
         robot.setMotorPowers(0.1,0.1,0.1,0.1);
         robot.intake.close();
@@ -52,7 +57,7 @@ public class Auton {
 
     }
 
-    public void runAutonLeft(Robot robot, HardwareMap hardwareMap) throws InterruptedException {
+    public void runAutonLeft() throws InterruptedException {
         DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
         DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
         robot.setMotorPowers(0, 0, 0, 0);
@@ -82,9 +87,9 @@ public class Auton {
         robot.followTrajectory(trajSeq4);
         robot.intake.close();
         TrajectorySequence trajSeq5 = robot.trajectorySequenceBuilder(trajSeq4.end())
-                        .waitSeconds(1.5)
-                        .back(1)
-                        .build();
+                .waitSeconds(1.5)
+                .back(1)
+                .build();
         robot.followTrajectorySequence(trajSeq5);
         //low goal
         goToLowGoal(liftLeft, liftRight);
@@ -123,7 +128,7 @@ public class Auton {
         }
     }
 
-    public void runAutonRight(Robot robot, HardwareMap hardwareMap) throws InterruptedException {
+    public void runAutonRight() throws InterruptedException {
         DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
         DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
         robot.setMotorPowers(0, 0, 0, 0);
@@ -187,44 +192,17 @@ public class Auton {
     }
 
     public void goToMediumGoal(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 620, 620);
+        robot.lift.liftToPositionAuton(620);
 
     }
 
     public void goToLowGoal(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 440, 440);
+        robot.lift.liftToPositionAuton(440);
 
     }
 
     public void goToTopOfStack(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 150, 150);
+        robot.lift.liftToPositionAuton(150);
 
-    }
-    private static void liftToPosition(DcMotorEx left, DcMotorEx right,int pos_left, int pos_right)
-    {
-        double startTime = System.currentTimeMillis();
-        while (((right.getCurrentPosition() < pos_right-10 || right.getCurrentPosition() >pos_right+10)&&(left.getCurrentPosition() < pos_left-10 || left.getCurrentPosition() >pos_left+10))){
-            right.setTargetPosition(pos_right);
-            left.setTargetPosition(pos_left);
-            right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            right.setPower(1);
-            left.setPower(1);
-            if(System.currentTimeMillis()-startTime>3000){
-                double startTime2 = System.currentTimeMillis();
-                while(true){
-                    right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    right.setPower(1);
-                    left.setPower(1);
-
-                    if(System.currentTimeMillis()-startTime2>2000) {
-                        break;
-                    }
-
-                }
-                break;
-            }
-        }
     }
 }
