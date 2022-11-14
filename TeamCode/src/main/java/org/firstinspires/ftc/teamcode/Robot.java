@@ -65,7 +65,6 @@ public class Robot extends MecanumDrive {
     public DcMotorEx leftRear;
     public DcMotorEx rightFront;
     public DcMotorEx rightRear;
-    public Intake intake;
 
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.5, 0, 0);
@@ -88,6 +87,9 @@ public class Robot extends MecanumDrive {
     private List<DcMotorEx> motors;
 
     private VoltageSensor batteryVoltageSensor;
+
+    public Intake intake;
+    public Lift lift;
 
     public Robot(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
@@ -140,6 +142,8 @@ public class Robot extends MecanumDrive {
 
         intake = new Intake(hardwareMap);
         intake.claw.resetDeviceConfigurationForOpMode();
+        
+        lift = new Lift(hardwareMap);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -164,7 +168,7 @@ public class Robot extends MecanumDrive {
         isFieldCentric = false;
     }
 
-    public void setSpeedMultipler(double x) {
+    public void setSpeedMultiplier(double x) {
         speedMultiplier = x;
     }
 
