@@ -110,31 +110,43 @@ public class Robot extends MecanumDrive {
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
 
+
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setDirection(DcMotor.Direction.REVERSE); // motor direction
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // Braking behavior
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // We don't want to use PID for the motors using the encoders
 
+
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRear.setDirection(DcMotor.Direction.REVERSE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
+        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
         motorLiftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
+        motorLiftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLiftRight.setDirection(DcMotor.Direction.FORWARD);
         motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+
         motorLiftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
+        motorLiftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLiftLeft.setDirection(DcMotor.Direction.FORWARD);
         motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

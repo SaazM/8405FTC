@@ -9,49 +9,62 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
 import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
 @TeleOp
 public class AutonAsync extends OpMode
 {
 
-//    @Override
-//    public void runOpMode() throws InterruptedException
-//    {
-//
-//        aprilTagsInit init = new aprilTagsInit(hardwareMap, telemetry);
-//        init.initialize();
-//
-//        while (!isStarted() && !isStopRequested())
-//        {
-//            init.search();
-//            sleep(20);
-//        }
-//        waitForStart();
-//        if (isStopRequested()) return;
-//        int finalID = init.stopAndSave();
-//        telemetry.addLine(Integer.toString(finalID));
-//        telemetry.update();
-//        Auton auton = new Auton(false, finalID);
-//
-//        waitForStart();
-////        while (opModeIsActive()) {
-//        auton.runAutonAsync(new Robot(hardwareMap), hardwareMap);
-////        }
-//    }
 
-    Robot drive = new Robot(hardwareMap);
+
+    Robot drive;
     int finalID = -1;
     Auton auton = new Auton(false, finalID);
-
+    DcMotorEx liftLeft;
+    DcMotorEx liftRight;
+    TrajectorySequence trajSeq2;
+    TrajectorySequence trajSeq3;
+    Intake intake;
+    int sequenceON = 0;
     @Override
     public void init() {
-        Trajectory trajSeq1 = drive.trajectoryBuilder(new Pose2d())
-                .forward(30)
+        drive = new Robot(hardwareMap);
+        liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
+        liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
+        liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intake = new Intake(hardwareMap);
+        intake.close();
+        sequenceON++;
+        TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
+                .strafeLeft(49)
+
+                .addDisplacementMarker(() ->{intake.open();})
                 .build();
-        drive.followTrajectoryAsync(trajSeq1);
+
+
+
+
+
+
+        drive.followTrajectorySequenceAsync(trajSeq1);
+
+    }
+    public void lift_thingies()
+    {
+        if(sequenceON == 1)
+        {
+            goToMediumGoal(liftLeft, liftRight);
+        }
+        else
+        {
+            liftRight.setPower(0);
+            liftLeft.setPower(0);
+        }
     }
 
     @Override
@@ -70,43 +83,42 @@ public class AutonAsync extends OpMode
 
     private static void liftToPosition(DcMotorEx left, DcMotorEx right,int pos_left, int pos_right)
     {
-        double startTime = System.currentTimeMillis();
-        while (((right.getCurrentPosition() < pos_right-10 || right.getCurrentPosition() >pos_right+10)&&(left.getCurrentPosition() < pos_left-10 || left.getCurrentPosition() >pos_left+10))){
+
+        if(((right.getCurrentPosition() < pos_right-10 || right.getCurrentPosition() >pos_right+10)&&(left.getCurrentPosition() < pos_left-10 || left.getCurrentPosition() >pos_left+10))){
             right.setTargetPosition(pos_right);
             left.setTargetPosition(pos_left);
             right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             right.setPower(1);
             left.setPower(1);
-            if(System.currentTimeMillis()-startTime>3000){
-                double startTime2 = System.currentTimeMillis();
-                while(true){
-                    right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    right.setPower(1);
-                    left.setPower(1);
 
-                    if(System.currentTimeMillis()-startTime2>2000) {
-                        break;
-                    }
-
-                }
-                break;
-            }
+        }
+        else
+        {
+            right.setTargetPosition(right.getCurrentPosition());
+            left.setTargetPosition(left.getCurrentPosition());
+            right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            right.setPower(1);
+            left.setPower(1);
         }
     }
 
+
+
     public void goToMediumGoal(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 620, 620);
+        liftToPosition(left,right, 400, 400);
     }
 
     @Override
     public void loop() {
+
         drive.update();
-        DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
-        DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
-        goToMediumGoal(liftLeft, liftRight);
-        telemetry.addData("STARTED", "STARTED");
+
+        lift_thingies();
+        telemetry.addData("STARTED", sequenceON);
+        telemetry.update();
+
     }
 
 }
