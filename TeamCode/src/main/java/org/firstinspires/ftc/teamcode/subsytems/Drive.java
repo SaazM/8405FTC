@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subsytems;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
@@ -14,7 +14,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityCons
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
@@ -24,7 +23,6 @@ import java.util.List;
 // roadrunner imports
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -54,13 +52,10 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 
-@Config
-public class Robot extends MecanumDrive {
+public class Drive extends MecanumDrive {
     public BNO055IMU imu;
     public boolean isFieldCentric;
 
-    public DcMotorEx motorLiftRight;
-    public DcMotorEx motorLiftLeft;
     public DcMotorEx leftFront;
     public DcMotorEx leftRear;
     public DcMotorEx rightFront;
@@ -68,14 +63,12 @@ public class Robot extends MecanumDrive {
 
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.5, 0, 0);
-
     public static double LATERAL_MULTIPLIER = 1;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
-
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
-    public static double speedMultiplier = 0.5;
+    public double speedMultiplier = 0.5;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -88,18 +81,12 @@ public class Robot extends MecanumDrive {
 
     private VoltageSensor batteryVoltageSensor;
 
-    public Intake intake;
-    public Lift lift;
-
-    public Robot(HardwareMap hardwareMap) {
+    public Drive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
-                new Pose2d(0.5, 0.5, Math.toRadians(0.5)), 0.5);
+        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.5, 0.5, Math.toRadians(0.5)), 0.5);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
-
-
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
@@ -132,19 +119,6 @@ public class Robot extends MecanumDrive {
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        motorLiftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
-        motorLiftRight.setDirection(DcMotor.Direction.FORWARD);
-        motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        motorLiftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
-        motorLiftLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        intake = new Intake(hardwareMap);
-        intake.claw.resetDeviceConfigurationForOpMode();
-        
-        lift = new Lift(hardwareMap);
-
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
         for (DcMotorEx motor : motors) {
@@ -166,31 +140,25 @@ public class Robot extends MecanumDrive {
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
 
         isFieldCentric = false;
+
+        leftRear.setPower(0);
+        rightRear.setPower(0);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
     }
 
     public void setSpeedMultiplier(double x) {
         speedMultiplier = x;
     }
 
-    public void turnToPosition(double rotation) {
-        while(this.imu.getAngularOrientation().firstAngle < rotation) {
-        this.mecanum(0, 0, 1);
-        telemetry.addData("Rotation: ", this.imu.getAngularOrientation().firstAngle);
-      }
-    }
-
-    public void mecanum(double power, double strafe, double turn) {
-        // denominator is largest motor power
+    public void driveCentric(double power, double strafe, double turn) {
         double denominator = Math.max(Math.abs(power) + Math.abs(strafe) + Math.abs(turn), 1);
         double frontLeftPower = (power + strafe + turn) / denominator;
         double backLeftPower = (power - strafe + turn) / denominator;
         double frontRightPower = (power - strafe - turn) / denominator;
         double backRightPower = (power + strafe - turn) / denominator;
 
-        leftFront.setPower(frontLeftPower * speedMultiplier);
-        leftRear.setPower(backLeftPower * speedMultiplier);
-        rightFront.setPower(frontRightPower * speedMultiplier);
-        rightRear.setPower(backRightPower * speedMultiplier);
+        setDrivePowers(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
     }
 
     public void fieldCentric(double power, double strafe, double turn) {
@@ -203,10 +171,21 @@ public class Robot extends MecanumDrive {
         double frontRightPower = (rotationY - rotationX - turn) / denominator;
         double backRightPower = (rotationY + rotationX - turn) / denominator;
 
-        leftFront.setPower(frontLeftPower*speedMultiplier);
-        leftRear.setPower(backLeftPower*speedMultiplier);
-        rightFront.setPower(frontRightPower*speedMultiplier);
-        rightRear.setPower(backRightPower*speedMultiplier);
+        setDrivePowers(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
+    }
+
+    public void setDrivePowers(double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower) {
+        leftFront.setPower(frontLeftPower * speedMultiplier);
+        leftRear.setPower(backLeftPower * speedMultiplier);
+        rightFront.setPower(frontRightPower * speedMultiplier);
+        rightRear.setPower(backRightPower * speedMultiplier);
+    }
+
+    public void turnToPosition(double rotation) {
+        while(this.imu.getAngularOrientation().firstAngle < rotation) {
+            this.driveCentric(0, 0, 1);
+            telemetry.addData("Rotation: ", this.imu.getAngularOrientation().firstAngle);
+        }
     }
 
     /* ---------- ROADRUNNER METHODS ---------- */

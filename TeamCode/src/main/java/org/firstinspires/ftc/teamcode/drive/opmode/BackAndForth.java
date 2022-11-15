@@ -6,7 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.subsytems.Robot;
 
 /*
  * Op mode for preliminary tuning of the follower PID coefficients (located in the drive base
@@ -32,21 +32,21 @@ public class BackAndForth extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Robot drive = new Robot(hardwareMap);
+        Robot robot = new Robot(hardwareMap);
 
-        Trajectory trajectoryForward = drive.trajectoryBuilder(new Pose2d())
+        Trajectory trajectoryForward = robot.drive.trajectoryBuilder(new Pose2d())
                 .forward(DISTANCE)
                 .build();
 
-        Trajectory trajectoryBackward = drive.trajectoryBuilder(trajectoryForward.end())
+        Trajectory trajectoryBackward = robot.drive.trajectoryBuilder(trajectoryForward.end())
                 .back(DISTANCE)
                 .build();
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            drive.followTrajectory(trajectoryForward);
-            drive.followTrajectory(trajectoryBackward);
+            robot.drive.followTrajectory(trajectoryForward);
+            robot.drive.followTrajectory(trajectoryBackward);
         }
     }
 }

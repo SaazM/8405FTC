@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.subsytems.Robot;
 
 import java.util.Objects;
 
@@ -31,9 +31,9 @@ public class MaxAngularVeloTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Robot drive = new Robot(hardwareMap);
+        Robot robot = new Robot(hardwareMap);
 
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -48,18 +48,18 @@ public class MaxAngularVeloTuner extends LinearOpMode {
         telemetry.clearAll();
         telemetry.update();
 
-        drive.setDrivePower(new Pose2d(0, 0, 1));
+        robot.drive.setDrivePower(new Pose2d(0, 0, 1));
         timer = new ElapsedTime();
 
         while (!isStopRequested() && timer.seconds() < RUNTIME) {
-            drive.updatePoseEstimate();
+            robot.drive.updatePoseEstimate();
 
-            Pose2d poseVelo = Objects.requireNonNull(drive.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
+            Pose2d poseVelo = Objects.requireNonNull(robot.drive.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
 
             maxAngVelocity = Math.max(poseVelo.getHeading(), maxAngVelocity);
         }
 
-        drive.setDrivePower(new Pose2d());
+        robot.drive.setDrivePower(new Pose2d());
 
         telemetry.addData("Max Angular Velocity (rad)", maxAngVelocity);
         telemetry.addData("Max Angular Velocity (deg)", Math.toDegrees(maxAngVelocity));

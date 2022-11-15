@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subsytems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,6 +9,7 @@ public class Intake {
 
     public Intake(HardwareMap hardwareMap) {
         claw = hardwareMap.get(Servo.class, "intake");
+        claw.resetDeviceConfigurationForOpMode();
     }
 
     public void open() {

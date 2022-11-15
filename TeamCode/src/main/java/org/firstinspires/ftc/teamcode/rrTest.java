@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsytems.Robot;
 
 @TeleOp(name="rrTest")
 public class rrTest extends LinearOpMode {
@@ -16,10 +14,10 @@ public class rrTest extends LinearOpMode {
         Robot robot = new Robot(hardwareMap);
 
         // --- RESET ALL MOTOR POWERS TO 0 --- //
-        robot.leftRear.setPower(0);
-        robot.rightRear.setPower(0);
-        robot.leftFront.setPower(0);
-        robot.rightFront.setPower(0);
+        robot.drive.leftRear.setPower(0);
+        robot.drive.rightRear.setPower(0);
+        robot.drive.leftFront.setPower(0);
+        robot.drive.rightFront.setPower(0);
 
         waitForStart();
 
@@ -28,27 +26,27 @@ public class rrTest extends LinearOpMode {
         //temporary variables
         int fieldCentricTrigger = 0;
         boolean liftToggled = true;
-        robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.motorLiftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lift.leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.lift.rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.lift.rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         waitForStart();
         double startTime = System.currentTimeMillis();
-        while (((robot.motorLiftRight.getCurrentPosition() < 1000 || robot.motorLiftRight.getCurrentPosition() >1000)&&(robot.motorLiftLeft.getCurrentPosition() < 1000 || robot.motorLiftLeft.getCurrentPosition() >1000))){
-            robot.motorLiftRight.setTargetPosition(1000);
-            robot.motorLiftLeft.setTargetPosition(1000);
-            robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.motorLiftRight.setPower(1);
-            robot.motorLiftLeft.setPower(1);
+        while (((robot.lift.leftLift.getCurrentPosition() < 1000 || robot.lift.leftLift.getCurrentPosition() >1000)&&(robot.lift.rightLift.getCurrentPosition() < 1000 || robot.lift.rightLift.getCurrentPosition() >1000))){
+            robot.lift.leftLift.setTargetPosition(1000);
+            robot.lift.rightLift.setTargetPosition(1000);
+            robot.lift.leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.lift.leftLift.setPower(1);
+            robot.lift.rightLift.setPower(1);
             if(System.currentTimeMillis()-startTime>1000){
                 double startTime2 = System.currentTimeMillis();
                 while(true){
-                    robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    robot.motorLiftRight.setPower(1);
-                    robot.motorLiftLeft.setPower(1);
+                    robot.lift.leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.lift.rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.lift.leftLift.setPower(1);
+                    robot.lift.rightLift.setPower(1);
 
                     if(System.currentTimeMillis()-startTime2>10000) {
                         break;

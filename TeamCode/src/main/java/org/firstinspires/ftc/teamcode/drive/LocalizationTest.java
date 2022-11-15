@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.subsytems.Robot;
 
 /**
  * This is a simple teleop routine for testing localization. Drive the robot around like a normal
@@ -18,14 +18,14 @@ import org.firstinspires.ftc.teamcode.Robot;
 public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Robot drive = new Robot(hardwareMap);
+        Robot robot = new Robot(hardwareMap);
 
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
 
         while (!isStopRequested()) {
-            drive.setWeightedDrivePower(
+            robot.drive.setWeightedDrivePower(
                     new Pose2d(
                             -gamepad1.left_stick_y,
                             -gamepad1.left_stick_x,
@@ -33,9 +33,9 @@ public class LocalizationTest extends LinearOpMode {
                     )
             );
 
-            drive.update();
+            robot.drive.update();
 
-            Pose2d poseEstimate = drive.getPoseEstimate();
+            Pose2d poseEstimate = robot.drive.getPoseEstimate();
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());

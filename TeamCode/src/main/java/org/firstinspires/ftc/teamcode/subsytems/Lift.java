@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subsytems;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
 
@@ -113,5 +113,9 @@ public class Lift {
                 break;
             }
         }
+    }
+
+    public boolean getKill() {
+        return kill;
     }
 }

@@ -3,7 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import org.firstinspires.ftc.teamcode.subsytems.Robot;
 
 @TeleOp(name="DriveOfficial")
 public class MecanumTeleOp extends LinearOpMode {
@@ -29,26 +30,18 @@ public class MecanumTeleOp extends LinearOpMode {
         // Figure out if we're left or right
         Robot robot = new Robot(hardwareMap);
 
-        // --- RESET ALL MOTOR POWERS TO 0 --- //
-        robot.leftRear.setPower(0);
-        robot.rightRear.setPower(0);
-        robot.leftFront.setPower(0);
-        robot.rightFront.setPower(0);
-
         waitForStart();
 
         if (isStopRequested()) return;
 
-        //temporary variables
-
-        robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.motorLiftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.motorLiftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lift.leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.lift.rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.lift.leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lift.rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         double toPosition = -1;
         boolean isBusy = false;
-        double startTime= System.currentTimeMillis();
+        double startTime = System.currentTimeMillis();
         while (opModeIsActive()) {
 
             double power = -gamepad1.left_stick_y; // Remember, this is reversed!
@@ -56,22 +49,22 @@ public class MecanumTeleOp extends LinearOpMode {
             double turn = gamepad1.right_stick_x;
             //Field Centric
             if (gamepad1.right_bumper) {
-                robot.isFieldCentric = !robot.isFieldCentric;
+                robot.drive.isFieldCentric = !robot.drive.isFieldCentric;
             }
 
             //Speed Multiplier
             double speedMultiplier = 0.5;
 
             if (gamepad1.left_bumper) {
-                robot.setSpeedMultiplier(1); // reset it back to slow mode
+                robot.drive.setSpeedMultiplier(1); // reset it back to slow mode
             } else {
-                robot.setSpeedMultiplier(0.5);
+                robot.drive.setSpeedMultiplier(0.5);
             }
 
-            if (robot.isFieldCentric) {
-                robot.fieldCentric(power, strafe, turn);
+            if (robot.drive.isFieldCentric) {
+                robot.drive.fieldCentric(power, strafe, turn);
             } else {
-                robot.mecanum(power, strafe, turn);
+                robot.drive.driveCentric(power, strafe, turn);
             }
 
             //Claw Movements
@@ -87,13 +80,12 @@ public class MecanumTeleOp extends LinearOpMode {
 
             //telemetry.addData("Power: ", power);
             //telemetry.addData("Strafe: ", strafe); //0 is straight forward, 1 is straight to the side
-            telemetry.addData("IMU Heading: ", -robot.imu.getAngularOrientation().firstAngle);
-            telemetry.addData("Field Centric: ", robot.isFieldCentric);
-            telemetry.addData("speed multiplier: ", robot.speedMultiplier);
-            telemetry.addData("LEncoder", robot.motorLiftLeft.getCurrentPosition());
-            telemetry.addData("REncoder", robot.motorLiftRight.getCurrentPosition());
-            telemetry.addData("Lift in Moving: ", robot.motorLiftRight.isBusy());
-            telemetry.addData("Kill: ", robot.lift.kill);
+            telemetry.addData("IMU Heading: ", -robot.drive.imu.getAngularOrientation().firstAngle);
+            telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);
+            telemetry.addData("speed multiplier: ", robot.drive.speedMultiplier);
+            telemetry.addData("LEncoder", robot.lift.leftLift.getCurrentPosition());
+            telemetry.addData("REncoder", robot.lift.rightLift.getCurrentPosition());
+            telemetry.addData("Kill: ", robot.lift.getKill());
             telemetry.addData("Start Time: ", startTime);
             telemetry.addData("Time: ", System.currentTimeMillis());
 

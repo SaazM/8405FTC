@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.subsytems.Robot;
 
 import java.util.List;
 
@@ -72,7 +72,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        Robot drive = new Robot(hardwareMap);
+        Robot robot = new Robot(hardwareMap);
 
         Mode mode = Mode.TUNING_MODE;
 
@@ -81,7 +81,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
         double lastKd = MOTOR_VELO_PID.d;
         double lastKf = MOTOR_VELO_PID.f;
 
-        drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
+        robot.drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
 
         NanoClock clock = NanoClock.system();
 
@@ -105,7 +105,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
                 case TUNING_MODE:
                     if (gamepad1.y) {
                         mode = Mode.DRIVER_MODE;
-                        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     }
 
                     // calculate and set the motor power
@@ -120,9 +120,9 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
                     MotionState motionState = activeProfile.get(profileTime);
                     double targetPower = kV * motionState.getV();
-                    drive.setDrivePower(new Pose2d(targetPower, 0, 0));
+                    robot.drive.setDrivePower(new Pose2d(targetPower, 0, 0));
 
-                    List<Double> velocities = drive.getWheelVelocities();
+                    List<Double> velocities = robot.drive.getWheelVelocities();
 
                     // update telemetry
                     telemetry.addData("targetVelocity", motionState.getV());
@@ -136,7 +136,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
                     break;
                 case DRIVER_MODE:
                     if (gamepad1.b) {
-                        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        robot.drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
                         mode = Mode.TUNING_MODE;
                         movingForwards = true;
@@ -144,7 +144,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
                         profileStart = clock.seconds();
                     }
 
-                    drive.setWeightedDrivePower(
+                    robot.drive.setWeightedDrivePower(
                             new Pose2d(
                                     -gamepad1.left_stick_y,
                                     -gamepad1.left_stick_x,
@@ -156,7 +156,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
             if (lastKp != MOTOR_VELO_PID.p || lastKd != MOTOR_VELO_PID.d
                     || lastKi != MOTOR_VELO_PID.i || lastKf != MOTOR_VELO_PID.f) {
-                drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
+                robot.drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
 
                 lastKp = MOTOR_VELO_PID.p;
                 lastKi = MOTOR_VELO_PID.i;
