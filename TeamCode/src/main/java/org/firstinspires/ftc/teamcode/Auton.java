@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import java.lang.*;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -25,6 +28,28 @@ public class Auton {
         } else if (tag_id == 3) {
             parkingZone = 3;
         }
+    }
+    public void init(Robot drive) {
+        TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
+                .forward(30)
+                .strafeRight(20)
+                .build();
+        drive.followTrajectorySequenceAsync(trajSeq1);
+        drive.update();
+    }
+
+    public void loop(Robot drive, HardwareMap hardwareMap) {
+        init(drive);
+        DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
+        DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
+        goToMediumGoal(liftLeft, liftRight);
+
+        drive.update();
+    }
+
+
+    public void runAutonAsync(Robot drive, HardwareMap hardwareMap) {
+        loop(drive, hardwareMap);
     }
 
     public void runAutonParkOnly(Robot drive, HardwareMap hardwareMap) {

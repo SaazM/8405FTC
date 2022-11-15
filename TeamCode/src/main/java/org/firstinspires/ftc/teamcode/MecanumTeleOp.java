@@ -178,15 +178,6 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.update();
         }
     }
-    private static void liftToPosition(Robot robot, int pos)
-    {
-        robot.motorLiftRight.setTargetPosition(pos);
-        robot.motorLiftLeft.setTargetPosition(pos);
-        robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.motorLiftRight.setPower(0.5);
-        robot.motorLiftLeft.setPower(0.5);
-    }
 
     private static void liftToPosition(Robot robot, int pos_left, int pos_right)
     {

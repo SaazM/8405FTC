@@ -31,12 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
 
 @TeleOp(name="AutonTest")
 //@Disabled
@@ -45,14 +40,9 @@ public class AutonTest extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        Servo intake = hardwareMap.get(Servo.class, "intake");
         waitForStart();
         while(opModeIsActive())
         {
-            intake.setPosition(0.4);
-            //0.7, 0.4(open)
-
         }
-
     }
 }
