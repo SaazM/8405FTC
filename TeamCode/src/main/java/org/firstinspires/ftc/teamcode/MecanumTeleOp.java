@@ -3,8 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.teamcode.robot.Robot;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name="DriveOfficial")
 public class MecanumTeleOp extends LinearOpMode {
@@ -42,11 +41,13 @@ public class MecanumTeleOp extends LinearOpMode {
 
         //temporary variables
 
-        robot.lift.leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.lift.rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.lift.leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.lift.rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.motorLiftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.motorLiftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        double toPosition = -1;
+        boolean isBusy = false;
         double startTime= System.currentTimeMillis();
         while (opModeIsActive()) {
 
@@ -55,19 +56,22 @@ public class MecanumTeleOp extends LinearOpMode {
             double turn = gamepad1.right_stick_x;
             //Field Centric
             if (gamepad1.right_bumper) {
-                robot.drive.switchDrive();
+                robot.isFieldCentric = !robot.isFieldCentric;
             }
+
+            //Speed Multiplier
+            double speedMultiplier = 0.5;
 
             if (gamepad1.left_bumper) {
-                robot.drive.setSpeedMultiplier(1); // reset it back to slow mode
+                robot.setSpeedMultiplier(1); // reset it back to slow mode
             } else {
-                robot.drive.setSpeedMultiplier(0.5);
+                robot.setSpeedMultiplier(0.5);
             }
 
-            if (robot.drive.isFieldCentric) {
-                robot.drive.fieldCentric(power, strafe, turn);
+            if (robot.isFieldCentric) {
+                robot.fieldCentric(power, strafe, turn);
             } else {
-                robot.drive.mecanum(power, strafe, turn);
+                robot.mecanum(power, strafe, turn);
             }
 
             //Claw Movements
@@ -85,9 +89,10 @@ public class MecanumTeleOp extends LinearOpMode {
             //telemetry.addData("Strafe: ", strafe); //0 is straight forward, 1 is straight to the side
             telemetry.addData("IMU Heading: ", -robot.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.isFieldCentric);
-            telemetry.addData("speed multiplier: ", robot.drive.speedMultiplier);
-            telemetry.addData("LEncoder", robot.lift.leftLift.getCurrentPosition());
-            telemetry.addData("REncoder", robot.lift.leftLift.getCurrentPosition());
+            telemetry.addData("speed multiplier: ", robot.speedMultiplier);
+            telemetry.addData("LEncoder", robot.motorLiftLeft.getCurrentPosition());
+            telemetry.addData("REncoder", robot.motorLiftRight.getCurrentPosition());
+            telemetry.addData("Lift in Moving: ", robot.motorLiftRight.isBusy());
             telemetry.addData("Kill: ", robot.lift.kill);
             telemetry.addData("Start Time: ", startTime);
             telemetry.addData("Time: ", System.currentTimeMillis());
