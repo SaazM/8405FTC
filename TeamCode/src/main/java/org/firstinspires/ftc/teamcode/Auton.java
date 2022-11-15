@@ -30,26 +30,25 @@ public class Auton {
         }
     }
     public void init(Robot drive) {
-        TrajectorySequence trajSeq1 = drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(30)
-                .strafeRight(20)
-                .build();
-        drive.followTrajectorySequenceAsync(trajSeq1);
-        drive.update();
+
     }
 
     public void loop(Robot drive, HardwareMap hardwareMap) {
-        init(drive);
-        DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
-        DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
-        goToMediumGoal(liftLeft, liftRight);
-
-        drive.update();
+        Trajectory trajSeq1 = drive.trajectoryBuilder(new Pose2d())
+                .forward(30)
+                .build();
+        drive.followTrajectory(trajSeq1);
+//        init(drive);
     }
 
 
     public void runAutonAsync(Robot drive, HardwareMap hardwareMap) {
         loop(drive, hardwareMap);
+        DcMotorEx liftLeft = hardwareMap.get(DcMotorEx.class, "leftLift");
+        DcMotorEx liftRight = hardwareMap.get(DcMotorEx.class, "rightLift");
+        goToMediumGoal(liftLeft, liftRight);
+
+        drive.update();
     }
 
     public void runAutonParkOnly(Robot drive, HardwareMap hardwareMap) {
