@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 @TeleOp(name="DriveOfficial")
 public class MecanumTeleOp extends LinearOpMode {
@@ -23,62 +24,35 @@ public class MecanumTeleOp extends LinearOpMode {
             return sign * eerp(Math.abs(input), degree, minval, 1);
         }
     }
+
     @Override
     public void runOpMode() throws InterruptedException {
-        // Figure out if we're left or right
-        Robot robot = new Robot(hardwareMap);
 
-        // --- RESET ALL MOTOR POWERS TO 0 --- //
-        robot.leftRear.setPower(0);
-        robot.rightRear.setPower(0);
-        robot.leftFront.setPower(0);
-        robot.rightFront.setPower(0);
+        Robot robot = new Robot(hardwareMap);
 
         waitForStart();
 
         if (isStopRequested()) return;
 
-        //temporary variables
+        robot.lift.reset();
 
-        robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.motorLiftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.motorLiftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        int holding_pos_left = -1;
-        int holding_pos_right = -1;
-        double toPosition = -1;
-        boolean isBusy = false;
-        boolean kill = false;
-        double startTime= System.currentTimeMillis();
+        double startTime = System.currentTimeMillis();
         while (opModeIsActive()) {
 
             double power = -gamepad1.left_stick_y; // Remember, this is reversed!
             double strafe = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double turn = gamepad1.right_stick_x;
-            //Field Centric
-            if (gamepad1.right_bumper) {
-                robot.isFieldCentric = !robot.isFieldCentric;
-            }
 
-            //Speed Multiplier
-            double speedMultiplier = 0.5;
+            if (gamepad1.right_bumper) {
+                robot.drive.switchDrive();
+            }
 
             if (gamepad1.left_bumper) {
-                robot.setSpeedMultipler(1); // reset it back to slow mode
-            } else {
-                robot.setSpeedMultipler(0.5);
+                robot.drive.switchSpeed();
             }
 
+            robot.drive.moveTeleOp(power, strafe, turn);
 
-            if (robot.isFieldCentric) {
-                robot.fieldCentric(power, strafe, turn);
-            } else {
-                robot.mecanum(power, strafe, turn);
-            }
-
-
-            //Claw Movements
             if(gamepad1.cross){
                 robot.intake.close();
             }
@@ -86,105 +60,18 @@ public class MecanumTeleOp extends LinearOpMode {
                 robot.intake.open();
             }
 
+            robot.lift.macros(gamepad1);
 
-            //Lift Macros
-
-            if(gamepad1.square)
-            {
-                startTime = System.currentTimeMillis();
-                kill = false;
-                holding_pos_left = 600;
-                holding_pos_right = 600;
-
-            }
-            else if(gamepad1.circle)
-            {
-                startTime = System.currentTimeMillis();
-                kill = false;
-                holding_pos_left = 380;
-                holding_pos_right = 380;
-
-
-            }
-            else if(gamepad1.dpad_up)
-            {
-                startTime = System.currentTimeMillis();
-                kill = false;
-                holding_pos_left = 135;
-                holding_pos_right = 135;
-            }
-
-            else if(gamepad1.right_trigger > 0.5)
-            {
-                startTime = System.currentTimeMillis();
-                kill=false;
-                robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.motorLiftLeft.setPower(0.5);
-                robot.motorLiftRight.setPower(0.5);
-                holding_pos_left = -1;
-                holding_pos_right = -1;
-            }
-            else if(gamepad1.left_trigger > 0.5)
-            {
-                startTime = System.currentTimeMillis();
-                kill = false;
-                robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.motorLiftLeft.setPower(-0.5);
-                robot.motorLiftRight.setPower(-0.5);
-                holding_pos_left = -1;
-                holding_pos_right = -1;
-            }
-
-
-
-            else if(robot.motorLiftRight.getCurrentPosition() > 30 && robot.motorLiftRight.getMode() == DcMotor.RunMode.RUN_USING_ENCODER)
-            {
-                if(holding_pos_left ==-1)
-                {
-                    holding_pos_left = robot.motorLiftLeft.getCurrentPosition();
-                    holding_pos_right = robot.motorLiftRight.getCurrentPosition();
-                }
-            }
-
-            if(holding_pos_left != -1 && !kill)
-            {
-                liftToPosition(robot, holding_pos_left, holding_pos_right);
-            }
-
-            if(gamepad1.dpad_down || ((System.currentTimeMillis() - startTime)>15000)){
-                liftToPosition(robot, 0, 0);
-                robot.motorLiftRight.setPower(0);
-                robot.motorLiftLeft.setPower(0);
-                kill=true;
-            }
-
-
-
-            //telemetry.addData("Power: ", power);
-            //telemetry.addData("Strafe: ", strafe); //0 is straight forward, 1 is straight to the side
-            telemetry.addData("IMU Heading: ", -robot.imu.getAngularOrientation().firstAngle);
-            telemetry.addData("Field Centric: ", robot.isFieldCentric);
-            telemetry.addData("speed multiplier: ", robot.speedMultiplier);
-            telemetry.addData("LEncoder", robot.motorLiftLeft.getCurrentPosition());
-            telemetry.addData("REncoder", robot.motorLiftRight.getCurrentPosition());
-            telemetry.addData("Lift in Moving: ", robot.motorLiftRight.isBusy());
-            telemetry.addData("Kill: ", kill);
+            telemetry.addData("IMU Heading: ", -robot.drive.imu.getAngularOrientation().firstAngle);
+            telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);
+            telemetry.addData("speed multiplier: ", robot.drive.speedMultiplier);
+            telemetry.addData("LEncoder", robot.lift.leftLift.getCurrentPosition());
+            telemetry.addData("REncoder", robot.lift.rightLift.getCurrentPosition());
+            telemetry.addData("Kill: ", robot.lift.kill);
             telemetry.addData("Start Time: ", startTime);
             telemetry.addData("Time: ", System.currentTimeMillis());
 
             telemetry.update();
         }
-    }
-
-    private static void liftToPosition(Robot robot, int pos_left, int pos_right)
-    {
-        robot.motorLiftRight.setTargetPosition(pos_right);
-        robot.motorLiftLeft.setTargetPosition(pos_left);
-        robot.motorLiftRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.motorLiftLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.motorLiftRight.setPower(0.5);
-        robot.motorLiftLeft.setPower(0.5);
     }
 }
