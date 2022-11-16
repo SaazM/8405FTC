@@ -16,6 +16,6 @@ public class Intake {
     }
 
     public void close() {
-        claw.setPosition(0.4);
+        claw.setPosition(0.6);
     }
 }

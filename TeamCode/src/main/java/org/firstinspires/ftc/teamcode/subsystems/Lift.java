@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gam
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Lift {
@@ -40,7 +41,7 @@ public class Lift {
         leftLift.setPower(0.5);
     }
 
-    public void macros() {
+    public void macros(Gamepad gamepad1) {
         if (gamepad1.square) {
             startTime = System.currentTimeMillis();
             kill = false;
