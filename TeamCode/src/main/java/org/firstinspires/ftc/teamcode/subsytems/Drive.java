@@ -147,8 +147,12 @@ public class Drive extends MecanumDrive {
         rightFront.setPower(0);
     }
 
-    public void setSpeedMultiplier(double x) {
-        speedMultiplier = x;
+    public void moveTeleOp(double power, double strafe, double turn) {
+        if(isFieldCentric) {
+            fieldCentric(power, strafe, turn);
+        } else {
+            driveCentric(power, strafe, turn);
+        }
     }
 
     public void driveCentric(double power, double strafe, double turn) {
@@ -181,6 +185,22 @@ public class Drive extends MecanumDrive {
         rightRear.setPower(backRightPower * speedMultiplier);
     }
 
+    public void switchDrive() {
+        isFieldCentric = !isFieldCentric;
+    }
+
+    public void switchSpeed() {
+        if (speedMultiplier == 0.5) {
+            speedMultiplier = 1;
+        } else if (speedMultiplier == 1) {
+            speedMultiplier = 0.5;
+        }
+    }
+
+    public void setSpeedMultiplier(double x) {
+        speedMultiplier = x;
+    }
+
     public void turnToPosition(double rotation) {
         while(this.imu.getAngularOrientation().firstAngle < rotation) {
             this.driveCentric(0, 0, 1);
@@ -191,7 +211,6 @@ public class Drive extends MecanumDrive {
     /* ---------- ROADRUNNER METHODS ---------- */
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
-
         return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, double maxVelo, double maxAccel) {

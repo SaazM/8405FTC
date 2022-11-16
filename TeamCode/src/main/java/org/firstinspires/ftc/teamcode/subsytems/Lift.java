@@ -13,7 +13,7 @@ public class Lift {
     public double startTime;
     public int holdingPosLeft;
     public int holdingPosRight;
-    boolean kill;
+    public boolean kill;
 
     public Lift(HardwareMap hardwareMap) {
         rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
@@ -115,7 +115,10 @@ public class Lift {
         }
     }
 
-    public boolean getKill() {
-        return kill;
+    public void reset() {
+        leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }

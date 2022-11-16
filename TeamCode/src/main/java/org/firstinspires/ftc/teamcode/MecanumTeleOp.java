@@ -25,49 +25,35 @@ public class MecanumTeleOp extends LinearOpMode {
             return sign * eerp(Math.abs(input), degree, minval, 1);
         }
     }
+
     @Override
     public void runOpMode() throws InterruptedException {
-        // Figure out if we're left or right
+
         Robot robot = new Robot(hardwareMap);
 
         waitForStart();
 
         if (isStopRequested()) return;
 
-        robot.lift.leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.lift.rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.lift.leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.lift.rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.lift.reset();
 
-        double toPosition = -1;
-        boolean isBusy = false;
         double startTime = System.currentTimeMillis();
         while (opModeIsActive()) {
 
             double power = -gamepad1.left_stick_y; // Remember, this is reversed!
             double strafe = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double turn = gamepad1.right_stick_x;
-            //Field Centric
-            if (gamepad1.right_bumper) {
-                robot.drive.isFieldCentric = !robot.drive.isFieldCentric;
-            }
 
-            //Speed Multiplier
-            double speedMultiplier = 0.5;
+            if (gamepad1.right_bumper) {
+                robot.drive.switchDrive();
+            }
 
             if (gamepad1.left_bumper) {
-                robot.drive.setSpeedMultiplier(1); // reset it back to slow mode
-            } else {
-                robot.drive.setSpeedMultiplier(0.5);
+                robot.drive.switchSpeed();
             }
 
-            if (robot.drive.isFieldCentric) {
-                robot.drive.fieldCentric(power, strafe, turn);
-            } else {
-                robot.drive.driveCentric(power, strafe, turn);
-            }
+            robot.drive.moveTeleOp(power, strafe, turn);
 
-            //Claw Movements
             if(gamepad1.cross){
                 robot.intake.close();
             }
@@ -75,17 +61,14 @@ public class MecanumTeleOp extends LinearOpMode {
                 robot.intake.open();
             }
 
-            //Lift Macros
             robot.lift.macros();
 
-            //telemetry.addData("Power: ", power);
-            //telemetry.addData("Strafe: ", strafe); //0 is straight forward, 1 is straight to the side
             telemetry.addData("IMU Heading: ", -robot.drive.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);
             telemetry.addData("speed multiplier: ", robot.drive.speedMultiplier);
             telemetry.addData("LEncoder", robot.lift.leftLift.getCurrentPosition());
             telemetry.addData("REncoder", robot.lift.rightLift.getCurrentPosition());
-            telemetry.addData("Kill: ", robot.lift.getKill());
+            telemetry.addData("Kill: ", robot.lift.kill);
             telemetry.addData("Start Time: ", startTime);
             telemetry.addData("Time: ", System.currentTimeMillis());
 
