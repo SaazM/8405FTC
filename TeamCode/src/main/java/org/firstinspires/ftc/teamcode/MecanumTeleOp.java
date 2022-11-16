@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.subsytems.Robot;
 
@@ -61,7 +60,7 @@ public class MecanumTeleOp extends LinearOpMode {
                 robot.intake.open();
             }
 
-            robot.lift.macros();
+            robot.lift.macros(gamepad1);
 
             telemetry.addData("IMU Heading: ", -robot.drive.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);

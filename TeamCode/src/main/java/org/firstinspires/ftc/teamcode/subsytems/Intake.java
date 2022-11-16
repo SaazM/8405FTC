@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsytems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
 
 public class Intake {
     public Servo claw;
@@ -17,6 +16,6 @@ public class Intake {
     }
 
     public void close() {
-        claw.setPosition(0.4);
+        claw.setPosition(0.6);
     }
 }
