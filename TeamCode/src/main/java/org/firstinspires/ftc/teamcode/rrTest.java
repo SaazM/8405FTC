@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.subsytems.Robot;
+import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 @TeleOp(name="rrTest")
 public class rrTest extends LinearOpMode {

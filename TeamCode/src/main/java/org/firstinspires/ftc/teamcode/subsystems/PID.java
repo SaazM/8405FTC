@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsytems;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 public class PID {
     private double Kp;
