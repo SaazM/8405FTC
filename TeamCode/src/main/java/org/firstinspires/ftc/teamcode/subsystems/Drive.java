@@ -188,16 +188,12 @@ public class Drive extends MecanumDrive {
         isFieldCentric = !isFieldCentric;
     }
 
-    public void switchSpeed() {
-        if (speedMultiplier == 0.5) {
-            speedMultiplier = 1;
-        } else if (speedMultiplier == 1) {
-            speedMultiplier = 0.5;
-        }
+    public void slowMode() {
+        speedMultiplier = 0.8;
     }
 
-    public void setSpeedMultiplier(double x) {
-        speedMultiplier = x;
+    public void fastMode() {
+        speedMultiplier = 1;
     }
 
     public void turnToPosition(double rotation) {

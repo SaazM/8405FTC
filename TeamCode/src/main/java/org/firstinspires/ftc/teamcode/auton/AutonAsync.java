@@ -37,11 +37,10 @@ public class AutonAsync extends OpMode
 
         TrajectorySequence trajSeq1 = robot.drive.trajectorySequenceBuilder(new Pose2d())
             .strafeLeft(49)
-
-            .addDisplacementMarker(() -> {intake.open();})
-            .build();
+                .build();
 
         robot.drive.followTrajectorySequenceAsync(trajSeq1);
+        intake.open();
 
     }
     public void lift_thingies()
@@ -95,7 +94,7 @@ public class AutonAsync extends OpMode
 
 
     public void goToMediumGoal(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 400, 400);
+        liftToPosition(left,right, 600, 600);
     }
 
     @Override

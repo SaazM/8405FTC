@@ -35,16 +35,16 @@ public class Lift {
         leftLift.setTargetPosition(posRight);
         rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightLift.setPower(0.5);
-        leftLift.setPower(0.5);
+        rightLift.setPower(1);
+        leftLift.setPower(1);
     }
 
     public void macros(Gamepad gamepad1) {
         if (gamepad1.square) {
             startTime = System.currentTimeMillis();
             kill = false;
-            holdingPosLeft = 600;
-            holdingPosRight = 600;
+            holdingPosLeft = 620;
+            holdingPosRight = 620;
         } else if (gamepad1.circle) {
             startTime = System.currentTimeMillis();
             kill = false;
@@ -60,8 +60,8 @@ public class Lift {
             kill = false;
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftLift.setPower(0.5);
-            rightLift.setPower(0.5);
+            leftLift.setPower(1);
+            rightLift.setPower(1);
             holdingPosLeft = -1;
             holdingPosRight = -1;
         } else if (gamepad1.left_trigger > 0.5) {
@@ -69,8 +69,8 @@ public class Lift {
             kill = false;
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftLift.setPower(-0.5);
-            rightLift.setPower(-0.5);
+            leftLift.setPower(-1);
+            rightLift.setPower(-1);
             holdingPosLeft = -1;
             holdingPosRight = -1;
         } else if (rightLift.getCurrentPosition() > 30 && rightLift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
@@ -84,7 +84,7 @@ public class Lift {
             liftToPosition(holdingPosLeft, holdingPosRight);
         }
 
-        if(gamepad1.dpad_down || ((System.currentTimeMillis() - startTime)>15000)) {
+        if(gamepad1.right_bumper || ((System.currentTimeMillis() - startTime)>15000)) {
             liftToPosition(0, 0);
             rightLift.setPower(0);
             leftLift.setPower(0);

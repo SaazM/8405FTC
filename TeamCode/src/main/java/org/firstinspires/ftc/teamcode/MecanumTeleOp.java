@@ -43,21 +43,18 @@ public class MecanumTeleOp extends LinearOpMode {
             double strafe = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double turn = gamepad1.right_stick_x;
 
-            if (gamepad1.right_bumper) {
-                robot.drive.switchDrive();
-            }
-
             if (gamepad1.left_bumper) {
-                robot.drive.switchSpeed();
+                robot.drive.fastMode();
+            } else {
+                robot.drive.slowMode();
             }
 
             robot.drive.moveTeleOp(power, strafe, turn);
 
-            if(gamepad1.cross){
-                robot.intake.close();
-            }
-            if(gamepad1.triangle){
-                robot.intake.open();
+            if (gamepad1.cross) {
+                robot.intake.moveClaw();
+            } else {
+                robot.intake.resetCounter();
             }
 
             robot.lift.macros(gamepad1);
