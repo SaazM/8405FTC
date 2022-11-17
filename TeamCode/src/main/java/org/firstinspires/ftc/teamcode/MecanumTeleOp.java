@@ -44,9 +44,9 @@ public class MecanumTeleOp extends LinearOpMode {
             double turn = gamepad1.right_stick_x;
 
             if (gamepad1.left_bumper) {
-                robot.drive.fastMode();
-            } else {
                 robot.drive.slowMode();
+            } else {
+                robot.drive.fastMode();
             }
 
             robot.drive.moveTeleOp(power, strafe, turn);

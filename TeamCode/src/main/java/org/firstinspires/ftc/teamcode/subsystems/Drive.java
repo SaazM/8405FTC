@@ -67,7 +67,7 @@ public class Drive extends MecanumDrive {
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
-    public double speedMultiplier = 0.5;
+    public double speedMultiplier = 1;
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -189,7 +189,7 @@ public class Drive extends MecanumDrive {
     }
 
     public void slowMode() {
-        speedMultiplier = 0.8;
+        speedMultiplier = 0.5;
     }
 
     public void fastMode() {
