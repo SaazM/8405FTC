@@ -16,19 +16,19 @@ public class Intake {
     }
 
     public void open() {
-        claw.setPosition(0.4);
+        claw.setPosition(0.3);
     }
 
     public void close() {
-        claw.setPosition(0.9);
+        claw.setPosition(1);
     }
 
     public void moveClaw() {
         if (counter == 0) {
             if (open) {
-                claw.setPosition(0.9);
+                open();
             } else {
-                claw.setPosition(0.4);
+                close();
             }
             open = !open;
         }

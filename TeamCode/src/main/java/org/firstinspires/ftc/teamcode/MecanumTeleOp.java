@@ -39,8 +39,8 @@ public class MecanumTeleOp extends LinearOpMode {
         double startTime = System.currentTimeMillis();
         while (opModeIsActive()) {
 
-            double power = -gamepad1.left_stick_y; // Remember, this is reversed!
-            double strafe = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            double power = -gamepad1.left_stick_y; // remember this is reversed
+            double strafe = gamepad1.left_stick_x * 1.1; // counteract imperfect strafing
             double turn = gamepad1.right_stick_x;
 
             if (gamepad1.left_bumper) {
@@ -65,6 +65,7 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.addData("LEncoder", robot.lift.leftLift.getCurrentPosition());
             telemetry.addData("REncoder", robot.lift.rightLift.getCurrentPosition());
             telemetry.addData("Kill: ", robot.lift.kill);
+            telemetry.addData("Open? ", robot.intake.open);
             telemetry.addData("Start Time: ", startTime);
             telemetry.addData("Time: ", System.currentTimeMillis());
 

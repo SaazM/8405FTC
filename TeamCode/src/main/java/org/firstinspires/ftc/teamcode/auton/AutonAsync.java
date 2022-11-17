@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.auton;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,8 +21,8 @@ public class AutonAsync extends OpMode
     int finalID = -1;
     DcMotorEx liftLeft;
     DcMotorEx liftRight;
-    TrajectorySequence trajSeq2;
-    TrajectorySequence trajSeq3;
+    Trajectory trajSeq2;
+    Trajectory trajSeq3;
     Intake intake;
     int sequenceON = 0;
 
@@ -35,12 +37,22 @@ public class AutonAsync extends OpMode
         intake.close();
         sequenceON++;
 
-        TrajectorySequence trajSeq1 = robot.drive.trajectorySequenceBuilder(new Pose2d())
-            .strafeLeft(49)
+        Trajectory trajSeq1 = robot.drive.trajectoryBuilder(new Pose2d())
+                .strafeTo(new Vector2d(0.0, 49))
+                .addDisplacementMarker(() -> {robot.drive.followTrajectoryAsync(trajSeq2);})
+                .build();
+        trajSeq2 = robot.drive.trajectoryBuilder(trajSeq1.end())
+                .forward(2.489)
+                .addDisplacementMarker(() -> {while((robot.lift.rightLift.getCurrentPosition() < 610 || robot.lift.rightLift.getCurrentPosition() > 630)
+                    &&robot.lift.leftLift.getCurrentPosition() < 610 || robot.lift.leftLift.getCurrentPosition() > 630){
+                    telemetry.addData("waiting", robot.lift.rightLift.getCurrentPosition());
+                    telemetry.update();
+                    }
+                    robot.intake.open();})
                 .build();
 
-        robot.drive.followTrajectorySequenceAsync(trajSeq1);
-        intake.open();
+        robot.drive.followTrajectoryAsync(trajSeq1);
+
 
     }
     public void lift_thingies()
@@ -77,8 +89,8 @@ public class AutonAsync extends OpMode
             left.setTargetPosition(pos_left);
             right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            right.setPower(1);
-            left.setPower(1);
+            right.setPower(0.5);
+            left.setPower(0.5);
         }
         else
         {
@@ -94,7 +106,7 @@ public class AutonAsync extends OpMode
 
 
     public void goToMediumGoal(DcMotorEx left, DcMotorEx right) {
-        liftToPosition(left,right, 600, 600);
+        liftToPosition(left,right, 620, 620);
     }
 
     @Override
