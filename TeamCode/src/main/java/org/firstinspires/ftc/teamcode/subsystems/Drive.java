@@ -150,11 +150,11 @@ public class Drive extends MecanumDrive {
         if(isFieldCentric) {
             fieldCentric(power, strafe, turn);
         } else {
-            driveCentric(power, strafe, turn);
+            robotCentric(power, strafe, turn);
         }
     }
 
-    public void driveCentric(double power, double strafe, double turn) {
+    public void robotCentric(double power, double strafe, double turn) {
         double denominator = Math.max(Math.abs(power) + Math.abs(strafe) + Math.abs(turn), 1);
         double frontLeftPower = (power + strafe + turn) / denominator;
         double backLeftPower = (power - strafe + turn) / denominator;
@@ -198,7 +198,7 @@ public class Drive extends MecanumDrive {
 
     public void turnToPosition(double rotation) {
         while(this.imu.getAngularOrientation().firstAngle <= rotation) {
-            this.driveCentric(0, 0, 1);
+            this.robotCentric(0, 0, 1);
         }
     }
 
