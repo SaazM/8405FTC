@@ -197,9 +197,8 @@ public class Drive extends MecanumDrive {
     }
 
     public void turnToPosition(double rotation) {
-        while(this.imu.getAngularOrientation().firstAngle < rotation) {
+        while(this.imu.getAngularOrientation().firstAngle <= rotation) {
             this.driveCentric(0, 0, 1);
-            telemetry.addData("Rotation: ", this.imu.getAngularOrientation().firstAngle);
         }
     }
 
