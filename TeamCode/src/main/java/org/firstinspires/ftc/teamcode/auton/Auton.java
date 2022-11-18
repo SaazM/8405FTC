@@ -176,8 +176,6 @@ public class Auton {
             robot.drive.followTrajectory(park);
         }
     }
-<<<<<<< HEAD
-
     public void goToMediumGoal() {
         robot.lift.liftToPosition(620,620);
 
@@ -192,6 +190,4 @@ public class Auton {
         robot.lift.liftToPosition(150,150);
 
     }
-=======
->>>>>>> bf9eca61b72ea9de17a22d8d5b9a448caf16fef0
 }
