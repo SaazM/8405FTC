@@ -30,13 +30,7 @@ public class Auton {
 
     public void runAutonParkOnly() {
 
-        robot.drive.setMotorPowers(0.1,0.1,0.1,0.1);
         robot.intake.close();
-        TrajectorySequence trajSeq = robot.drive.trajectorySequenceBuilder(new Pose2d())
-                .forward(25)
-                .build();
-        robot.drive.followTrajectorySequence(trajSeq);
-
 
 
         if (parkingZone == 1) { // red
@@ -184,17 +178,17 @@ public class Auton {
     }
 
     public void goToMediumGoal() {
-        robot.lift.liftToPositionAuton(620);
+        robot.lift.liftToPosition(620,620);
 
     }
 
     public void goToLowGoal() {
-        robot.lift.liftToPositionAuton(440);
+        robot.lift.liftToPosition(440,440);
 
     }
 
     public void goToTopOfStack() {
-        robot.lift.liftToPositionAuton(150);
+        robot.lift.liftToPosition(150,150);
 
     }
 }

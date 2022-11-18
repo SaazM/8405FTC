@@ -193,7 +193,7 @@ public class Drive extends MecanumDrive {
     }
 
     public void fastMode() {
-        speedMultiplier = 1;
+        speedMultiplier = 0.8;
     }
 
     public void turnToPosition(double rotation) {
