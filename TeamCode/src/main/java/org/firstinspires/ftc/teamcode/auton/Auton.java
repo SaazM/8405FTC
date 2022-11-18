@@ -55,7 +55,7 @@ public class Auton {
                 .strafeLeft(49)
                 .build();
         robot.drive.followTrajectorySequence(trajSeq1);
-        goToMediumGoal();
+        robot.lift.liftToMedium();
         TrajectorySequence trajSeq2 = robot.drive.trajectorySequenceBuilder(trajSeq1.end())
                 .forward(2.5)
                 .build();
@@ -68,7 +68,7 @@ public class Auton {
                 .turn(Math.toRadians(-169))
                 .build();
         robot.drive.followTrajectorySequence(trajSeq3);
-        goToTopOfStack();
+        robot.lift.liftToTopStack();
         Trajectory trajSeq4 = robot.drive.trajectoryBuilder(trajSeq3.end(), 80.4828434*0.95*0.6, 73.17330064499293*0.6)
                 .forward(26.5)
                 .build();
@@ -80,7 +80,7 @@ public class Auton {
                 .build();
         robot.drive.followTrajectorySequence(trajSeq5);
         //low goal
-        goToLowGoal();
+        robot.lift.liftToLow();
         TrajectorySequence trajSeq6 = robot.drive.trajectorySequenceBuilder(trajSeq5.end())
                 .back(20)
                 .turn(Math.toRadians(52))
@@ -123,7 +123,7 @@ public class Auton {
                 .strafeRight(48)
                 .build();
         robot.drive.followTrajectorySequence(trajSeq1);
-        goToMediumGoal();
+        robot.lift.liftToMedium();
         TrajectorySequence trajSeq2 = robot.drive.trajectorySequenceBuilder(trajSeq1.end())
                 .forward(2)
                 .build();
@@ -135,7 +135,7 @@ public class Auton {
                 .turn(Math.toRadians(184))
                 .build();
         robot.drive.followTrajectorySequence(trajSeq3);
-        goToTopOfStack();
+        robot.lift.liftToTopStack();
         Trajectory trajSeq4 = robot.drive.trajectoryBuilder(trajSeq3.end(), 80.4828434*0.95*0.6, 73.17330064499293*0.6)
                 .forward(27)
                 .build();
@@ -146,7 +146,7 @@ public class Auton {
                 .back(1)
                 .build();
         robot.drive.followTrajectorySequence(trajSeq5);
-        goToLowGoal();
+        robot.lift.liftToLow();
         TrajectorySequence trajSeq6 = robot.drive.trajectorySequenceBuilder(trajSeq5.end())
                 .back(20)
                 .turn(Math.toRadians(-51.5))
@@ -176,6 +176,7 @@ public class Auton {
             robot.drive.followTrajectory(park);
         }
     }
+<<<<<<< HEAD
 
     public void goToMediumGoal() {
         robot.lift.liftToPosition(620,620);
@@ -191,4 +192,6 @@ public class Auton {
         robot.lift.liftToPosition(150,150);
 
     }
+=======
+>>>>>>> bf9eca61b72ea9de17a22d8d5b9a448caf16fef0
 }

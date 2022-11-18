@@ -106,6 +106,18 @@ public class Lift {
         liftToPosition(380, 380);
     }
 
+    public void liftToMedium() {
+        liftToPositionAuton(620);
+    }
+
+    public void liftToLow() {
+        liftToPositionAuton(440);
+    }
+
+    public void liftToTopStack() {
+        liftToPositionAuton(150);
+    }
+
     public void reset() {
         leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
