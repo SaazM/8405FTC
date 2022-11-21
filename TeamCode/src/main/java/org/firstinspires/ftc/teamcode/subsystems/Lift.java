@@ -97,25 +97,25 @@ public class Lift {
 
 
     }
-    public void goToMediumGoal()
-    {
-        liftToPosition(630, 630);
-    }
-    public void goToLowGoal()
-    {
-        liftToPosition(380, 380);
-    }
+    public void goToMediumGoal() { liftToPosition(630, 630); }
+
+    public void goToLowGoal()  { liftToPosition(380, 380); }
+
+    public void goToHighGoal() { liftToPosition(700, 700); }
 
     public void liftToMedium() {
-        liftToPositionAuton(620);
+//        liftToPositionAuton(620);
+        liftToPosition(630, 630);
     }
 
     public void liftToLow() {
-        liftToPositionAuton(440);
+//        liftToPositionAuton(440);
+        liftToPosition(380, 380);
     }
 
     public void liftToTopStack() {
-        liftToPositionAuton(150);
+//        liftToPositionAuton(150);
+        liftToPosition(150, 150);
     }
 
     public void reset() {
