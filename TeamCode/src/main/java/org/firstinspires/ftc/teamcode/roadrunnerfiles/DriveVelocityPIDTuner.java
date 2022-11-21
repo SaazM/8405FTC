@@ -17,11 +17,11 @@ import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.kV;
 
 /*
  * This routine is designed to tune the PID coefficients used by the REV Expansion Hubs for closed-
@@ -33,7 +33,7 @@ import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.kV;
  * connected, start the program, and your robot will begin moving forward and backward according to
  * a motion profile. Your job is to graph the velocity errors over time and adjust the PID
  * coefficients (note: the tuning variable will not appear until the op mode finishes initializing).
- * Once you've found a satisfactory set of gains, add them to the DriveConstants.java file under the
+ * Once you've found a satisfactory set of gains, add them to the DriveConstantsCurrent.java file under the
  * MOTOR_VELO_PID field.
  *
  * Recommended tuning process:

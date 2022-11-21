@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
  * and op modes themselves.
  */
 @Config
-public class DriveConstants {
+public class DriveConstantsCurrent {
 
     /*
      * These are motor constants that should be listed online for your motors.
@@ -34,8 +34,7 @@ public class DriveConstants {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(10,0 , 0.8,
-            14.25);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(10,0 , 0.8, 14.25);
 
     /*
      * These are physical constants that can be determined from your robot (including the track

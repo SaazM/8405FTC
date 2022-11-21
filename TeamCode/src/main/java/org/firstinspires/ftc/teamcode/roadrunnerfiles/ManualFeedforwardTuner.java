@@ -17,12 +17,12 @@ import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 import java.util.Objects;
 
-import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.kA;
+import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.kStatic;
+import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.kV;
 
 /*
  * This routine is designed to tune the open-loop feedforward coefficients. Although it may seem unnecessary,
@@ -33,7 +33,7 @@ import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstants.kV;
  * you are using the Control Hub. Once you've successfully connected, start the program, and your
  * robot will begin moving forward and backward according to a motion profile. Your job is to graph
  * the velocity errors over time and adjust the feedforward coefficients. Once you've found a
- * satisfactory set of gains, add them to the appropriate fields in the DriveConstants.java file.
+ * satisfactory set of gains, add them to the appropriate fields in the DriveConstantsCurrent.java file.
  *
  * Pressing Y/Δ (Xbox/PS4) will pause the tuning process and enter driver override, allowing the
  * user to reset the position of the bot in the event that it drifts off the path.
