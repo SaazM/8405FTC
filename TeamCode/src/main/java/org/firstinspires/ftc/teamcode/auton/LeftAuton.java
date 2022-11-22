@@ -22,7 +22,7 @@ public class LeftAuton extends LinearOpMode
         int finalID = init.stopAndSave();
         telemetry.addLine(Integer.toString(finalID));
         telemetry.update();
-        Auton auton = new Auton(true, finalID, new Robot(hardwareMap));
-        auton.runAutonLeft();
+        AutonAsync auton = new AutonAsync();
+        auton.runAutonOffensive();
     }
 }

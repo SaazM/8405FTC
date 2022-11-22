@@ -33,7 +33,7 @@ public class Lift {
 
     public void liftToPosition(int posLeft, int posRight)
     {
-        liftReached = (Math.abs(rightLift.getCurrentPosition() - posRight) < 15) && (Math.abs(leftLift.getCurrentPosition() - posLeft) < 15);
+        liftReached = (Math.abs(rightLift.getCurrentPosition() - posRight) < 20) || (Math.abs(leftLift.getCurrentPosition() - posLeft) < 20);
         rightLift.setTargetPosition(posLeft);
         leftLift.setTargetPosition(posRight);
         rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);

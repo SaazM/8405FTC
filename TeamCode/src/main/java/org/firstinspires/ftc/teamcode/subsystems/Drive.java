@@ -165,7 +165,7 @@ public class Drive extends MecanumDrive {
     }
 
     public void fieldCentric(double power, double strafe, double turn) {
-        double botHeading = -imu.getAngularOrientation().secondAngle;
+        double botHeading = -imu.getAngularOrientation().firstAngle;
         double rotationX = strafe * Math.cos(botHeading) - power * Math.sin(botHeading);
         double rotationY = strafe * Math.sin(botHeading) + power * Math.cos(botHeading);
         double denominator = Math.max(Math.abs(power) + Math.abs(strafe) + Math.abs(turn), 1);

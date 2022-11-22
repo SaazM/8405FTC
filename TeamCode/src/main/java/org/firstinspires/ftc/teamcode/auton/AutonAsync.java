@@ -38,12 +38,12 @@ public class AutonAsync extends OpMode
     TrajectorySequence waitTrajSeq;
 
 
-    public void runAutonAsyncTesting() throws InterruptedException {
+    public void runAutonAsyncTesting() {
         Trajectory trajSeq1 = robot.drive.trajectoryBuilder(new Pose2d())
                 .strafeLeft(49)
                 .addDisplacementMarker(() -> {robot.drive.followTrajectoryAsync(trajSeq2);})
                 .build();
-        Trajectory trajSeq2 = robot.drive.trajectoryBuilder(trajSeq1.end())
+        trajSeq2 = robot.drive.trajectoryBuilder(trajSeq1.end())
                 .forward(2.5)
                 .addDisplacementMarker(() -> {
                     startTime = System.currentTimeMillis();
@@ -102,46 +102,86 @@ public class AutonAsync extends OpMode
         robot.drive.followTrajectoryAsync(trajSeq1);
     }
 
-    // --- START OF OFFENSIVE AUTON AGAINST GOOD TEAMS --- //
-    TrajectorySequence ts1;
-    TrajectorySequence ts2;
-    TrajectorySequence ts3;
-    TrajectorySequence ts4;
-    TrajectorySequence ts5;
-    TrajectorySequence ts6;
-    TrajectorySequence ts7;
-    TrajectorySequence ts8;
+    public void runAutonHighSpam(){
+        sequenceON = 2;
+        Trajectory trajSeq1 = robot.drive.trajectoryBuilder(new Pose2d())
+                .strafeLeft(75)
+                .addDisplacementMarker(() -> {robot.drive.followTrajectoryAsync(trajSeq2);})
+                .build();
+        trajSeq2 = robot.drive.trajectoryBuilder(trajSeq1.end())
+                .forward(2.5)
+                .addDisplacementMarker(() -> {
+                    startTime = System.currentTimeMillis();
+                    while(!robot.lift.liftReached){
+                        telemetry.addData("waiting ", robot.lift.rightLift.getCurrentPosition());
+                        telemetry.addData("liftReached ", robot.lift.liftReached);
+                        telemetry.update();
+                    }
+                    robot.intake.open();
+                    sequenceON = 4;
+                    robot.drive.followTrajectorySequenceAsync(waitTrajSeq);
+                })
+                .build();
 
+        waitTrajSeq  = robot.drive.trajectorySequenceBuilder(trajSeq2.end())
+                .waitSeconds(1)
+                .strafeRight(13)
+                .turn(Math.toRadians(-150))
+                .build();
+
+        robot.drive.followTrajectoryAsync(trajSeq1);
+    }
+
+    // --- START OF OFFENSIVE AUTON AGAINST GOOD TEAMS --- //
+    Trajectory ts1;
+    Trajectory ts2;
+    Trajectory ts3;
+    Trajectory ts4;
+    Trajectory ts5;
+    Trajectory ts6;
+    Trajectory ts7;
+    Trajectory ts8;
+    public void runAutonTest()
+    {
+        trajSeq3 = robot.drive.trajectorySequenceBuilder(new Pose2d())
+                .strafeLeft(23)
+                .addDisplacementMarker(() -> robot.drive.followTrajectorySequence(waitTrajSeq))
+                .build();
+        waitTrajSeq = robot.drive.trajectorySequenceBuilder(trajSeq3.end())
+                .forward(10)
+                .build();
+        robot.drive.followTrajectorySequenceAsync(trajSeq3);
+    }
     public void runAutonOffensive() {
         // RESET
-        robot.drive.setMotorPowers(0, 0, 0, 0);
-        robot.intake.close();
+
+
 
         // TESTING HOW DISPLACEMENT MARKERS INTERACT WITH TRAJSEQS
 
         // first low goal
-        TrajectorySequence ts1 = robot.drive.trajectorySequenceBuilder(new Pose2d())
+        sequenceON = 2;
+        Trajectory ts1 = robot.drive.trajectoryBuilder(new Pose2d())
                 .strafeLeft(23)
                 .addDisplacementMarker(() -> {
                     startTime = System.currentTimeMillis();
                     while(!robot.lift.liftReached) {
                         telemetry.addData("waiting ", robot.lift.rightLift.getCurrentPosition());
                         telemetry.addData("liftReached ", robot.lift.liftReached);
+                        telemetry.addData("sequence on", sequenceON);
+                        telemetry.addData("math", (Math.abs(robot.lift.rightLift.getCurrentPosition() - 380) < 20) || (Math.abs(robot.lift.leftLift.getCurrentPosition() - 380) < 20));
                         telemetry.update();
                     }
-                    sequenceON = 2;
+
                     robot.intake.open();
-                    robot.drive.followTrajectorySequenceAsync(ts2);
                     sequenceON = 0;
+                    robot.drive.followTrajectoryAsync(ts2);
                 })
                 .build();
 
 
         // get cone from cone stack
-        TrajectorySequence ts2 = robot.drive.trajectorySequenceBuilder(ts1.end())
-                .waitSeconds(5)
-                .strafeLeft(40)
-                .turn(Math.toRadians((-160)))
+        ts2 = robot.drive.trajectoryBuilder(ts1.end())
                 .forward(40)
                 .addDisplacementMarker(() -> {
                     startTime = System.currentTimeMillis();
@@ -152,111 +192,12 @@ public class AutonAsync extends OpMode
                     }
                     sequenceON = 4;
                     robot.intake.close();
-                    robot.drive.followTrajectorySequenceAsync(ts3);
                 })
                 .build();
 
-        // put cone on other low goal
-        TrajectorySequence ts3 = robot.drive.trajectorySequenceBuilder(ts2.end())
-                .waitSeconds(3)
-                .back(24)
-                .turn(Math.toRadians(-90))
-                .forward(5)
-                .addDisplacementMarker(() -> {
-                    startTime = System.currentTimeMillis();
-                    while(!robot.lift.liftReached) {
-                        telemetry.addData("waiting ", robot.lift.rightLift.getCurrentPosition());
-                        telemetry.addData("liftReached ", robot.lift.liftReached);
-                        telemetry.update();
-                    }
-                    sequenceON = 2;
-                    robot.intake.open();
-                    sequenceON = 0;
-                    robot.drive.followTrajectorySequenceAsync(ts4);
-                })
-                .build();
 
-        // go back to cone stack
-       TrajectorySequence ts4 = robot.drive.trajectorySequenceBuilder(ts3.end())
-               .waitSeconds(3)
-               .back(10)
-               .turn(Math.toRadians(90))
-               .forward(24)
-               .addDisplacementMarker(() -> {
-                   startTime = System.currentTimeMillis();
-                   while(!robot.lift.liftReached) {
-                       telemetry.addData("waiting ", robot.lift.rightLift.getCurrentPosition());
-                       telemetry.addData("liftReached ", robot.lift.liftReached);
-                       telemetry.update();
-                   }
-                   sequenceON = 4;
-                   robot.intake.close();
-                   robot.drive.followTrajectorySequenceAsync(ts5);
-               })
 
-               .build();
-
-        // score on medium goal
-        TrajectorySequence ts5 = robot.drive.trajectorySequenceBuilder(ts4.end())
-                .waitSeconds(3)
-                .back(50)
-                .turn(Math.toRadians(-90))
-                .forward(5)
-                .addDisplacementMarker(() -> {
-                    startTime = System.currentTimeMillis();
-                    while(!robot.lift.liftReached) {
-                        telemetry.addData("waiting ", robot.lift.rightLift.getCurrentPosition());
-                        telemetry.addData("liftReached ", robot.lift.liftReached);
-                        telemetry.update();
-                    }
-                    sequenceON = 3;
-                    robot.intake.open();
-                    robot.drive.followTrajectorySequenceAsync(ts6);
-                })
-                .build();
-
-        // go back to cone stack
-        TrajectorySequence ts6 = robot.drive.trajectorySequenceBuilder(ts5.end())
-                .waitSeconds(3)
-                .back(10)
-                .turn(Math.toRadians(90))
-                .forward(50)
-                .addDisplacementMarker(() -> {
-                    startTime = System.currentTimeMillis();
-                    while(!robot.lift.liftReached) {
-                        telemetry.addData("waiting ", robot.lift.rightLift.getCurrentPosition());
-                        telemetry.addData("liftReached ", robot.lift.liftReached);
-                        telemetry.update();
-                    }
-                    sequenceON = 4;
-                    robot.intake.close();
-                    robot.drive.followTrajectorySequenceAsync(ts7);
-                })
-                .build();
-
-        // score on high goal
-        TrajectorySequence ts7 = robot.drive.trajectorySequenceBuilder(ts6.end())
-                .waitSeconds(3)
-                .back(10)
-                .turn(Math.toRadians(180))
-                .forward(65)
-                .turn(Math.toRadians(-90))
-                .forward(10)
-                .addDisplacementMarker(() -> {
-                    startTime = System.currentTimeMillis();
-                    while(!robot.lift.liftReached) {
-                        telemetry.addData("waiting ", robot.lift.rightLift.getCurrentPosition());
-                        telemetry.addData("liftReached ", robot.lift.liftReached);
-                        telemetry.update();
-                    }
-                    sequenceON = 3;
-                    robot.intake.open();
-                    sequenceON = 0;
-                })
-
-                .build();
-
-        robot.drive.followTrajectorySequenceAsync(ts1);
+        robot.drive.followTrajectoryAsync(ts1);
     }
     // --- END OF OFFENSIVE AUTON AGAINST GOOD TEAMS --- //
 
@@ -271,9 +212,8 @@ public class AutonAsync extends OpMode
         liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake = new Intake(hardwareMap);
         intake.close();
-        sequenceON++;
 
-        runAutonLeftHigh();
+        runAutonHighSpam();
     }
 
 
@@ -291,14 +231,14 @@ public class AutonAsync extends OpMode
                 robot.lift.leftLift.setPower(0);
             }
         } else if (sequenceON == 2) {
-            if (System.currentTimeMillis() - startTime <= 10000) {
-                robot.lift.goToLowGoal();
-            }
-            else {
-                robot.lift.liftToPosition(0, 0);
-                robot.lift.rightLift.setPower(0);
-                robot.lift.leftLift.setPower(0);
-            }
+//            if (System.currentTimeMillis() - startTime <= 10000) {
+            robot.lift.goToLowGoal();
+//            }
+//            else {
+//                robot.lift.liftToPosition(0, 0);
+//                robot.lift.rightLift.setPower(0);
+//                robot.lift.leftLift.setPower(0);
+//            }
         } else if (sequenceON == 3) {
             if (System.currentTimeMillis() - startTime <= 10000) {
                 robot.lift.goToHighGoal();
@@ -342,7 +282,6 @@ public class AutonAsync extends OpMode
     @Override
     public void loop() {
         robot.drive.update();
-
         lift_thingies();
         telemetry.addData("STARTED", sequenceON);
         telemetry.update();

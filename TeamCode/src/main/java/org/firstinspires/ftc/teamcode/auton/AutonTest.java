@@ -47,11 +47,8 @@ public class AutonTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Intake intake = new Intake(hardwareMap);
-        waitForStart();
-        while(opModeIsActive())
-        {
-            intake.open();
-        }
+        Robot drive=  new Robot(hardwareMap);
+
+
     }
 }

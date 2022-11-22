@@ -57,6 +57,10 @@ public class MecanumTeleOp extends LinearOpMode {
                 robot.intake.resetCounter();
             }
 
+            if (gamepad1.dpad_down) {
+                robot.drive.switchDrive();
+            }
+
             robot.lift.macros(gamepad1);
 
             telemetry.addData("IMU Heading: ", -robot.drive.imu.getAngularOrientation().firstAngle);
@@ -68,6 +72,7 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.addData("Open? ", robot.intake.open);
             telemetry.addData("Start Time: ", startTime);
             telemetry.addData("Time: ", System.currentTimeMillis());
+            telemetry.addData("IsFieldCentric? ", robot.drive.isFieldCentric);
 
             telemetry.update();
         }
