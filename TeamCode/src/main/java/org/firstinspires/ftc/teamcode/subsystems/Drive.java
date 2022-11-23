@@ -74,7 +74,7 @@ public class Drive extends MecanumDrive {
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
 
-    private TrajectoryFollower follower;
+    public TrajectoryFollower follower;
 
     private List<DcMotorEx> motors;
 
@@ -145,7 +145,10 @@ public class Drive extends MecanumDrive {
         leftFront.setPower(0);
         rightFront.setPower(0);
     }
-
+    public void changeFollowerAccuracy(double timeout, double translational_error, double turn_error)
+    {
+        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(translational_error, translational_error, Math.toRadians(turn_error)), timeout);
+    }
     public void moveTeleOp(double power, double strafe, double turn) {
         if(isFieldCentric) {
             fieldCentric(power, strafe, turn);
