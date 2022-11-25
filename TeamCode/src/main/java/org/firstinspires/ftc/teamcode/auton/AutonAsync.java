@@ -226,7 +226,7 @@ public class AutonAsync extends OpMode
             }
             else
             {
-                robot.lift.liftToPosition(0, 0);
+                robot.lift.liftToPosition(0, 0, 0.3);
                 robot.lift.rightLift.setPower(0);
                 robot.lift.leftLift.setPower(0);
             }
@@ -244,23 +244,23 @@ public class AutonAsync extends OpMode
                 robot.lift.goToHighGoal();
             }
             else {
-                robot.lift.liftToPosition(0, 0);
+                robot.lift.liftToPosition(0, 0, 0.3);
                 robot.lift.rightLift.setPower(0);
                 robot.lift.leftLift.setPower(0);
             }
         } else if (sequenceON == 4) {
             if (System.currentTimeMillis() - startTime <= 10000) {
-                robot.lift.liftToTopStack();
+                //robot.lift.liftToTopStack();
             }
             else {
-                robot.lift.liftToPosition(0, 0);
+                robot.lift.liftToPosition(0, 0, 0.3);
                 robot.lift.rightLift.setPower(0);
                 robot.lift.leftLift.setPower(0);
             }
         }
         else
         {
-            robot.lift.liftToPosition(0, 0);
+            robot.lift.liftToPosition(0, 0, 0.3);
             liftRight.setPower(0);
             liftLeft.setPower(0);
         }

@@ -31,7 +31,7 @@ public class Lift {
         kill = false;
     }
 
-    public void liftToPosition(int posLeft, int posRight)
+    public void liftToPosition(int posLeft, int posRight, double power)
     {
         liftReached = (Math.abs(rightLift.getCurrentPosition() - posRight) < 20) || (Math.abs(leftLift.getCurrentPosition() - posLeft) < 20);
         rightLift.setTargetPosition(posLeft);
@@ -60,21 +60,21 @@ public class Lift {
 
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftLift.setPower(1);
-            rightLift.setPower(1);
+            leftLift.setPower(0.8);
+            rightLift.setPower(0.8);
             holdingPosLeft = -1;
             holdingPosRight = -1;
         } else if (gamepad1.left_trigger > 0.5) {
 
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftLift.setPower(-1);
-            rightLift.setPower(-1);
+            leftLift.setPower(-0.5);
+            rightLift.setPower(-0.5);
             holdingPosLeft = -1;
             holdingPosRight = -1;
         } else if (rightLift.getCurrentPosition() > 30 && rightLift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
             if (holdingPosLeft == -1) {
-                holdingPosLeft = rightLift.getCurrentPosition();
+                holdingPosLeft = leftLift.getCurrentPosition();
                 holdingPosRight = rightLift.getCurrentPosition();
             }
         }
@@ -86,37 +86,33 @@ public class Lift {
         if(gamepad1.right_bumper || ((System.currentTimeMillis() - startTime)>15000)) {
             holdingPosRight = 0;
             holdingPosLeft = 0;
-            liftToPosition(0, 0);
+            liftToPosition(0, 0, 0);
             rightLift.setPower(0);
             leftLift.setPower(0);
             kill = true;
         }
         if(holdingPosLeft != -1 && !kill) {
-            liftToPosition(holdingPosLeft, holdingPosRight);
+            if(holdingPosLeft == leftLift.getCurrentPosition())
+            {
+                liftToPosition(holdingPosLeft, holdingPosRight, 0.2);
+            }
+            liftToPosition(holdingPosLeft, holdingPosRight, 0.8);
         }
 
 
     }
-    public void goToMediumGoal() { liftToPosition(630, 630); }
+    public void goToMediumGoal() { liftToPosition(630, 630, 0.8); }
 
-    public void goToLowGoal()  { liftToPosition(380, 380); }
+    public void goToLowGoal()  { liftToPosition(380, 380, 0.8); }
 
-    public void goToHighGoal() { liftToPosition(700, 700); }
+    public void goToHighGoal() { liftToPosition(700, 700, 0.8); }
 
-    public void liftToMedium() {
-//        liftToPositionAuton(620);
-        liftToPosition(630, 630);
-    }
+    public void liftToMedium() { liftToPosition(630, 630, 0.8); }
 
-    public void liftToLow() {
-//        liftToPositionAuton(440);
-        liftToPosition(380, 380);
-    }
+    public void liftToLow() { liftToPosition(380, 380, 0.8); }
 
-    public void liftToTopStack() {
-//        liftToPositionAuton(150);
-        liftToPosition(150, 150);
-    }
+    public void liftToTopStack() { liftToPosition(180, 180, 0.8); }
+
 
     public void reset() {
         leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

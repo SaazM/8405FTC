@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.RobotTest;
 
@@ -34,10 +35,16 @@ public class NewBotTestingTeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         RobotTest robot = new RobotTest(hardwareMap);
-        DcMotorEx lift = hardwareMap.get(DcMotorEx.class, "lift");
-        lift.setDirection(DcMotorEx.Direction.REVERSE);
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        DcMotorEx leftLift = hardwareMap.get(DcMotorEx.class, "leftLift");
+        DcMotorEx rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
+        leftLift.setDirection(DcMotorEx.Direction.REVERSE);
+        leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        rightLift.setDirection(DcMotorEx.Direction.FORWARD);
+        rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         waitForStart();
 
@@ -54,22 +61,13 @@ public class NewBotTestingTeleOp extends LinearOpMode {
             }
 
             robot.drive.moveTeleOp(power, strafe, turn);
-
-            if (gamepad1.right_trigger > 0) {
-                lift.setPower(1);
-            }
-            else if (gamepad1.left_trigger > 0) {
-                lift.setPower(-1);
-            }
-            else {
-                lift.setPower(0);
-            }
+            robot.lift.macros(gamepad1);
 
             telemetry.addData("IMU Heading: ", -robot.drive.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);
             telemetry.addData("speed multiplier: ", robot.drive.speedMultiplier);
             telemetry.addData("IsFieldCentric? ", robot.drive.isFieldCentric);
-            telemetry.addData("Lift Position", lift.getCurrentPosition());
+            telemetry.addData("LEFT Lift Position", leftLift.getCurrentPosition());
 
             telemetry.update();
         }
