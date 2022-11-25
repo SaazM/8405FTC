@@ -61,13 +61,18 @@ public class NewBotTestingTeleOp extends LinearOpMode {
             }
 
             robot.drive.moveTeleOp(power, strafe, turn);
-            robot.lift.macros(gamepad1);
 
+            //robot.lift.isHolding = false;
+            robot.lift.macros(gamepad1);
             telemetry.addData("IMU Heading: ", -robot.drive.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);
             telemetry.addData("speed multiplier: ", robot.drive.speedMultiplier);
             telemetry.addData("IsFieldCentric? ", robot.drive.isFieldCentric);
             telemetry.addData("LEFT Lift Position", leftLift.getCurrentPosition());
+            telemetry.addData("RIGHT Lift Position", rightLift.getCurrentPosition());
+            telemetry.addData("IsHolding?: ", robot.lift.isHolding);
+            telemetry.addData("HoldingPosLeft: ", robot.lift.holdingPosLeft);
+
 
             telemetry.update();
         }

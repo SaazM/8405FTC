@@ -14,14 +14,22 @@ public class Lift {
     public int holdingPosRight;
     public boolean kill;
     public boolean liftReached = true;//only used in auton
+    public boolean isHolding = false;
 
 
     public Lift(HardwareMap hardwareMap) {
+
+
+
         rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
-        rightLift.setDirection(DcMotor.Direction.FORWARD);
-        rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         leftLift = hardwareMap.get(DcMotorEx.class, "leftLift");
+        rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        rightLift.setDirection(DcMotor.Direction.FORWARD);
+        rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftLift.setDirection(DcMotor.Direction.FORWARD);
         leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -65,7 +73,6 @@ public class Lift {
             holdingPosLeft = -1;
             holdingPosRight = -1;
         } else if (gamepad1.left_trigger > 0.5) {
-
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setPower(-0.5);
@@ -92,14 +99,13 @@ public class Lift {
             kill = true;
         }
         if(holdingPosLeft != -1 && !kill) {
-            if(holdingPosLeft == leftLift.getCurrentPosition())
-            {
-                liftToPosition(holdingPosLeft, holdingPosRight, 0.2);
+            isHolding = true;
+            if (Math.abs(holdingPosLeft-leftLift.getCurrentPosition()) <= 15) {
+                liftToPosition(holdingPosLeft, holdingPosRight, 0.0);
+            } else {
+                liftToPosition(holdingPosLeft, holdingPosRight, 0.8);
             }
-            liftToPosition(holdingPosLeft, holdingPosRight, 0.8);
         }
-
-
     }
     public void goToMediumGoal() { liftToPosition(630, 630, 0.8); }
 
