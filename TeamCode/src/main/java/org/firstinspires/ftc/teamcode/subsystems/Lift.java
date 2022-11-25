@@ -53,8 +53,10 @@ public class Lift {
     public void macros(Gamepad gamepad1) {
         double temp = startTime;
         boolean temp_ = kill;
+        boolean tempHolding = isHolding;
         startTime = System.currentTimeMillis();
         kill = false;
+        isHolding = false;
         if (gamepad1.square) {
             holdingPosLeft = 680;
             holdingPosRight = 680;
@@ -80,6 +82,7 @@ public class Lift {
             holdingPosLeft = -1;
             holdingPosRight = -1;
         } else if (rightLift.getCurrentPosition() > 30 && rightLift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+            isHolding = true;
             if (holdingPosLeft == -1) {
                 holdingPosLeft = leftLift.getCurrentPosition();
                 holdingPosRight = rightLift.getCurrentPosition();
@@ -89,6 +92,7 @@ public class Lift {
         {
             kill = temp_;
             startTime = temp;
+            isHolding = tempHolding;
         }
         if(gamepad1.right_bumper || ((System.currentTimeMillis() - startTime)>15000)) {
             holdingPosRight = 0;
@@ -99,9 +103,8 @@ public class Lift {
             kill = true;
         }
         if(holdingPosLeft != -1 && !kill) {
-            isHolding = true;
-            if (Math.abs(holdingPosLeft-leftLift.getCurrentPosition()) <= 15) {
-                liftToPosition(holdingPosLeft, holdingPosRight, 0.0);
+            if (isHolding) {
+                liftToPosition(holdingPosLeft, holdingPosRight, 0.05);
             } else {
                 liftToPosition(holdingPosLeft, holdingPosRight, 0.8);
             }
