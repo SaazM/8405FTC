@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.RobotTest;
 
-@TeleOp(name="DriveTesting")
-public class NewBotTestingTeleOp extends LinearOpMode {
+@TeleOp(name="New Drive Testing")
+public class NewBotTeleOp extends LinearOpMode {
     private final double inches_per_revolution = 60/25.4*Math.PI; //60 mm * (1 inches)/(25.4 mm) is the diameter of the wheel in inches, *pi for circumference
     private final double ticks_per_revolution = 360*6.0; //4 ticks per cycle & 360 cycle per revolution
     private final double mm_to_inches = 0.03937008;
