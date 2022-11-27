@@ -3,10 +3,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
+import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
-@TeleOp(name="Old TeleOp")
-public class OldBotTeleOp extends LinearOpMode {
+@TeleOp(name="Drive Official")
+public class OfficialTeleOp extends LinearOpMode {
     private final double inches_per_revolution = 60/25.4*Math.PI; //60 mm * (1 inches)/(25.4 mm) is the diameter of the wheel in inches, *pi for circumference
     private final double ticks_per_revolution = 360*6.0; //4 ticks per cycle & 360 cycle per revolution
     private final double mm_to_inches = 0.03937008;
@@ -28,15 +28,12 @@ public class OldBotTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        OldRobot robot = new OldRobot(hardwareMap);
+        Robot robot = new Robot(hardwareMap);
+
+        robot.lift.newBotStart();
 
         waitForStart();
 
-        if (isStopRequested()) return;
-
-        robot.lift.oldBotStart();
-
-        double startTime = System.currentTimeMillis();
         while (opModeIsActive()) {
 
             double power = -gamepad1.left_stick_y; // remember this is reversed
@@ -49,30 +46,25 @@ public class OldBotTeleOp extends LinearOpMode {
                 robot.drive.fastMode();
             }
 
+            if (gamepad1.cross) {
+                robot.intake.outtake();
+            } else {
+                robot.intake.intake();
+            }
+
             robot.drive.moveTeleOp(power, strafe, turn);
 
-            if (gamepad1.cross) {
-                robot.intake.moveClaw();
-            } else {
-                robot.intake.resetCounter();
-            }
-
-            if (gamepad1.dpad_down) {
-                robot.drive.switchDrive();
-            }
-
-            robot.lift.oldMacros(gamepad1);
-
+            //robot.lift.isHolding = false;
+            robot.lift.newMacros(gamepad1);
             telemetry.addData("IMU Heading: ", -robot.drive.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);
             telemetry.addData("speed multiplier: ", robot.drive.speedMultiplier);
-            telemetry.addData("LEncoder", robot.lift.leftLift.getCurrentPosition());
-            telemetry.addData("REncoder", robot.lift.rightLift.getCurrentPosition());
-            telemetry.addData("Kill: ", robot.lift.kill);
-            telemetry.addData("Open? ", robot.intake.open);
-            telemetry.addData("Start Time: ", startTime);
-            telemetry.addData("Time: ", System.currentTimeMillis());
             telemetry.addData("IsFieldCentric? ", robot.drive.isFieldCentric);
+            telemetry.addData("LEFT Lift Position", robot.lift.leftLift.getCurrentPosition());
+            telemetry.addData("RIGHT Lift Position", robot.lift.rightLift.getCurrentPosition());
+            telemetry.addData("IsHolding?: ", robot.lift.isHolding);
+            telemetry.addData("HoldingPosLeft: ", robot.lift.holdingPosLeft);
+
 
             telemetry.update();
         }

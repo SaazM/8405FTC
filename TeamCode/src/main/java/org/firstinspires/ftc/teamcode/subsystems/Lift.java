@@ -13,7 +13,7 @@ public class Lift {
     public int holdingPosLeft;
     public int holdingPosRight;
     public boolean kill;
-    public boolean liftReached = true;//only used in auton
+    public boolean liftReached = true;
     public boolean isHolding = false;
 
     public Lift(HardwareMap hardwareMap) {
@@ -85,9 +85,6 @@ public class Lift {
             isHolding = tempHolding;
         }
         if (gamepad1.right_bumper || ((System.currentTimeMillis() - startTime)>20000)) {
-//            holdingPosRight = 0;
-//            holdingPosLeft = 0;
-//            liftToPosition(0, 0, 0.8);
             rightLift.setPower(0);
             leftLift.setPower(0);
             kill = true;
@@ -101,11 +98,6 @@ public class Lift {
         }
     }
 
-    public void oldMacros(Gamepad gamepad1) {
-
-    }
-
-    // vals not equal for lift sync
     public void liftToMedium() { liftToPosition(2025, 2000, 0.8); }
 
     public void liftToLow() { liftToPosition(1025, 1000, 0.8); }
@@ -113,13 +105,6 @@ public class Lift {
     public void liftToTopStack() { liftToPosition(195, 180, 0.8); }
 
     public void liftToHigh() { liftToPosition(2675, 2650, 0.8); }
-
-    public void oldBotStart() {
-        leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
 
     public void newBotStart() {
         leftLift.setDirection(DcMotorEx.Direction.REVERSE);

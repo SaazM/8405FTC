@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
-import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
+import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 @TeleOp
 public class ParkAuton extends LinearOpMode
@@ -26,7 +26,7 @@ public class ParkAuton extends LinearOpMode
         int finalID = init.stopAndSave();
         telemetry.addLine(Integer.toString(finalID));
         telemetry.update();
-        Auton auton = new Auton(false, finalID, new OldRobot(hardwareMap));
+        Auton auton = new Auton(false, finalID, new Robot(hardwareMap));
         auton.runAutonParkOnly();
     }
 

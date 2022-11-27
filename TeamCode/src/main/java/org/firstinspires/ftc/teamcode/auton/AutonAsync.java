@@ -8,14 +8,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
+import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
 @TeleOp
 public class AutonAsync extends OpMode
 {
-    OldRobot robot;
+    Robot robot;
     int finalID = -1;
     DcMotorEx liftLeft;
     DcMotorEx liftRight;
@@ -50,7 +50,7 @@ public class AutonAsync extends OpMode
                         telemetry.addData("liftReached ", robot.lift.liftReached);
                         telemetry.update();
                     }
-                    robot.intake.open();
+                    robot.intake.outtake();
                     sequenceON++;
                     robot.drive.followTrajectorySequenceAsync(waitTrajSeq);
                 })
@@ -69,7 +69,7 @@ public class AutonAsync extends OpMode
     public void runAutonLeftHigh() {
 
         robot.drive.setMotorPowers(0, 0, 0, 0);
-        robot.intake.close();
+        robot.intake.intake();
         //strafe to high
         trajSeq1 = robot.drive.trajectoryBuilder(new Pose2d())
                 .strafeLeft(63)
@@ -86,7 +86,7 @@ public class AutonAsync extends OpMode
                         telemetry.addData("liftReached ", robot.lift.liftReached);
                         telemetry.update();
                     }
-                    robot.intake.open();
+                    robot.intake.outtake();
                     sequenceON++;
                     robot.drive.followTrajectorySequenceAsync(trajSeq3);
                 })
@@ -115,7 +115,7 @@ public class AutonAsync extends OpMode
                         telemetry.addData("liftReached ", robot.lift.liftReached);
                         telemetry.update();
                     }
-                    robot.intake.open();
+                    robot.intake.outtake();
                     sequenceON = 4;
                     robot.drive.followTrajectorySequenceAsync(waitTrajSeq);
                 })
@@ -171,7 +171,7 @@ public class AutonAsync extends OpMode
                         telemetry.update();
                     }
 
-                    robot.intake.open();
+                    robot.intake.outtake();
                     sequenceON = 0;
                     robot.drive.followTrajectoryAsync(ts2);
                 })
@@ -189,7 +189,7 @@ public class AutonAsync extends OpMode
                         telemetry.update();
                     }
                     sequenceON = 4;
-                    robot.intake.close();
+                    robot.intake.intake();
                 })
                 .build();
 
@@ -203,13 +203,13 @@ public class AutonAsync extends OpMode
     @Override
     public void init() {
         startTime = System.currentTimeMillis();
-        robot = new OldRobot(hardwareMap);
+        robot = new Robot(hardwareMap);
         liftLeft = robot.lift.leftLift;
         liftRight = robot.lift.rightLift;
         liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake = new Intake(hardwareMap);
-        intake.close();
+        intake.intake();
 
         runAutonHighSpam();
     }

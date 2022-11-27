@@ -32,7 +32,7 @@ package org.firstinspires.ftc.teamcode.auton;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
+import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 
 @TeleOp(name="AutonTest")
@@ -41,7 +41,7 @@ public class AutonTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        OldRobot drive=  new OldRobot(hardwareMap);
+        Robot drive=  new Robot(hardwareMap);
 
 
     }

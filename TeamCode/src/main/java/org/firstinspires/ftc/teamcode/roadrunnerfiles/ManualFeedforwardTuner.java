@@ -13,8 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
-
 import java.util.Objects;
 
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.MAX_ACCEL;
@@ -23,6 +21,8 @@ import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurre
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.kA;
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.kStatic;
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.kV;
+
+import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 /*
  * This routine is designed to tune the open-loop feedforward coefficients. Although it may seem unnecessary,
@@ -46,7 +46,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    private OldRobot robot;
+    private Robot robot;
 
     enum Mode {
         DRIVER_MODE,
@@ -70,7 +70,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        robot = new OldRobot(hardwareMap);
+        robot = new Robot(hardwareMap);
 
         mode = Mode.TUNING_MODE;
 

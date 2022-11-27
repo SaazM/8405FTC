@@ -13,8 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
-
 import java.util.List;
 
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.MAX_ACCEL;
@@ -22,6 +20,8 @@ import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurre
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.MOTOR_VELO_PID;
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.RUN_USING_ENCODER;
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.kV;
+
+import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 /*
  * This routine is designed to tune the PID coefficients used by the REV Expansion Hubs for closed-
@@ -72,7 +72,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        OldRobot robot = new OldRobot(hardwareMap);
+        Robot robot = new Robot(hardwareMap);
 
         Mode mode = Mode.TUNING_MODE;
 

@@ -149,6 +149,7 @@ public class Drive extends MecanumDrive {
     {
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(translational_error, translational_error, Math.toRadians(turn_error)), timeout);
     }
+
     public void moveTeleOp(double power, double strafe, double turn) {
         if(isFieldCentric) {
             fieldCentric(power, strafe, turn);
@@ -168,7 +169,7 @@ public class Drive extends MecanumDrive {
     }
 
     public void fieldCentric(double power, double strafe, double turn) {
-        double botHeading = -imu.getAngularOrientation().firstAngle;
+        double botHeading = -imu.getAngularOrientation().thirdAngle;
         double rotationX = strafe * Math.cos(botHeading) - power * Math.sin(botHeading);
         double rotationY = strafe * Math.sin(botHeading) + power * Math.cos(botHeading);
         double denominator = Math.max(Math.abs(power) + Math.abs(strafe) + Math.abs(turn), 1);

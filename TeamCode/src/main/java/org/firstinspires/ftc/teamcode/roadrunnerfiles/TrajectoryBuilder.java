@@ -6,7 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.MarkerCallback;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 
-import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
+import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 import java.util.ArrayList;
 
@@ -14,8 +14,8 @@ public class TrajectoryBuilder {
     //MAJOR UNCERTAINTY IF THIS WORKS, RELIES ON A FEW ASSUMPTIONS
     ArrayList<com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder> requests;
     Pose2d currentPose;
-    OldRobot robot;
-    public TrajectoryBuilder (OldRobot robot)
+    Robot robot;
+    public TrajectoryBuilder (Robot robot)
     {
         requests = new ArrayList<>();
         currentPose = new Pose2d();

@@ -5,14 +5,14 @@ import java.lang.*;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
-import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
+import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 public class Auton {
     private boolean direction;
     private int parkingZone;
-    private OldRobot robot;
-    public Auton(boolean left, int tag_id, OldRobot rob) {
+    private Robot robot;
+    public Auton(boolean left, int tag_id, Robot rob) {
         this.direction = left;
         tag_id++;
         if (tag_id == 2) {
@@ -28,7 +28,7 @@ public class Auton {
 
     public void runAutonParkOnly() {
 
-        robot.intake.close();
+        robot.intake.intake();
 
 
         if (parkingZone == 1) { // red
@@ -47,7 +47,7 @@ public class Auton {
 
     public void runAutonLeft() throws InterruptedException {
         robot.drive.setMotorPowers(0, 0, 0, 0);
-        robot.intake.close();
+        robot.intake.intake();
         //medium goal
         TrajectorySequence trajSeq1 = robot.drive.trajectorySequenceBuilder(new Pose2d())
                 .strafeLeft(49)
@@ -58,7 +58,7 @@ public class Auton {
                 .forward(2.5)
                 .build();
         robot.drive.followTrajectorySequence(trajSeq2);
-        robot.intake.open();
+        robot.intake.outtake();
         //get cone from stack
         TrajectorySequence trajSeq3 = robot.drive.trajectorySequenceBuilder(trajSeq2.end())
                 .back(2.5)
@@ -71,7 +71,7 @@ public class Auton {
                 .forward(26.5)
                 .build();
         robot.drive.followTrajectory(trajSeq4);
-        robot.intake.close();
+        robot.intake.intake();
         TrajectorySequence trajSeq5 = robot.drive.trajectorySequenceBuilder(trajSeq4.end())
                 .waitSeconds(1.5)
                 .back(1)
@@ -85,7 +85,7 @@ public class Auton {
                 .forward(7)
                 .build();
         robot.drive.followTrajectorySequence(trajSeq6);
-        robot.intake.open();
+        robot.intake.outtake();
         TrajectorySequence trajSeq7 = robot.drive.trajectorySequenceBuilder(trajSeq6.end())
                 .waitSeconds(1)
                 .build();
@@ -116,7 +116,7 @@ public class Auton {
 
     public void runAutonRight() throws InterruptedException {
         robot.drive.setMotorPowers(0, 0, 0, 0);
-        robot.intake.close();
+        robot.intake.intake();
         TrajectorySequence trajSeq1 = robot.drive.trajectorySequenceBuilder(new Pose2d())
                 .strafeRight(48)
                 .build();
@@ -126,7 +126,7 @@ public class Auton {
                 .forward(2)
                 .build();
         robot.drive.followTrajectorySequence(trajSeq2);
-        robot.intake.open();
+        robot.intake.outtake();
         TrajectorySequence trajSeq3 = robot.drive.trajectorySequenceBuilder(trajSeq2.end())
                 .back(2)
                 .strafeRight(16)
@@ -138,7 +138,7 @@ public class Auton {
                 .forward(27)
                 .build();
         robot.drive.followTrajectory(trajSeq4);
-        robot.intake.close();
+        robot.intake.intake();
         TrajectorySequence trajSeq5 = robot.drive.trajectorySequenceBuilder(trajSeq4.end())
                 .waitSeconds(1.5)
                 .back(1)
@@ -151,7 +151,7 @@ public class Auton {
                 .forward(4.5)
                 .build();
         robot.drive.followTrajectorySequence(trajSeq6);
-        robot.intake.open();
+        robot.intake.outtake();
         TrajectorySequence trajSeq7 = robot.drive.trajectorySequenceBuilder(trajSeq6.end())
                 .waitSeconds(1)
                 .build();
