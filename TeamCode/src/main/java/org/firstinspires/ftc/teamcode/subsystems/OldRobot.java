@@ -6,12 +6,14 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
-public class RobotTest {
-    public Drive drive;
+public class OldRobot {
+    public Intake intake;
     public Lift lift;
+    public Drive drive;
 
-    public RobotTest(HardwareMap hardwareMap) {
-        drive = new Drive(hardwareMap);
+    public OldRobot(HardwareMap hardwareMap) {
+        intake = new Intake(hardwareMap);
         lift = new Lift(hardwareMap);
+        drive = new Drive(hardwareMap);
     }
 }

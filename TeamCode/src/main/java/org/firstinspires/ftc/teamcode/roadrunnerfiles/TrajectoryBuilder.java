@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode.roadrunnerfiles;
-import java.lang.reflect.Method;
 
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.MarkerCallback;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
-import com.sun.tools.javac.code.Attribute;
 
-
-import org.checkerframework.checker.units.qual.A;
-import org.firstinspires.ftc.teamcode.subsystems.Robot;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
 
 import java.util.ArrayList;
 
@@ -19,8 +14,8 @@ public class TrajectoryBuilder {
     //MAJOR UNCERTAINTY IF THIS WORKS, RELIES ON A FEW ASSUMPTIONS
     ArrayList<com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder> requests;
     Pose2d currentPose;
-    Robot robot;
-    public TrajectoryBuilder (Robot robot)
+    OldRobot robot;
+    public TrajectoryBuilder (OldRobot robot)
     {
         requests = new ArrayList<>();
         currentPose = new Pose2d();

@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
 
 @TeleOp(name="rrTest")
 public class rrTest extends LinearOpMode {
     @Override
     public void runOpMode() {
-        Robot robot = new Robot(hardwareMap);
+        OldRobot robot = new OldRobot(hardwareMap);
 
         // --- RESET ALL MOTOR POWERS TO 0 --- //
         robot.drive.leftRear.setPower(0);

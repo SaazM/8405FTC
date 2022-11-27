@@ -1,23 +1,21 @@
 package org.firstinspires.ftc.teamcode.auton;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.auton.Auton;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
 @TeleOp
 public class AutonAsync extends OpMode
 {
-    Robot robot;
+    OldRobot robot;
     int finalID = -1;
     DcMotorEx liftLeft;
     DcMotorEx liftRight;
@@ -205,7 +203,7 @@ public class AutonAsync extends OpMode
     @Override
     public void init() {
         startTime = System.currentTimeMillis();
-        robot = new Robot(hardwareMap);
+        robot = new OldRobot(hardwareMap);
         liftLeft = robot.lift.leftLift;
         liftRight = robot.lift.rightLift;
         liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -222,7 +220,7 @@ public class AutonAsync extends OpMode
     {
         if(sequenceON == 1) {
             if (System.currentTimeMillis() - startTime <= 10000) {
-                robot.lift.goToMediumGoal();
+                robot.lift.liftToMedium();
             }
             else
             {
@@ -232,7 +230,7 @@ public class AutonAsync extends OpMode
             }
         } else if (sequenceON == 2) {
 //            if (System.currentTimeMillis() - startTime <= 10000) {
-            robot.lift.goToLowGoal();
+            robot.lift.liftToLow();
 //            }
 //            else {
 //                robot.lift.liftToPosition(0, 0);
@@ -241,7 +239,7 @@ public class AutonAsync extends OpMode
 //            }
         } else if (sequenceON == 3) {
             if (System.currentTimeMillis() - startTime <= 10000) {
-                robot.lift.goToHighGoal();
+                robot.lift.liftToHigh();
             }
             else {
                 robot.lift.liftToPosition(0, 0, 0.3);

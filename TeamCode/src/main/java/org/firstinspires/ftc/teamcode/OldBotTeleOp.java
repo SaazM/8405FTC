@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
 
 @TeleOp(name="Old TeleOp")
 public class OldBotTeleOp extends LinearOpMode {
@@ -28,13 +28,13 @@ public class OldBotTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Robot robot = new Robot(hardwareMap);
+        OldRobot robot = new OldRobot(hardwareMap);
 
         waitForStart();
 
         if (isStopRequested()) return;
 
-        robot.lift.reset();
+        robot.lift.oldBotStart();
 
         double startTime = System.currentTimeMillis();
         while (opModeIsActive()) {
@@ -61,7 +61,7 @@ public class OldBotTeleOp extends LinearOpMode {
                 robot.drive.switchDrive();
             }
 
-            robot.lift.macros(gamepad1);
+            robot.lift.oldMacros(gamepad1);
 
             telemetry.addData("IMU Heading: ", -robot.drive.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);

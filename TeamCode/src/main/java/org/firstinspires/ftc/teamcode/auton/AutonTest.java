@@ -29,16 +29,10 @@
 
 package org.firstinspires.ftc.teamcode.auton;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Robot;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
 
 
 @TeleOp(name="AutonTest")
@@ -47,7 +41,7 @@ public class AutonTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Robot drive=  new Robot(hardwareMap);
+        OldRobot drive=  new OldRobot(hardwareMap);
 
 
     }

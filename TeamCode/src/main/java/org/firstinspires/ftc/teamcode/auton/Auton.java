@@ -1,20 +1,18 @@
 package org.firstinspires.ftc.teamcode.auton;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import java.lang.*;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.subsystems.OldRobot;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 public class Auton {
     private boolean direction;
     private int parkingZone;
-    private Robot robot;
-    public Auton(boolean left, int tag_id, Robot rob) {
+    private OldRobot robot;
+    public Auton(boolean left, int tag_id, OldRobot rob) {
         this.direction = left;
         tag_id++;
         if (tag_id == 2) {
