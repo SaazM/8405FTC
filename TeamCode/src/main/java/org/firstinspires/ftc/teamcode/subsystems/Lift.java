@@ -73,13 +73,15 @@ public class Lift {
             rightLift.setPower(-0.3);
             holdingPosLeft = -1;
             holdingPosRight = -1;
-        } else if (rightLift.getCurrentPosition() > 30 && rightLift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+        }
+        else if (rightLift.getCurrentPosition() > 30 && rightLift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
             isHolding = true;
             if (holdingPosLeft == -1) {
                 holdingPosLeft = leftLift.getCurrentPosition();
                 holdingPosRight = rightLift.getCurrentPosition();
             }
-        } else {
+        }
+        else {
             kill = temp_;
             startTime = temp;
             isHolding = tempHolding;
