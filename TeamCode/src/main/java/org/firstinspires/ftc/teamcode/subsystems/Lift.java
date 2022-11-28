@@ -40,8 +40,8 @@ public class Lift {
         leftLift.setTargetPosition(posRight);
         rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightLift.setPower(0.8);
-        leftLift.setPower(0.8);
+        rightLift.setPower(0.3);
+        leftLift.setPower(0.3);
     }
 
     public void newMacros(Gamepad gamepad1) {
@@ -62,8 +62,8 @@ public class Lift {
         } else if (gamepad1.right_trigger > 0.5) {
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftLift.setPower(0.7);
-            rightLift.setPower(0.7);
+            leftLift.setPower(0.3);
+            rightLift.setPower(0.3);
             holdingPosLeft = -1;
             holdingPosRight = -1;
         } else if (gamepad1.left_trigger > 0.5) {
@@ -93,7 +93,7 @@ public class Lift {
             if (isHolding) {
                 liftToPosition(holdingPosLeft, holdingPosRight, 0.05);
             } else {
-                liftToPosition(holdingPosLeft, holdingPosRight, 0.8);
+                liftToPosition(holdingPosLeft, holdingPosRight, 0.3);
             }
         }
     }
