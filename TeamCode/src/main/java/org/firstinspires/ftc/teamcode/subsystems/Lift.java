@@ -16,6 +16,8 @@ public class Lift {
     public boolean liftReached = true;
     public boolean isHolding = false;
 
+
+
     public Lift(HardwareMap hardwareMap) {
         rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
         leftLift = hardwareMap.get(DcMotorEx.class, "leftLift");

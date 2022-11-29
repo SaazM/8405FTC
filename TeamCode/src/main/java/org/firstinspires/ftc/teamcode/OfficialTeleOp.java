@@ -52,7 +52,9 @@ public class OfficialTeleOp extends LinearOpMode {
                 robot.intake.intake();
             }
 
-            robot.drive.moveTeleOp(power, strafe, turn);
+            double liftPos = (double)(robot.lift.leftLift.getCurrentPosition() + robot.lift.rightLift.getCurrentPosition()) / 2;
+
+            robot.drive.moveTeleOp(power, strafe, turn, liftPos);
 
             //robot.lift.isHolding = false;
             robot.lift.newMacros(gamepad1);

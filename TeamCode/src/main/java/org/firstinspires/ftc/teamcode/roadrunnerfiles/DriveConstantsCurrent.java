@@ -35,7 +35,7 @@ public class DriveConstantsCurrent {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(12.5, 0, 2,
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(12.5, 0, 2.5,
             14);
 
     /*
@@ -56,7 +56,7 @@ public class DriveConstantsCurrent {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
+    public static double kV = 1.0 / rpmToVelocity(MAX_RPM); // 0.011522978602550106
     public static double kA = 0;
     public static double kStatic = 0;
 
@@ -90,8 +90,8 @@ public class DriveConstantsCurrent {
      */
     public static double MAX_VEL = 66.76640180569838;
     public static double MAX_ACCEL = 73.17330064499293;
-    public static double MAX_ANG_VEL = Math.toRadians(528.5853892255653*0.3);
-    public static double MAX_ANG_ACCEL = Math.toRadians(528.5853892255653*0.3);
+    public static double MAX_ANG_VEL = Math.toRadians(360);
+    public static double MAX_ANG_ACCEL = Math.toRadians(360);
 
 
     public static double encoderTicksToInches(double ticks) {
