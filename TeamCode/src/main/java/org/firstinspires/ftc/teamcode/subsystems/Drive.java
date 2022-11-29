@@ -7,10 +7,13 @@ import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurre
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.TRACK_WIDTH;
 
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
+import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -61,11 +64,18 @@ public class Drive extends MecanumDrive {
     public DcMotorEx rightRear;
 
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(7, 0, 0);
-    public static double LATERAL_MULTIPLIER = -61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 0);
+    public static double LATERAL_MULTIPLIER = 1;//-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
+
+
+
+
+    private PIDFController turnController;
+    private MotionProfile turnProfile;
+    private double turnStart;
 
     public double speedMultiplier = 1;
 
@@ -83,7 +93,11 @@ public class Drive extends MecanumDrive {
     public Drive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.5, 0.5, Math.toRadians(5)), 0.2);
+
+        turnController = new PIDFController(HEADING_PID);
+        turnController.setInputBounds(0, 2 * Math.PI);
+
+        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.5, 0.5, Math.toRadians(0.01)), 0.2);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
@@ -100,22 +114,22 @@ public class Drive extends MecanumDrive {
 
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
         leftFront.setDirection(DcMotor.Direction.REVERSE); // motor direction
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // Braking behavior
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // Braking behavior
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // We don't want to use PID for the motors using the encoders
 
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
         leftRear.setDirection(DcMotor.Direction.REVERSE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
         rightFront.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
         rightRear.setDirection(DcMotor.Direction.FORWARD);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
@@ -130,7 +144,7 @@ public class Drive extends MecanumDrive {
             setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);

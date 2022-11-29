@@ -50,7 +50,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Robot;
 @Config
 @Autonomous(name="drivePID", group = "drive")
 public class DriveVelocityPIDTuner extends LinearOpMode {
-    public static double DISTANCE = 50; // in
+    public static double DISTANCE = 75; // in
 
     enum Mode {
         DRIVER_MODE,
