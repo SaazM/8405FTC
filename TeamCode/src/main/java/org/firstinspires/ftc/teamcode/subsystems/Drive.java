@@ -59,13 +59,6 @@ public class Drive extends MecanumDrive {
     public DcMotorEx leftRear;
     public DcMotorEx rightFront;
     public DcMotorEx rightRear;
-    private NanoClock clock;
-
-    private Mode mode;
-
-    private PIDFController turnController;
-    private MotionProfile turnProfile;
-    private double turnStart;
 
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(7, 0, 0);
@@ -90,23 +83,7 @@ public class Drive extends MecanumDrive {
     public Drive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
-<<<<<<< HEAD
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.5, 0.5, Math.toRadians(5)), 0.2);
-=======
-
-        clock = NanoClock.system();
-
-        turnController = new PIDFController(HEADING_PID);
-        turnController.setInputBounds(0, 2 * Math.PI);
-
-        velConstraint = new MinVelocityConstraint(Arrays.asList(
-                new AngularVelocityConstraint(MAX_ANG_VEL),
-                new MecanumVelocityConstraint(MAX_VEL, TRACK_WIDTH)
-        ));
-        accelConstraint = new ProfileAccelerationConstraint(MAX_ACCEL);
-
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.1, 0.1, Math.toRadians(0.1)), 1.5);
->>>>>>> 17a970b582a4ceb3d9e4daf803a8f52ca7aaeabd
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
