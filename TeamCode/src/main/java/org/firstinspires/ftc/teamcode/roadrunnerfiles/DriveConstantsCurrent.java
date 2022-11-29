@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.roadrunnerfiles;
 
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
@@ -34,7 +35,8 @@ public class DriveConstantsCurrent {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(10,0 , 0.8, 14.25);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(12.5, 0, 2,
+            14);
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -45,8 +47,8 @@ public class DriveConstantsCurrent {
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
     public static double WHEEL_RADIUS = 1.8898; // in
-    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 13.75; // in
+    public static double GEAR_RATIO = 1 * 61.5/60.688487933704074; // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 9.0; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -54,7 +56,7 @@ public class DriveConstantsCurrent {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-
+    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
     public static double kA = 0;
     public static double kStatic = 0;
 
@@ -73,24 +75,23 @@ public class DriveConstantsCurrent {
      * This is only 85% of the theoretical maximum velocity of the bot, following the recommendation above.
      * This is capped at 85% because there are a number of variables that will prevent your bot from actually
      * reaching this maximum velocity: voltage dropping over the game, bot weight, general mechanical inefficiencies, etc.
-     * However, you can push this higher yourself if you'd like. Perhaps raise it to 90-95% of the theoretically 
+     * However, you can push this higher yourself if you'd like. Perhaps raise it to 90-95% of the theoretically
      * max velocity. The theoretically maximum velocity is 86.08623605293286 in/s.
      * Just make sure that your bot can actually reach this maximum velocity. Path following will be detrimentally
      * affected if it is aiming for a velocity not actually possible.
-     * 
+     *
      * The maximum acceleration is somewhat arbitrary and it is recommended that you tweak this yourself based on
      * actual testing. Just set it at a reasonable value and keep increasing until your path following starts
      * to degrade. As of now, it simply mirrors the velocity, resulting in 73.17330064499293 in/s/s
      *
      * Maximum Angular Velocity is calculated as: maximum velocity / trackWidth * (180 / Math.PI) but capped at 360°/s.
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
-     
+
      */
-    public static double MAX_VEL = 80.4828434*0.85;
+    public static double MAX_VEL = 66.76640180569838;
     public static double MAX_ACCEL = 73.17330064499293;
-    public static double MAX_ANG_VEL = Math.toRadians(299.4658071428571);
-    public static double MAX_ANG_ACCEL = Math.toRadians(299.4658071428571);
-    public static double kV = 1.0 / MAX_VEL;
+    public static double MAX_ANG_VEL = Math.toRadians(528.5853892255653*0.3);
+    public static double MAX_ANG_ACCEL = Math.toRadians(528.5853892255653*0.3);
 
 
     public static double encoderTicksToInches(double ticks) {
@@ -102,7 +103,7 @@ public class DriveConstantsCurrent {
     }
 
     public static double getMotorVelocityF(double ticksPerSecond) {
-      // see https://docs.google.com/document/d/1tyWrXDfMidwYyP_5H4mZyVgaEswhOC35gvdmP-V-5hA/edit#heading=h.61g9ixenznbx
-      return 32767 / ticksPerSecond;
+        // see https://docs.google.com/document/d/1tyWrXDfMidwYyP_5H4mZyVgaEswhOC35gvdmP-V-5hA/edit#heading=h.61g9ixenznbx
+        return 32767 / ticksPerSecond;
     }
 }

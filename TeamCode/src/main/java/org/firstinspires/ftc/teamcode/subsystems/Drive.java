@@ -60,9 +60,9 @@ public class Drive extends MecanumDrive {
     public DcMotorEx rightFront;
     public DcMotorEx rightRear;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.5, 0, 0);
-    public static double LATERAL_MULTIPLIER = 1;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(6, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(6, 0, 0);
+    public static double LATERAL_MULTIPLIER = -61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
@@ -83,7 +83,7 @@ public class Drive extends MecanumDrive {
     public Drive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.5, 0.5, Math.toRadians(0.5)), 0.5);
+        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.1, 0.1, Math.toRadians(0.1)), 1.5);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
@@ -151,6 +151,8 @@ public class Drive extends MecanumDrive {
     }
 
     public void moveTeleOp(double power, double strafe, double turn) {
+        double speedLimiter = 1;
+
         if(isFieldCentric) {
             fieldCentric(power, strafe, turn);
         } else {
@@ -182,10 +184,10 @@ public class Drive extends MecanumDrive {
     }
 
     public void setDrivePowers(double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower) {
-        leftFront.setPower(frontLeftPower * speedMultiplier);
-        leftRear.setPower(backLeftPower * speedMultiplier);
-        rightFront.setPower(frontRightPower * speedMultiplier);
-        rightRear.setPower(backRightPower * speedMultiplier);
+        leftFront.setVelocity(frontLeftPower * speedMultiplier * 2787);
+        leftRear.setVelocity(backLeftPower * speedMultiplier * 2787);
+        rightFront.setVelocity(frontRightPower * speedMultiplier * 2787);
+        rightRear.setVelocity(backRightPower * speedMultiplier * 2787);
     }
 
     public void switchDrive() {
@@ -367,7 +369,7 @@ public class Drive extends MecanumDrive {
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getAngularVelocity().yRotationRate;
+        return (double) imu.getAngularVelocity().xRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
