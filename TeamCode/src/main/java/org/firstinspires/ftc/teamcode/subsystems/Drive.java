@@ -79,6 +79,8 @@ public class Drive extends MecanumDrive {
     private double powerToVelocity = 435*384.5/60;
 
     public double speedMultiplier = 1;
+    private double maxAccel = 1;//max acceleration in ticks per second
+    private double lastUpdate = System.currentTimeMillis();
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
@@ -200,10 +202,34 @@ public class Drive extends MecanumDrive {
     }
 
     public void setDrivePowers(double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower) {
-        leftFront.setVelocity(frontLeftPower * speedMultiplier * powerToVelocity);
-        leftRear.setVelocity(backLeftPower * speedMultiplier * powerToVelocity);
-        rightFront.setVelocity(frontRightPower * speedMultiplier * powerToVelocity);
-        rightRear.setVelocity(backRightPower * speedMultiplier * powerToVelocity);
+        double frontLeftRequest = frontLeftPower * speedMultiplier * powerToVelocity;
+        double rearLeftRequest = backLeftPower * speedMultiplier * powerToVelocity;
+        double frontRightRequest = frontRightPower * speedMultiplier * powerToVelocity;
+        double rearRightRequest = backRightPower * speedMultiplier * powerToVelocity;
+        
+        if(Math.abs(leftFront.getVelocity() - frontLeftRequest) > accelLimit)
+        {
+            frontLeftRequest = leftFront.getVelocity() + Math.signum(leftFront.getVelocity() - frontLeftRequest) * accelLimit;
+        }
+        if(Math.abs(leftRear.getVelocity() - rearLeftRequest) > accelLimit)
+        {
+            rearLeftRequest = leftRear.getVelocity() + Math.signum(leftRear.getVelocity() - rearLeftRequest) * accelLimit;
+        }
+        if(Math.abs(rightRear.getVelocity() - rearRightRequest) > accelLimit)
+        {
+            rearRightRequest = rightRear.getVelocity() + Math.signum(rightRear.getVelocity() - rearRightRequest) * accelLimit;
+        }
+        if(Math.abs(rightFront.getVelocity() - frontRightRequest) > accelLimit)
+        {
+            frontRightRequest = rightFront.getVelocity() + Math.signum(rightFront.getVelocity() - frontRightRequest) * accelLimit;
+        }
+        
+        leftFront.setVelocity(frontLeftRequest);
+        leftRear.setVelocity(rearLeftRequest);
+        rightFront.setVelocity(frontRightRequest);
+        rightRear.setVelocity(rearRightRequest);
+        
+        
     }
 
     public void switchDrive() {
