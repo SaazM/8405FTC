@@ -42,7 +42,5 @@ public class AutonTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         Robot drive=  new Robot(hardwareMap);
-
-
     }
 }

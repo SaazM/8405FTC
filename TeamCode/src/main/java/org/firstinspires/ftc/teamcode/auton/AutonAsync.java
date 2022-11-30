@@ -150,55 +150,17 @@ public class AutonAsync extends OpMode
                 .build();
         robot.drive.followTrajectorySequenceAsync(trajSeq3);
     }
+
+    // -- OFFENSIVE AUTON MODE -- //
     public void runAutonOffensive() {
-        // RESET
 
-
-
-        // TESTING HOW DISPLACEMENT MARKERS INTERACT WITH TRAJSEQS
-
-        // first low goal
-        sequenceON = 2;
-        Trajectory ts1 = robot.drive.trajectoryBuilder(new Pose2d())
-                .strafeLeft(23)
-                .addDisplacementMarker(() -> {
-                    startTime = System.currentTimeMillis();
-                    while(!robot.lift.liftReached) {
-                        telemetry.addData("waiting ", robot.lift.rightLift.getCurrentPosition());
-                        telemetry.addData("liftReached ", robot.lift.liftReached);
-                        telemetry.addData("sequence on", sequenceON);
-                        telemetry.addData("math", (Math.abs(robot.lift.rightLift.getCurrentPosition() - 380) < 20) || (Math.abs(robot.lift.leftLift.getCurrentPosition() - 380) < 20));
-                        telemetry.update();
-                    }
-
-                    robot.intake.outtake();
-                    sequenceON = 0;
-                    robot.drive.followTrajectoryAsync(ts2);
-                })
-                .build();
-
-
-        // get cone from cone stack
-        ts2 = robot.drive.trajectoryBuilder(ts1.end())
-                .forward(40)
-                .addDisplacementMarker(() -> {
-                    startTime = System.currentTimeMillis();
-                    while(!robot.lift.liftReached) {
-                        telemetry.addData("waiting ", robot.lift.rightLift.getCurrentPosition());
-                        telemetry.addData("liftReached ", robot.lift.liftReached);
-                        telemetry.update();
-                    }
-                    sequenceON = 4;
-                    robot.intake.intake();
-                })
-                .build();
-
-
-
-        robot.drive.followTrajectoryAsync(ts1);
     }
-    // --- END OF OFFENSIVE AUTON AGAINST GOOD TEAMS --- //
 
+
+    // -- DEFENSIVE AUTON MODE-- //
+    public void runAutonDefensive() {
+
+    }
 
     @Override
     public void init() {
