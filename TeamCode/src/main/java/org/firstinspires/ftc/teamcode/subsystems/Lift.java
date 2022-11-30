@@ -15,7 +15,10 @@ public class Lift {
     public boolean kill;
     public boolean liftReached = true;
     public boolean isHolding = false;
-
+    private double powerToVelocity = 435*384.5/60;//converts power into ticks per second
+    private double manualLiftPower = 0.3;
+    private double holdLiftPower = 0.1;
+    private double macroLiftPower = 0.8;
 
 
     public Lift(HardwareMap hardwareMap) {
@@ -36,14 +39,14 @@ public class Lift {
         kill = false;
     }
 
-    public void liftToPosition(int posLeft, int posRight, double power) {
+    public void liftToPosition(int posLeft, int posRight, double power) {//power here is a fallacy; it just is percentage of lift velocity capability
         liftReached = (Math.abs(rightLift.getCurrentPosition() - posRight) < 20) || (Math.abs(leftLift.getCurrentPosition() - posLeft) < 20);
         rightLift.setTargetPosition(posLeft);
         leftLift.setTargetPosition(posRight);
         rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightLift.setPower(0.3);
-        leftLift.setPower(0.3);
+        rightLift.setVelocity(power*0.95*powerToVelocity);
+        leftLift.setVelocity(power*0.95*powerToVelocity);
     }
 
     public void liftTeleOp(Gamepad gamepad) {
@@ -64,15 +67,15 @@ public class Lift {
         } else if (gamepad.right_trigger > 0.5) { // move lift up
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftLift.setPower(0.3);
-            rightLift.setPower(0.3);
+            rightLift.setVelocity(manualLiftPower*0.95*powerToVelocity);
+            leftLift.setVelocity(manualLiftPower*0.95*powerToVelocity);
             holdingPosLeft = -1;
             holdingPosRight = -1;
         } else if (gamepad.left_trigger > 0.5) { // move lift down
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftLift.setPower(-0.3);
-            rightLift.setPower(-0.3);
+            rightLift.setVelocity(manualLiftPower*0.95*powerToVelocity);
+            leftLift.setVelocity(manualLiftPower*0.95*powerToVelocity);
             holdingPosLeft = -1;
             holdingPosRight = -1;
         } else if (rightLift.getCurrentPosition() > 30 && rightLift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) { // holding
@@ -93,20 +96,20 @@ public class Lift {
         }
         if (holdingPosLeft != -1 && !kill) { // holds power
             if (isHolding) { // maintains current height
-                liftToPosition(holdingPosLeft, holdingPosRight, 0.05);
+                liftToPosition(holdingPosLeft, holdingPosRight, holdLiftPower);
             } else {
-                liftToPosition(holdingPosLeft, holdingPosRight, 0.3);
+                liftToPosition(holdingPosLeft, holdingPosRight, macroLiftPower);
             }
         }
     }
 
-    public void liftToMedium() { liftToPosition(2025, 2000, 0.8); }
+    public void liftToMedium() { liftToPosition(2025, 2000, macroLiftPower); }
 
-    public void liftToLow() { liftToPosition(1025, 1000, 0.8); }
+    public void liftToLow() { liftToPosition(1025, 1000, macroLiftPower); }
 
-    public void liftToTopStack() { liftToPosition(195, 180, 0.8); }
+    public void liftToTopStack() { liftToPosition(195, 180, macroLiftPower); }
 
-    public void liftToHigh() { liftToPosition(2675, 2650, 0.8); }
+    public void liftToHigh() { liftToPosition(2675, 2650, macroLiftPower); }
 
     public void newBotStart() {
         leftLift.setDirection(DcMotorEx.Direction.REVERSE);

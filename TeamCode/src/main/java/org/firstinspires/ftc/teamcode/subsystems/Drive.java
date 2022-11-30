@@ -76,6 +76,7 @@ public class Drive extends MecanumDrive {
     private PIDFController turnController;
     private MotionProfile turnProfile;
     private double turnStart;
+    private double powerToVelocity = 435*384.5/60;
 
     public double speedMultiplier = 1;
 
@@ -199,10 +200,10 @@ public class Drive extends MecanumDrive {
     }
 
     public void setDrivePowers(double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower) {
-        leftFront.setVelocity(frontLeftPower * speedMultiplier * 2787);
-        leftRear.setVelocity(backLeftPower * speedMultiplier * 2787);
-        rightFront.setVelocity(frontRightPower * speedMultiplier * 2787);
-        rightRear.setVelocity(backRightPower * speedMultiplier * 2787);
+        leftFront.setVelocity(frontLeftPower * speedMultiplier * powerToVelocity);
+        leftRear.setVelocity(backLeftPower * speedMultiplier * powerToVelocity);
+        rightFront.setVelocity(frontRightPower * speedMultiplier * powerToVelocity);
+        rightRear.setVelocity(backRightPower * speedMultiplier * powerToVelocity);
     }
 
     public void switchDrive() {
@@ -371,10 +372,10 @@ public class Drive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        leftFront.setVelocity(v * powerToVelocity);
+        leftRear.setVelocity(v1 * powerToVelocity);
+        rightRear.setVelocity(v2 * powerToVelocity);
+        rightFront.setVelocity(v3 * powerToVelocity);
     }
 
     @Override
