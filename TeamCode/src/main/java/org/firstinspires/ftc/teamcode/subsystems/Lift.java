@@ -46,55 +46,53 @@ public class Lift {
         leftLift.setPower(0.3);
     }
 
-    public void newMacros(Gamepad gamepad1) {
+    public void liftTeleOp(Gamepad gamepad) {
         double temp = startTime;
         boolean temp_ = kill;
         boolean tempHolding = isHolding;
         startTime = System.currentTimeMillis();
         kill = false;
         isHolding = false;
-        if (gamepad1.square) {
+        if (gamepad.square) { // medium goal macro
             liftToMedium();
-        } else if (gamepad1.circle) {
+        } else if (gamepad.circle) { // low goal macro
             liftToLow();
-        } else if (gamepad1.dpad_up) {
+        } else if (gamepad.dpad_up) { // stack macro
             liftToTopStack();
-        } else if (gamepad1.triangle) {
+        } else if (gamepad.triangle) { // high goal macro
             liftToHigh();
-        } else if (gamepad1.right_trigger > 0.5) {
+        } else if (gamepad.right_trigger > 0.5) { // move lift up
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setPower(0.3);
             rightLift.setPower(0.3);
             holdingPosLeft = -1;
             holdingPosRight = -1;
-        } else if (gamepad1.left_trigger > 0.5) {
+        } else if (gamepad.left_trigger > 0.5) { // move lift down
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setPower(-0.3);
             rightLift.setPower(-0.3);
             holdingPosLeft = -1;
             holdingPosRight = -1;
-        }
-        else if (rightLift.getCurrentPosition() > 30 && rightLift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+        } else if (rightLift.getCurrentPosition() > 30 && rightLift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) { // holding
             isHolding = true;
             if (holdingPosLeft == -1) {
                 holdingPosLeft = leftLift.getCurrentPosition();
                 holdingPosRight = rightLift.getCurrentPosition();
             }
-        }
-        else {
+        } else { // prevents holding when lift is at bottom
             kill = temp_;
             startTime = temp;
             isHolding = tempHolding;
         }
-        if (gamepad1.right_bumper || ((System.currentTimeMillis() - startTime)>20000)) {
+        if (gamepad.right_bumper || ((System.currentTimeMillis() - startTime) > 20000)) { // kills lift power
             rightLift.setPower(0);
             leftLift.setPower(0);
             kill = true;
         }
-        if (holdingPosLeft != -1 && !kill) {
-            if (isHolding) {
+        if (holdingPosLeft != -1 && !kill) { // holds power
+            if (isHolding) { // maintains current height
                 liftToPosition(holdingPosLeft, holdingPosRight, 0.05);
             } else {
                 liftToPosition(holdingPosLeft, holdingPosRight, 0.3);

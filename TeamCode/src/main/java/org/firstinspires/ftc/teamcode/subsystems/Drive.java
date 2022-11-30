@@ -166,12 +166,12 @@ public class Drive extends MecanumDrive {
 
     public void moveTeleOp(double power, double strafe, double turn, double liftPos) {
 
-        double limiter = (2600 - liftPos) / 2600; // multiplied by 100
+        double limiter = (2600 - liftPos) / 2600;
 
-        if(isFieldCentric) {
-            fieldCentric(power * limiter, strafe * limiter, turn * limiter);
+        if (isFieldCentric) {
+            fieldCentric(power, strafe, turn);
         } else {
-            robotCentric(power * limiter, strafe * limiter, turn * limiter);
+            robotCentric(power, strafe, turn);
         }
     }
 
