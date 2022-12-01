@@ -79,7 +79,7 @@ public class Drive extends MecanumDrive {
     private double powerToVelocity = 435*384.5/60;
 
     public double speedMultiplier = 1;
-    private double maxAccel = 1;//max acceleration in ticks per second
+    private double accelLimit = 1;//max acceleration in ticks per second
     private double lastUpdate = System.currentTimeMillis();
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
@@ -122,7 +122,7 @@ public class Drive extends MecanumDrive {
 
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
         leftRear.setDirection(DcMotor.Direction.REVERSE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
@@ -132,7 +132,7 @@ public class Drive extends MecanumDrive {
 
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
         rightRear.setDirection(DcMotor.Direction.FORWARD);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
@@ -169,12 +169,12 @@ public class Drive extends MecanumDrive {
 
     public void moveTeleOp(double power, double strafe, double turn, double liftPos) {
 
-        double limiter = (2600 - liftPos) / 2600;
+        double limiter = (3100 - liftPos) / 3100;
 
         if (isFieldCentric) {
-            fieldCentric(power, strafe, turn);
+            fieldCentric(power*limiter, strafe, turn);
         } else {
-            robotCentric(power, strafe, turn);
+            robotCentric(power*limiter, strafe, turn);
         }
     }
 
@@ -206,24 +206,24 @@ public class Drive extends MecanumDrive {
         double rearLeftRequest = backLeftPower * speedMultiplier * powerToVelocity;
         double frontRightRequest = frontRightPower * speedMultiplier * powerToVelocity;
         double rearRightRequest = backRightPower * speedMultiplier * powerToVelocity;
-        
-        if(Math.abs(leftFront.getVelocity() - frontLeftRequest) > accelLimit)
-        {
-            frontLeftRequest = leftFront.getVelocity() + Math.signum(leftFront.getVelocity() - frontLeftRequest) * accelLimit;
+
+
+        if(leftFront.getVelocity()>200){
+            if(frontLeftRequest<0){
+                frontLeftRequest *= 0.4;
+                rearLeftRequest *= 0.4;
+                frontRightRequest *= 0.4;
+                rearRightRequest *= 0.4;
+            }
         }
-        if(Math.abs(leftRear.getVelocity() - rearLeftRequest) > accelLimit)
-        {
-            rearLeftRequest = leftRear.getVelocity() + Math.signum(leftRear.getVelocity() - rearLeftRequest) * accelLimit;
+        if(leftFront.getVelocity()<-200){
+            if(frontLeftRequest<0){
+                frontLeftRequest *= 0.4;
+                rearLeftRequest *= 0.4;
+                frontRightRequest *= 0.4;
+                rearRightRequest *= 0.4;
+            }
         }
-        if(Math.abs(rightRear.getVelocity() - rearRightRequest) > accelLimit)
-        {
-            rearRightRequest = rightRear.getVelocity() + Math.signum(rightRear.getVelocity() - rearRightRequest) * accelLimit;
-        }
-        if(Math.abs(rightFront.getVelocity() - frontRightRequest) > accelLimit)
-        {
-            frontRightRequest = rightFront.getVelocity() + Math.signum(rightFront.getVelocity() - frontRightRequest) * accelLimit;
-        }
-        
         leftFront.setVelocity(frontLeftRequest);
         leftRear.setVelocity(rearLeftRequest);
         rightFront.setVelocity(frontRightRequest);

@@ -22,6 +22,6 @@ public class LeftAuton extends LinearOpMode
         telemetry.addLine(Integer.toString(finalID));
         telemetry.update();
         AutonAsync auton = new AutonAsync();
-        auton.runAutonOffensive();
+        //auton.runAutonTest();
     }
 }

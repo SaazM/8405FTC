@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
@@ -33,12 +34,13 @@ public class OfficialTeleOp extends LinearOpMode {
         robot.lift.newBotStart();
 
         waitForStart();
-
+        double endTime = -1;
         while (opModeIsActive()) {
 
             double power = -gamepad1.left_stick_y; // remember this is reversed
             double strafe = gamepad1.left_stick_x * 1.1; // counteract imperfect strafing
             double turn = gamepad1.right_stick_x;
+
 
             if (gamepad1.left_bumper) {
                 robot.drive.slowMode();
@@ -48,8 +50,15 @@ public class OfficialTeleOp extends LinearOpMode {
 
             if (gamepad1.cross) {
                 robot.intake.outtake();
-            } else {
+                endTime = System.currentTimeMillis() + 1500;
+            }
+            else if(endTime > 0 && System.currentTimeMillis() < endTime)
+            {
+                robot.intake.outtake();
+            }
+            else {
                 robot.intake.intake();
+                endTime = -1;
             }
 
             double liftPos = (double)(robot.lift.leftLift.getCurrentPosition() + robot.lift.rightLift.getCurrentPosition()) / 2;
@@ -66,6 +75,7 @@ public class OfficialTeleOp extends LinearOpMode {
             telemetry.addData("RIGHT Lift Position", robot.lift.rightLift.getCurrentPosition());
             telemetry.addData("IsHolding?: ", robot.lift.isHolding);
             telemetry.addData("HoldingPosLeft: ", robot.lift.holdingPosLeft);
+            telemetry.addData("lF vel", robot.drive.leftFront.getVelocity());
 
 
             telemetry.update();

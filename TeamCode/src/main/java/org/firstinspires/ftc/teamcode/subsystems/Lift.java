@@ -95,7 +95,7 @@ public class Lift {
             startTime = temp;
             isHolding = tempHolding;
         }
-        if (gamepad.right_bumper || ((System.currentTimeMillis() - startTime) > 20000)) { // kills lift power
+        if (gamepad.right_bumper || ((System.currentTimeMillis() - startTime) > 120000)) { // kills lift power
             rightLift.setPower(0);
             leftLift.setPower(0);
             kill = true;
@@ -115,7 +115,7 @@ public class Lift {
 
     public void liftToTopStack() { liftToPosition(180, 180, macroLiftPower); }
 
-    public void liftToHigh() { liftToPosition(2610, 2610, macroLiftPower); }
+    public void liftToHigh() { liftToPosition(2650, 2650, macroLiftPower); }
 
     public void newBotStart() {
         leftLift.setDirection(DcMotorEx.Direction.REVERSE);
