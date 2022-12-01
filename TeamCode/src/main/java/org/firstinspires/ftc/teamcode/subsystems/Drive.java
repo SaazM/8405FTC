@@ -167,15 +167,18 @@ public class Drive extends MecanumDrive {
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(translational_error, translational_error, Math.toRadians(turn_error)), timeout);
     }
 
-    public void moveTeleOp(double power, double strafe, double turn, double liftPos) {
+    public double moveTeleOp(double power, double strafe, double turn, double liftPos) {
+        //double limiter = (3100 - liftPos) / 3100;
+        double limiter = driveAntiTip(liftPos/3100, 435);
 
-        double limiter = (3100 - liftPos) / 3100;
+
 
         if (isFieldCentric) {
             fieldCentric(power*limiter, strafe, turn);
         } else {
             robotCentric(power*limiter * 3/4 + power/4, strafe, turn);
         }
+        return limiter;
     }
 
     public void robotCentric(double power, double strafe, double turn) {
@@ -200,30 +203,43 @@ public class Drive extends MecanumDrive {
 
         setDrivePowers(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
     }
-
+    public double driveAntiTip(double liftPosition,  double startLimitPoint)
+    {
+        return Math.min(1, Math.exp(-1.5*(liftPosition - startLimitPoint/3100)));
+    }
     public void setDrivePowers(double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower) {
+        double dampenBy = 0.3;
         double frontLeftRequest = frontLeftPower * speedMultiplier * powerToVelocity;
         double rearLeftRequest = backLeftPower * speedMultiplier * powerToVelocity;
         double frontRightRequest = frontRightPower * speedMultiplier * powerToVelocity;
         double rearRightRequest = backRightPower * speedMultiplier * powerToVelocity;
+        if(frontLeftRequest >= 0 && frontRightRequest >= 0)
+        {
+            frontLeftRequest = Math.min(1, frontLeftRequest*1.75);
+            rearLeftRequest = Math.min(1, rearLeftRequest*1.75);
+            frontRightRequest = Math.min(1, frontRightRequest*1.75);
+            rearRightRequest = Math.min(1, rearRightRequest*1.75);
+        }
 
-
-        if(leftFront.getVelocity()>200){
-            if(frontLeftRequest<0){
-                frontLeftRequest *= 0.4;
-                rearLeftRequest *= 0.4;
-                frontRightRequest *= 0.4;
-                rearRightRequest *= 0.4;
+        if(Math.abs(leftFront.getVelocity())>200 && Math.abs(rightFront.getVelocity()) > 200 && (Math.signum(leftFront.getVelocity()) == Math.signum(rightFront.getVelocity()))){
+            if(Math.abs(leftFront.getVelocity() - frontLeftRequest) > 200){
+                frontLeftRequest *= dampenBy;
+                rearLeftRequest *= dampenBy;
+                frontRightRequest *= dampenBy;
+                rearRightRequest *= dampenBy;
             }
         }
-        if(leftFront.getVelocity()<-200){
-            if(frontLeftRequest<0){
-                frontLeftRequest *= 0.4;
-                rearLeftRequest *= 0.4;
-                frontRightRequest *= 0.4;
-                rearRightRequest *= 0.4;
+        /**
+        if(leftFront.getVelocity()<-200 && rightFront.getVelocity() < -200){
+            if(frontLeftRequest>0){
+                frontLeftRequest *= dampenBy;
+                rearLeftRequest *= dampenBy;
+                frontRightRequest *= dampenBy;
+                rearRightRequest *= dampenBy;
             }
         }
+         **/
+
         leftFront.setVelocity(frontLeftRequest);
         leftRear.setVelocity(rearLeftRequest);
         rightFront.setVelocity(frontRightRequest);
