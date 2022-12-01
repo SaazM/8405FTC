@@ -174,7 +174,7 @@ public class Drive extends MecanumDrive {
         if (isFieldCentric) {
             fieldCentric(power*limiter, strafe, turn);
         } else {
-            robotCentric(power*limiter, strafe, turn);
+            robotCentric(power*limiter * 3/4 + power/4, strafe, turn);
         }
     }
 
