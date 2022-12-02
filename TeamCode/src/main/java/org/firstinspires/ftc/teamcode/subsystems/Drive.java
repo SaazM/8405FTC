@@ -100,7 +100,7 @@ public class Drive extends MecanumDrive {
         turnController = new PIDFController(HEADING_PID);
         turnController.setInputBounds(0, 2 * Math.PI);
 
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.5, 0.5, Math.toRadians(0.01)), 0.5);
+        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.3, 0.3, Math.toRadians(0.5)), 0.75);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
@@ -172,11 +172,19 @@ public class Drive extends MecanumDrive {
         double limiter = driveAntiTip(liftPos/3100, 435);
 
 
+<<<<<<< Updated upstream
+=======
+        double limiter = Math.max(0.1, (3100 - liftPos) / 3100);
+>>>>>>> Stashed changes
 
         if (isFieldCentric) {
-            fieldCentric(power*limiter, strafe, turn);
+            fieldCentric(power*limiter, strafe*limiter, turn);
         } else {
+<<<<<<< Updated upstream
             robotCentric(power*limiter * 3/4 + power/4, strafe, turn);
+=======
+            robotCentric(power*limiter, strafe*limiter, turn);
+>>>>>>> Stashed changes
         }
         return limiter;
     }
@@ -221,6 +229,7 @@ public class Drive extends MecanumDrive {
             rearRightRequest = Math.min(1, rearRightRequest*1.75);
         }
 
+<<<<<<< Updated upstream
         if(Math.abs(leftFront.getVelocity())>200 && Math.abs(rightFront.getVelocity()) > 200 && (Math.signum(leftFront.getVelocity()) == Math.signum(rightFront.getVelocity()))){
             if(Math.abs(leftFront.getVelocity() - frontLeftRequest) > 200){
                 frontLeftRequest *= dampenBy;
@@ -240,12 +249,31 @@ public class Drive extends MecanumDrive {
         }
          **/
 
+=======
+
+        if(leftFront.getVelocity()>200 && rightFront.getVelocity()>200){
+            if(frontLeftRequest<0){
+                frontLeftRequest *= 0.4;
+                rearLeftRequest *= 0.4;
+                frontRightRequest *= 0.4;
+                rearRightRequest *= 0.4;
+            }
+        }
+//        if(leftFront.getVelocity()<-200){
+//            if(frontLeftRequest>0){
+//                frontLeftRequest *= 0.4;
+//                rearLeftRequest *= 0.4;
+//                frontRightRequest *= 0.4;
+//                rearRightRequest *= 0.4;
+//            }
+//        }
+>>>>>>> Stashed changes
         leftFront.setVelocity(frontLeftRequest);
         leftRear.setVelocity(rearLeftRequest);
         rightFront.setVelocity(frontRightRequest);
         rightRear.setVelocity(rearRightRequest);
-        
-        
+
+
     }
 
     public void switchDrive() {

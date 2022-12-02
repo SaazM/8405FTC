@@ -19,7 +19,7 @@ public class Lift {
     private double manualLiftPower = 0.8;
     private double holdLiftPower = 0.15;
     private double macroLiftPower = 0.8;
-    private double liftLimit = 3100; //upper lift limit
+    private double liftLimit = 2800; //upper lift limit
 
 
     public Lift(HardwareMap hardwareMap) {
@@ -79,8 +79,8 @@ public class Lift {
         } else if (gamepad.left_trigger > 0.5) { // move lift down
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            if(rightLift.getCurrentPosition() > 40){rightLift.setVelocity(-manualLiftPower*0.95*powerToVelocity);}else{rightLift.setVelocity(0);}
-            if(leftLift.getCurrentPosition() > 40){leftLift.setVelocity(-manualLiftPower*0.95*powerToVelocity);}else{leftLift.setVelocity(0);}
+            if(rightLift.getCurrentPosition() > 40){rightLift.setVelocity(-manualLiftPower*0.95*powerToVelocity);}
+            if(leftLift.getCurrentPosition() > 40){leftLift.setVelocity(-manualLiftPower*0.95*powerToVelocity);}
 
             holdingPosLeft = -1;
             holdingPosRight = -1;
@@ -113,7 +113,7 @@ public class Lift {
 
     public void liftToLow() { liftToPosition(930, 930, macroLiftPower); }
 
-    public void liftToTopStack() { liftToPosition(180, 180, macroLiftPower); }
+    public void liftToTopStack() { liftToPosition(275, 275, macroLiftPower); }
 
     public void liftToHigh() { liftToPosition(2650, 2650, macroLiftPower); }
 
