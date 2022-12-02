@@ -117,7 +117,7 @@ public class Drive extends MecanumDrive {
 
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
         leftFront.setDirection(DcMotor.Direction.REVERSE); // motor direction
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // Braking behavior
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // Braking behavior
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // We don't want to use PID for the motors using the encoders
 
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
@@ -127,7 +127,7 @@ public class Drive extends MecanumDrive {
 
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
         rightFront.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
@@ -172,19 +172,12 @@ public class Drive extends MecanumDrive {
         double limiter = driveAntiTip(liftPos/3100, 435);
 
 
-<<<<<<< Updated upstream
-=======
-        double limiter = Math.max(0.1, (3100 - liftPos) / 3100);
->>>>>>> Stashed changes
 
         if (isFieldCentric) {
             fieldCentric(power*limiter, strafe*limiter, turn);
         } else {
-<<<<<<< Updated upstream
             robotCentric(power*limiter * 3/4 + power/4, strafe, turn);
-=======
             robotCentric(power*limiter, strafe*limiter, turn);
->>>>>>> Stashed changes
         }
         return limiter;
     }
@@ -221,23 +214,40 @@ public class Drive extends MecanumDrive {
         double rearLeftRequest = backLeftPower * speedMultiplier * powerToVelocity;
         double frontRightRequest = frontRightPower * speedMultiplier * powerToVelocity;
         double rearRightRequest = backRightPower * speedMultiplier * powerToVelocity;
-        if(frontLeftRequest >= 0 && frontRightRequest >= 0)
-        {
-            frontLeftRequest = Math.min(1, frontLeftRequest*1.75);
-            rearLeftRequest = Math.min(1, rearLeftRequest*1.75);
-            frontRightRequest = Math.min(1, frontRightRequest*1.75);
-            rearRightRequest = Math.min(1, rearRightRequest*1.75);
-        }
+//        if(frontLeftRequest >= 0 && frontRightRequest >= 0)
+//        {
+//            frontLeftRequest = Math.min(1, frontLeftRequest*1.75);
+//            rearLeftRequest = Math.min(1, rearLeftRequest*1.75);
+//            frontRightRequest = Math.min(1, frontRightRequest*1.75);
+//            rearRightRequest = Math.min(1, rearRightRequest*1.75);
+//        }
+//
+//        if(Math.abs(leftFront.getVelocity())>200 && Math.abs(rightFront.getVelocity()) > 200 && (Math.signum(leftFront.getVelocity()) == Math.signum(rightFront.getVelocity()))){
+//            if(Math.abs(leftFront.getVelocity() - frontLeftRequest) > 200){
+//                frontLeftRequest *= dampenBy;
+//                rearLeftRequest *= dampenBy;
+//                frontRightRequest *= dampenBy;
+//                rearRightRequest *= dampenBy;
+//            }
+//        }
 
-<<<<<<< Updated upstream
-        if(Math.abs(leftFront.getVelocity())>200 && Math.abs(rightFront.getVelocity()) > 200 && (Math.signum(leftFront.getVelocity()) == Math.signum(rightFront.getVelocity()))){
-            if(Math.abs(leftFront.getVelocity() - frontLeftRequest) > 200){
-                frontLeftRequest *= dampenBy;
-                rearLeftRequest *= dampenBy;
-                frontRightRequest *= dampenBy;
-                rearRightRequest *= dampenBy;
+        if(leftFront.getVelocity()>200 && rightFront.getVelocity()>200){
+            if(frontLeftRequest<0){
+                frontLeftRequest *= 0.1;
+                rearLeftRequest *= 0.1;
+                frontRightRequest *= 0.1;
+                rearRightRequest *= 0.1;
             }
         }
+        if(leftFront.getVelocity()<-200 && rightFront.getVelocity()<-200){
+            if(frontLeftRequest>0){
+                frontLeftRequest *= 0.1;
+                rearLeftRequest *= 0.1;
+                frontRightRequest *= 0.1;
+                rearRightRequest *= 0.1;
+            }
+        }
+
         /**
         if(leftFront.getVelocity()<-200 && rightFront.getVelocity() < -200){
             if(frontLeftRequest>0){
@@ -248,8 +258,6 @@ public class Drive extends MecanumDrive {
             }
         }
          **/
-
-=======
 
         if(leftFront.getVelocity()>200 && rightFront.getVelocity()>200){
             if(frontLeftRequest<0){
@@ -267,7 +275,6 @@ public class Drive extends MecanumDrive {
 //                rearRightRequest *= 0.4;
 //            }
 //        }
->>>>>>> Stashed changes
         leftFront.setVelocity(frontLeftRequest);
         leftRear.setVelocity(rearLeftRequest);
         rightFront.setVelocity(frontRightRequest);

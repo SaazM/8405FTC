@@ -76,6 +76,9 @@ public class OfficialTeleOp extends LinearOpMode {
             telemetry.addData("IsHolding?: ", robot.lift.isHolding);
             telemetry.addData("HoldingPosLeft: ", robot.lift.holdingPosLeft);
             telemetry.addData("lF vel", robot.drive.leftFront.getVelocity());
+            telemetry.addData("rF vel", robot.drive.rightFront.getVelocity());
+            telemetry.addData("pass", robot.drive.leftFront.getVelocity()>200 && robot.drive.rightFront.getVelocity()>200);
+
             telemetry.addData("Limiter", temp);
 
 
