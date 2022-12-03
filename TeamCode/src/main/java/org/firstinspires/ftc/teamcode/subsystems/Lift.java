@@ -114,7 +114,23 @@ public class Lift {
         } else { // prevents holding when lift is at bottom
             kill = prevKill;
             startTime = startTimeTemp;
+<<<<<<< Updated upstream
             isHolding = prevHolding;
+=======
+//            holdingPosRight = -1;
+//            holdingPosLeft = -1;
+            isHolding = true;
+        }
+        if (gamepad.right_bumper || ((System.currentTimeMillis() - startTime) > 120000)  || Math.min(leftLift.getCurrentPosition(), rightLift.getCurrentPosition())<0) { // kills lift power
+            rightLift.setPower(0);
+            leftLift.setPower(0);
+            rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            holdingPosLeft = -1;
+            holdingPosRight = -1;
+            kill = true;
+            isHolding = false;
+>>>>>>> Stashed changes
         }
 
         if (holdingPosRight != -1 && !kill) { // holds power
