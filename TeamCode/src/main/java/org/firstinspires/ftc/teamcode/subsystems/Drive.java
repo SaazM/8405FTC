@@ -227,7 +227,7 @@ public class Drive extends MecanumDrive {
 //                rearRightRequest *= dampenBy;
 //            }
 //        }
-
+ 
 //        if(leftFront.getVelocity()>500 && rightFront.getVelocity()>500 ){
 //            if(frontLeftRequest<0){
 //                frontLeftRequest *= 0.1;
