@@ -63,9 +63,12 @@ public class AutonAsync extends OpMode{
 
 
         if (tag_id == 3) { // parking zone 1
-            tagForward = -24;
+            tagForward = -27;
         } else if (tag_id == 1) { // parking zone 3
-            tagForward = 24;
+            tagForward = 23;
+        }
+        else{
+            tagForward=-3;
         }
     }
 
@@ -75,11 +78,96 @@ public class AutonAsync extends OpMode{
 
     }
 
-    public void runAutonHighSpamLeft() {}
+    public void runAutonParkOnly() {
+        TrajectorySequence park = robot.drive.trajectorySequenceBuilder(new Pose2d())
+                .strafeRight(30)
+                .forward(tagForward)
+                .build();
+        robot.drive.followTrajectorySequence(park);
+    }
+
+    public void runAutonThreeConeDefensiveLeft() {
+        // strafe left to med goal
+        // outtake
+        // spline turn to stack
+        // intake
+        // go back
+        // turn to high
+        // outtake
+        // park
+
+        t1 = robot.drive.trajectoryBuilder(new Pose2d())
+                .addDisplacementMarker(() -> {liftTo = 1; toIntake = true;})
+                .strafeLeft(47)
+                .addDisplacementMarker(() -> {
+                    robot.drive.followTrajectoryAsync(t2);
+                })
+                .build();
+
+        t2 = robot.drive.trajectoryBuilder(t1.end())
+                .forward(3)
+                .addDisplacementMarker(() -> {
+                    timer.reset();
+                    while(waitSeconds(1.0)) {
+                        robot.intake.outtake();
+                        telemetry.addData("Intaking?: ", toIntake);
+                        telemetry.update();
+                    }
+                    telemetry.addLine("Done Waiting");
+                    telemetry.update();
+                    toIntake = true;
+                    robot.drive.followTrajectoryAsync(t3);
+                })
+                .build();
+
+        t3 = robot.drive.trajectoryBuilder(t2.end())
+                .lineToLinearHeading(new Pose2d(t2.end().getX(), t2.end().getY()+13, Math.toRadians(185)))
+                .addDisplacementMarker(() -> {
+                    timer.reset();
+
+                    telemetry.addLine("Done Waiting");
+                    telemetry.update();
+                    liftTo = 4;
+                    robot.drive.followTrajectoryAsync(t4);
+                })
+                .build();
+
+        t4 = robot.drive.trajectoryBuilder(t3.end())
+                .forward(30)
+                .addDisplacementMarker(() -> {
+                    toIntake = true;
+                    while (waitSeconds(1.0)) {
+                        robot.intake.intake();
+                        telemetry.addData("Intaking?: ", toIntake);
+                        telemetry.update();
+                    }
+                    liftTo = 3;
+                    robot.drive.followTrajectoryAsync(t5);
+                })
+                .build();
+
+
+
+        t5 = robot.drive.trajectoryBuilder(t4.end())
+                .back(60)
+                .addDisplacementMarker(() -> {
+                    robot.drive.followTrajectory(t6);
+                })
+                .build();
+
+
+        t6 = robot.drive.trajectoryBuilder(t5.end())
+                .lineToLinearHeading(new Pose2d(t5.end().getX()+0.01, t5.end().getY()-0.01, Math.toRadians(135)))
+                .build();
+
+
+
+        robot.drive.followTrajectoryAsync(t1);
+    }
+
 
 
     public void runAutonHighSpamRight() {
-
          t1 = robot.drive.trajectoryBuilder(new Pose2d())
                  .addDisplacementMarker(() -> {liftTo = 3; toIntake = true;})
                  .lineToConstantHeading(new Vector2d(2.5, -74))
@@ -115,35 +203,28 @@ public class AutonAsync extends OpMode{
                     telemetry.update();
                     toIntake = true;
 
-
                     robot.drive.followTrajectoryAsync(t4);
                 })
-
-
                 .build();
 
          t4 = robot.drive.trajectoryBuilder(t1.end())
-
                  .back(3)
                  .addDisplacementMarker(() ->{
-
                      liftTo = 4;
                      robot.drive.followTrajectoryAsync(t5);
                  })
                  .build();
 
          t5 = robot.drive.trajectoryBuilder(t4.end())
-                 .lineToLinearHeading(new Pose2d(t4.end().getX(), t4.end().getY()+13, Math.toRadians(180)))
+                 .lineToLinearHeading(new Pose2d(t4.end().getX(), t4.end().getY()+13, Math.toRadians(185)))
                  .addDisplacementMarker(() -> robot.drive.followTrajectoryAsync(t6))
 
 
                  .build();
 
         t6 = robot.drive.trajectoryBuilder(t5.end())
-                .forward(23.5)
-                .addDisplacementMarker(() ->
-
-                {
+                .forward(24.5)
+                .addDisplacementMarker(() -> {
                     while (waitSeconds(1)) {
                     }
                     liftTo = 3;
@@ -162,7 +243,7 @@ public class AutonAsync extends OpMode{
 
 
         t8 = robot.drive.trajectoryBuilder(t7.end())
-                .lineToLinearHeading(new Pose2d(t7.end().getX(), t7.end().getY()-13, Math.toRadians(355)))
+                .lineToLinearHeading(new Pose2d(t7.end().getX(), t7.end().getY()-13, Math.toRadians(359)))
                 .addDisplacementMarker(() -> robot.drive.followTrajectoryAsync(t9))
                 .build();
 

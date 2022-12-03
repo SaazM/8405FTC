@@ -31,7 +31,7 @@ public class Lift {
 
 
         rightLift.setDirection(DcMotor.Direction.FORWARD);
-        rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightLift.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, new PIDFCoefficients(7.5, 0, 0, 0));
@@ -97,13 +97,22 @@ public class Lift {
             holdingPosRight = -1;
         } else if (gamepad.left_trigger > 0.5) { // move lift down
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            if (rightLift.getCurrentPosition() < 0) {
-                rightLift.setPower(0);
-            } else if (rightLift.getCurrentPosition() > 100) {//if lift is below 100, slow down so we dont blow up the lift
-                rightLift.setVelocity(-manualLiftPower * 0.95 * powerToVelocity * 0.3);
-            } else if (rightLift.getCurrentPosition() > 5) {
-                rightLift.setVelocity(-manualLiftPower * 0.3 * powerToVelocity * 0.3);
+//            if (rightLift.getCurrentPosition() < 0) {
+//                rightLift.setPower(0);
+//            } else if (rightLift.getCurrentPosition() > 100) {//if lift is below 100, slow down so we dont blow up the lift
+//                rightLift.setVelocity(-manualLiftPower * 0.95 * powerToVelocity * 0.3);
+//            } else {
+//                rightLift.setVelocity(-manualLiftPower * 0.3 * powerToVelocity * 0.3);
+//            }
+            if(rightLift.getCurrentPosition() > 100)
+            {
+                rightLift.setVelocity(-manualLiftPower * 0.6 * powerToVelocity);
             }
+            else
+
+            {rightLift.setVelocity(-manualLiftPower * 0.5 * powerToVelocity * 0.3);}
+
+
             holdingPosRight = -1;
         } else if (rightLift.getCurrentPosition() > 20 && rightLift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) { // holding
             isHolding = true;
@@ -139,7 +148,7 @@ public class Lift {
             }
         }
     }
-
+    public void liftToZero(){holdingPosRight = 0;}
     public void liftToMedium() {
         holdingPosRight = 1860;
     }

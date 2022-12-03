@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.auton;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
@@ -20,9 +21,6 @@ public class RightAuton extends OpMode
     public void init() {
         init = new aprilTagsInit(hardwareMap, telemetry);
         init.initialize();
-
-
-
     }
     @Override
     public void init_loop()
@@ -41,6 +39,8 @@ public class RightAuton extends OpMode
         telemetry.update();
         auton = new AutonAsync(finalID, hardwareMap, telemetry);
         auton.runAutonHighSpamRight();
+        //auton.runAutonHighSpamThree();
+        auton.liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         activated = true;
     }
     @Override
