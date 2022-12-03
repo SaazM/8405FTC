@@ -42,7 +42,6 @@ public class Auton {
                     .build();
             robot.drive.followTrajectory(park);
         }
-
     }
 
     public void runAutonLeft() throws InterruptedException {

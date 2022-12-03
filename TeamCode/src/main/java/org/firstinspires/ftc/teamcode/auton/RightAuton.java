@@ -23,8 +23,8 @@ public class RightAuton extends LinearOpMode
         int finalID = init.stopAndSave();
         telemetry.addLine(Integer.toString(finalID));
         telemetry.update();
-        Auton auton = new Auton(false, finalID, new Robot(hardwareMap));
-        auton.runAutonRight();
+        AutonAsync auton = new AutonAsync(finalID, hardwareMap, telemetry);
+        auton.runAutonHighSpamRight();
     }
 
 }

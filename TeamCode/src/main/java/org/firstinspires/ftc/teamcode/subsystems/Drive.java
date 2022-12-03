@@ -96,7 +96,6 @@ public class Drive extends MecanumDrive {
     public Drive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
-
         turnController = new PIDFController(HEADING_PID);
         turnController.setInputBounds(0, 2 * Math.PI);
 
@@ -162,16 +161,14 @@ public class Drive extends MecanumDrive {
         leftFront.setPower(0);
         rightFront.setPower(0);
     }
-    public void changeFollowerAccuracy(double timeout, double translational_error, double turn_error)
-    {
+
+    public void changeFollowerAccuracy(double timeout, double translational_error, double turn_error) {
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(translational_error, translational_error, Math.toRadians(turn_error)), timeout);
     }
 
     public double moveTeleOp(double power, double strafe, double turn, double liftPos) {
         //double limiter = (3100 - liftPos) / 3100;
         double limiter = driveAntiTip(liftPos/3100, 435);
-
-
 
         if (isFieldCentric) {
             fieldCentric(power*limiter, strafe*limiter, turn);
@@ -231,22 +228,22 @@ public class Drive extends MecanumDrive {
 //            }
 //        }
 
-        if(leftFront.getVelocity()>200 && rightFront.getVelocity()>200){
-            if(frontLeftRequest<0){
-                frontLeftRequest *= 0.1;
-                rearLeftRequest *= 0.1;
-                frontRightRequest *= 0.1;
-                rearRightRequest *= 0.1;
-            }
-        }
-        if(leftFront.getVelocity()<-200 && rightFront.getVelocity()<-200){
-            if(frontLeftRequest>0){
-                frontLeftRequest *= 0.1;
-                rearLeftRequest *= 0.1;
-                frontRightRequest *= 0.1;
-                rearRightRequest *= 0.1;
-            }
-        }
+//        if(leftFront.getVelocity()>500 && rightFront.getVelocity()>500 ){
+//            if(frontLeftRequest<0){
+//                frontLeftRequest *= 0.1;
+//                rearLeftRequest *= 0.1;
+//                frontRightRequest *= 0.1;
+//                rearRightRequest *= 0.1;
+//            }
+//        }
+//        if(leftFront.getVelocity()<-500 && rightFront.getVelocity()<-500){
+//            if(frontLeftRequest>0){
+//                frontLeftRequest *= 0.1;
+//                rearLeftRequest *= 0.1;
+//                frontRightRequest *= 0.1;
+//                rearRightRequest *= 0.1;
+//            }
+//        }
 
         /**
         if(leftFront.getVelocity()<-200 && rightFront.getVelocity() < -200){
@@ -259,14 +256,6 @@ public class Drive extends MecanumDrive {
         }
          **/
 
-        if(leftFront.getVelocity()>200 && rightFront.getVelocity()>200){
-            if(frontLeftRequest<0){
-                frontLeftRequest *= 0.4;
-                rearLeftRequest *= 0.4;
-                frontRightRequest *= 0.4;
-                rearRightRequest *= 0.4;
-            }
-        }
 //        if(leftFront.getVelocity()<-200){
 //            if(frontLeftRequest>0){
 //                frontLeftRequest *= 0.4;
@@ -279,8 +268,6 @@ public class Drive extends MecanumDrive {
         leftRear.setVelocity(rearLeftRequest);
         rightFront.setVelocity(frontRightRequest);
         rightRear.setVelocity(rearRightRequest);
-
-
     }
 
     public void switchDrive() {

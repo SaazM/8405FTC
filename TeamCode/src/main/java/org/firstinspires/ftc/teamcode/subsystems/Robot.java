@@ -15,6 +15,5 @@ public class Robot {
         drive = new Drive(hardwareMap);
         lift = new Lift(hardwareMap);
         intake = new Intake(hardwareMap);
-
     }
 }
