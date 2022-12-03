@@ -114,9 +114,7 @@ public class Lift {
         } else { // prevents holding when lift is at bottom
             kill = prevKill;
             startTime = startTimeTemp;
-<<<<<<< Updated upstream
             isHolding = prevHolding;
-=======
 //            holdingPosRight = -1;
 //            holdingPosLeft = -1;
             isHolding = true;
@@ -130,7 +128,6 @@ public class Lift {
             holdingPosRight = -1;
             kill = true;
             isHolding = false;
->>>>>>> Stashed changes
         }
 
         if (holdingPosRight != -1 && !kill) { // holds power
