@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.auton;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,7 +17,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-public class AutonAsync {
+@TeleOp
+public class AutonAsync extends OpMode{
     Robot robot;
     int finalID = -1;
     DcMotorEx liftLeft;
@@ -23,8 +26,10 @@ public class AutonAsync {
     Intake intake;
     double startTime;
     Telemetry telemetry;
+    HardwareMap hardwareMap;
+    aprilTagsInit apriltags;
 
-    double tagForward = 0;
+    double tagForward = 0.01;
     double tagBack = 0;
 
     boolean toIntake = true;
@@ -39,26 +44,28 @@ public class AutonAsync {
     Trajectory trajSeq1;
     ElapsedTime timer;
 
-    Trajectory t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16;
+    Trajectory t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17;
 
     public AutonAsync(int tag_id, HardwareMap hardwareMap, Telemetry t) {
         startTime = System.currentTimeMillis();
         robot = new Robot(hardwareMap);
+
         timer = new ElapsedTime();
-        liftLeft = robot.lift.leftLift;
+        //liftLeft = robot.lift.leftLift;
         liftRight = robot.lift.rightLift;
-        liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake = robot.intake;
         telemetry = t;
 
-        tag_id++;
-        if (tag_id == 2) { // parking zone 1
-            tagBack = 12;
-        } else if (tag_id == 3) { // parking zone 3
-            tagForward = 12;
+
+
+        if (tag_id == 3) { // parking zone 1
+            tagForward = -24;
+        } else if (tag_id == 1) { // parking zone 3
+            tagForward = 24;
         }
     }
 
@@ -75,11 +82,19 @@ public class AutonAsync {
 
          t1 = robot.drive.trajectoryBuilder(new Pose2d())
                  .addDisplacementMarker(() -> {liftTo = 3; toIntake = true;})
-                .strafeRight(75)
+                 .lineToConstantHeading(new Vector2d(2.5, -74))
                  .addDisplacementMarker(() -> {
                      timer.reset();
+                     while(waitSeconds(1.0)){
 
-                     robot.drive.followTrajectoryAsync(t2);
+                         robot.intake.outtake();
+                         telemetry.addData("Intaking?: ", toIntake);
+                         telemetry.update();
+                     }
+                     telemetry.addLine("Done Waiting");
+                     telemetry.update();
+                     toIntake = true;
+                     robot.drive.followTrajectoryAsync(t4);
                  })
                  .build();
 
@@ -107,11 +122,11 @@ public class AutonAsync {
 
                 .build();
 
-         t4 = robot.drive.trajectoryBuilder(t2.end())
+         t4 = robot.drive.trajectoryBuilder(t1.end())
 
                  .back(3)
                  .addDisplacementMarker(() ->{
-                     while(waitSeconds(0.25)){}
+
                      liftTo = 4;
                      robot.drive.followTrajectoryAsync(t5);
                  })
@@ -132,8 +147,7 @@ public class AutonAsync {
                     while (waitSeconds(1)) {
                     }
                     liftTo = 3;
-                    while (waitSeconds(0.5)) {
-                    }
+
                     robot.drive.followTrajectoryAsync(t7);
                 })
 
@@ -169,7 +183,7 @@ public class AutonAsync {
                     toIntake = true;
 
                     liftTo = 5;
-                    robot.drive.followTrajectoryAsync(t11);
+                    robot.drive.followTrajectoryAsync(t10);
                 })
 
 
@@ -178,30 +192,16 @@ public class AutonAsync {
 
         t10 = robot.drive.trajectoryBuilder(t9.end())
                 .back(2)
-
+                .addDisplacementMarker(() -> robot.drive.followTrajectoryAsync(t11))
                 .build();
-        t11 = robot.drive.trajectoryBuilder(t9.end())
-                .lineToLinearHeading(new Pose2d(t9.end().getX(), t9.end().getY()+13, Math.toRadians(180)))
-                .addDisplacementMarker(() -> {
-                    while(waitSeconds(0.25)){}
-                    liftTo = 5;
-                    robot.drive.followTrajectoryAsync(t12);
-                })
+        t11 = robot.drive.trajectoryBuilder(t10.end())
+                .strafeLeft(12)
+                .addDisplacementMarker(() -> robot.drive.followTrajectoryAsync(t12))
 
                 .build();
 
         t12 = robot.drive.trajectoryBuilder(t11.end())
-                .forward(23.5)
-                .addDisplacementMarker(() ->
-
-                {
-                    while (waitSeconds(1)) {
-                    }
-                    liftTo = 3;
-                    while (waitSeconds(0.5)) {
-                    }
-                    robot.drive.followTrajectoryAsync(t13);
-                })
+                .forward(tagForward)
 
                 .build();
 
@@ -231,17 +231,22 @@ public class AutonAsync {
                     telemetry.addLine("Done Waiting");
                     telemetry.update();
                     toIntake = true;
-                    robot.drive.followTrajectoryAsync(t16);
+                    liftTo = 6;
+                    //robot.drive.followTrajectoryAsync(t16);
 
                 })
 
 
                 .build();
-        t16 = robot.drive.trajectoryBuilder(t15.end())
-                .strafeLeft(12)
-                .forward(tagForward)
-                .back(tagBack)
-                .build();
+        /**t16 = robot.drive.trajectoryBuilder(t15.end())
+                .lineToConstantHeading(new Vector2d(t15.end().getX()-3, t15.end().getY()+12))
+                .lineToConstantHeading(new Vector2d(t15.end().getX() - 3 + tagForward, t15.end().getY() + 12))
+
+                                .build();**/
+
+
+
+
         robot.drive.followTrajectoryAsync(t1);
     }
 
@@ -273,23 +278,33 @@ public class AutonAsync {
                 robot.lift.liftToPosition(0, 0, 0.4);
             }
         }
+        if(liftTo>=1)robot.lift.autonRequest();
+
     }
 
+    @Override
+    public void init() {
+
+    }
+    @Override
     public void init_loop() {
-    }
 
+    }
+    @Override
     public void start() {
 
     }
 
     public void stop() {
     }
-
+    @Override
     public void loop() {
+
         robot.drive.update();
         lift_thingies();
         intaking();
         telemetry.addData("STARTED", liftTo);
+        telemetry.addData("PARKING ID: ", finalID);
         telemetry.update();
     }
 }

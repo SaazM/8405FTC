@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.checkerframework.checker.units.qual.Current;
@@ -68,8 +69,9 @@ public class OfficialTeleOp extends LinearOpMode {
             telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);
             telemetry.addData("speed multiplier: ", robot.drive.speedMultiplier);
             telemetry.addData("IsFieldCentric? ", robot.drive.isFieldCentric);
-            telemetry.addData("LEFT Lift Position", robot.lift.leftLift.getCurrentPosition());
+            telemetry.addData("Right Lift Requested Position", robot.lift.holdingPosRight);
             telemetry.addData("RIGHT Lift Position", robot.lift.rightLift.getCurrentPosition());
+            telemetry.addData("Right Lift PID: ", robot.lift.rightLift.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
             telemetry.addData("IsHolding?: ", robot.lift.isHolding);
             telemetry.addData("HoldingPosLeft: ", robot.lift.holdingPosLeft);
             telemetry.addData("lF vel", robot.drive.leftFront.getVelocity());

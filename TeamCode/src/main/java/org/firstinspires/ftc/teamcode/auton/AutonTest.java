@@ -31,7 +31,10 @@ package org.firstinspires.ftc.teamcode.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 
@@ -40,6 +43,25 @@ import org.firstinspires.ftc.teamcode.subsystems.Robot;
 public class AutonTest extends LinearOpMode {
     @Override
     public void runOpMode() {
-        Robot drive=  new Robot(hardwareMap);
+        DcMotorEx rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
+        rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        boolean moveON = false;
+        waitForStart();
+        while(opModeIsActive())
+        {
+            if(rightLift.getCurrentPosition() <= 2100 && !moveON)
+            {
+                rightLift.setPower(0.3);
+
+            }
+            else
+            {
+                moveON = true;
+                rightLift.setPower(-0.1);
+
+            }
+            rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
     }
 }
