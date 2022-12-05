@@ -85,12 +85,11 @@ public class Lift {
         } else if (gamepad.right_trigger > 0.5) { // move lift up
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             if (rightLift.getCurrentPosition() < liftLimit - 40) {
-                rightLift.setVelocity(manualLiftPower * 0.95 * powerToVelocity);
+                rightLift.setVelocity(gamepad.right_trigger*manualLiftPower * 0.95 * powerToVelocity);
             }
 
             if (rightLift.getCurrentPosition() > liftLimit) {
                 rightLift.setVelocity(0);
-
             }
 
             holdingPosLeft = -1;
