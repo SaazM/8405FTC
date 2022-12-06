@@ -105,7 +105,7 @@ public class Lift {
 //            }
             if(rightLift.getCurrentPosition() > 100)
             {
-                rightLift.setVelocity(-manualLiftPower * 0.6 * powerToVelocity);
+                rightLift.setVelocity(gamepad.left_trigger*-manualLiftPower * 0.6 * powerToVelocity);
             }
             else
 
