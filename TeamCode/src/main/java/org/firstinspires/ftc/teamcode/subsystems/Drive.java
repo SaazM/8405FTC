@@ -245,25 +245,23 @@ public class Drive extends MecanumDrive {
 //            }
 //        }
 
-        /**
         if(leftFront.getVelocity()<-200 && rightFront.getVelocity() < -200){
-            if(frontLeftRequest>0){
+            if(frontLeftRequest>0 && frontRightRequest>0){
                 frontLeftRequest *= dampenBy;
                 rearLeftRequest *= dampenBy;
                 frontRightRequest *= dampenBy;
                 rearRightRequest *= dampenBy;
             }
         }
-         **/
+        if(leftFront.getVelocity()>200 && rightFront.getVelocity() > 200){
+            if(frontLeftRequest<0 && frontRightRequest<0){
+                frontLeftRequest *= dampenBy;
+                rearLeftRequest *= dampenBy;
+                frontRightRequest *= dampenBy;
+                rearRightRequest *= dampenBy;
+            }
+        }
 
-//        if(leftFront.getVelocity()<-200){
-//            if(frontLeftRequest>0){
-//                frontLeftRequest *= 0.4;
-//                rearLeftRequest *= 0.4;
-//                frontRightRequest *= 0.4;
-//                rearRightRequest *= 0.4;
-//            }
-//        }
         leftFront.setVelocity(frontLeftRequest);
         leftRear.setVelocity(rearLeftRequest);
         rightFront.setVelocity(frontRightRequest);

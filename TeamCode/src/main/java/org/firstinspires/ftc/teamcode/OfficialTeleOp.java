@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.checkerframework.checker.units.qual.Current;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.subsystems.*;
 
 @TeleOp(name="Drive Official")
 public class OfficialTeleOp extends LinearOpMode {
@@ -42,6 +42,10 @@ public class OfficialTeleOp extends LinearOpMode {
             double power = -gamepad1.left_stick_y; // remember this is reversed
             double strafe = gamepad1.left_stick_x * 1.1; // counteract imperfect strafing
             double turn = gamepad1.right_stick_x;
+
+            if (gamepad1.dpad_down) {
+                robot.drive.switchDrive();
+            }
 
             if (gamepad1.left_bumper) {
                 robot.drive.slowMode();
