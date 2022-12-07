@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class Lift {
 
     private enum LIFT_MODE {
-        MANUAL,MACRO,HOLD,NONE
+        MANUAL,MACRO,HOLD,NONE,RESET
     }
     public DcMotorEx leftLift;
     public DcMotorEx rightLift;
@@ -80,6 +80,9 @@ public class Lift {
         } else if (gamepad.triangle) { // high goal macro
             liftToHigh();
             currentMode = LIFT_MODE.MACRO;
+        } else if (gamepad.right_bumper)
+        {
+            currentMode = LIFT_MODE.RESET;
         }
 
         //MANUAL
@@ -97,7 +100,7 @@ public class Lift {
             currentMode = LIFT_MODE.MANUAL;
             if (rightLift.getCurrentPosition() > 100) {
                 rightLift.setVelocity(gamepad.left_trigger * -manualLiftPower * 0.6 * powerToVelocity);
-            } else {
+            }{
                 rightLift.setVelocity(gamepad.left_trigger *-manualLiftPower * 0.2 * powerToVelocity);
             }
         }
@@ -111,13 +114,19 @@ public class Lift {
         }
 
         //ANALYSIS OF MODE
-        if (currentMode != LIFT_MODE.MANUAL && currentMode != LIFT_MODE.NONE) { // goes to position asked for if needed
+        if (currentMode == LIFT_MODE.HOLD || currentMode == LIFT_MODE.MACRO) { // goes to position asked for if needed
             if (currentMode == LIFT_MODE.HOLD){
                 liftToPosition(holdingPosLeft, holdingPosRight, holdLiftPower);
             }
             else {
                 liftToPosition(holdingPosLeft, holdingPosRight, macroLiftPower);
             }
+        }
+        else if(currentMode == LIFT_MODE.RESET)
+        {
+            rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightLift.setPower(0);
+
         }
     }
 
