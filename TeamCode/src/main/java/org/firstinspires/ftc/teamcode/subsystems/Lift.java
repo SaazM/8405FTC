@@ -8,6 +8,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 public class Lift {
+
+    private enum LIFT_MODE {
+        MANUAL,MACRO,HOLD,NONE
+    }
     public DcMotorEx leftLift;
     public DcMotorEx rightLift;
     public DigitalChannel limitSwitch;
@@ -15,17 +19,20 @@ public class Lift {
     public double startTime;
     public int holdingPosLeft;
     public int holdingPosRight;
-    public boolean kill;
-    public boolean liftReached = true;
-    public boolean isHolding = false;
-    private double powerToVelocity = 435 * 384.5 / 60; //converts power into ticks per second
-    private double manualLiftPower = 0.8;
-    private double holdLiftPower = 0.3;
-    private double macroLiftPower = 0.8;
-    private double liftLimit = 2750; //upper lift limit
+
+    //LIFT CONSTANTS
+    private final double powerToVelocity = 435 * 384.5 / 60; //converts power into ticks per second
+    private final double manualLiftPower = 0.8;
+    private final double holdLiftPower = 0.3;
+    private final double macroLiftPower = 0.8;
+    private final double liftLimit = 2750; //upper lift limit
+
+    private LIFT_MODE currentMode;
+
 
 
     public Lift(HardwareMap hardwareMap) {
+        currentMode = LIFT_MODE.NONE;
         rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
         leftLift = hardwareMap.get(DcMotorEx.class, "leftLift");
 
@@ -41,112 +48,80 @@ public class Lift {
         startTime = System.currentTimeMillis();
         holdingPosLeft = -1;
         holdingPosRight = -1;
-        kill = false;
+
     }
 
     public void liftToPosition(int posLeft, int posRight, double power) {//power here is a fallacy; it just is percentage of lift velocity capability
-        liftReached = (Math.abs(rightLift.getCurrentPosition() - posRight) < 20);
         rightLift.setTargetPosition(posRight);
         rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         if (Math.abs(posRight - rightLift.getCurrentPosition()) <= 20) {
-            isHolding = true;
+            currentMode = LIFT_MODE.HOLD;
         }
-        if (posRight < rightLift.getCurrentPosition() && posRight >= 0) {
-            rightLift.setPower(power * 0.75);
-        } else if (posRight > rightLift.getCurrentPosition() && posRight <= liftLimit) {
+        //DETERMINE VALIDITY OF POSITION
+        if(posRight >= 0 && posRight<=liftLimit)
+        {
             rightLift.setPower(power);
-        } else {
-            rightLift.setPower(0);
         }
+
     }
 
     public void liftTeleOp(Gamepad gamepad) {
-        double startTimeTemp = startTime;
-        boolean prevKill = kill;
-        boolean prevHolding = isHolding;
-        startTime = System.currentTimeMillis();
-        kill = false;
-        isHolding = false;
-        /**
-         if(limitSwitch.getState())
-         {
-         rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-         leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-         }
-         **/
+
+        //MACROS
         if (gamepad.square) { // medium goal macro
             liftToMedium();
+            currentMode = LIFT_MODE.MACRO;
         } else if (gamepad.circle) { // low goal macro
             liftToLow();
+            currentMode = LIFT_MODE.MACRO;
         } else if (gamepad.dpad_up) { // stack macro
             liftToTopStack();
+            currentMode = LIFT_MODE.MACRO;
         } else if (gamepad.triangle) { // high goal macro
             liftToHigh();
-        } else if (gamepad.right_trigger > 0.5) { // move lift up
+            currentMode = LIFT_MODE.MACRO;
+        }
+
+        //MANUAL
+        if (gamepad.right_trigger > 0.5) { // move lift up
+            currentMode = LIFT_MODE.MANUAL;
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            if (rightLift.getCurrentPosition() < liftLimit - 40) {
+            if (rightLift.getCurrentPosition() < liftLimit - 20) {
                 rightLift.setVelocity(gamepad.right_trigger*manualLiftPower * 0.95 * powerToVelocity);
             }
-
             if (rightLift.getCurrentPosition() > liftLimit) {
                 rightLift.setVelocity(0);
             }
-
-            holdingPosLeft = -1;
-            holdingPosRight = -1;
         } else if (gamepad.left_trigger > 0.5) { // move lift down
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            if (rightLift.getCurrentPosition() < 0) {
-//                rightLift.setPower(0);
-//            } else if (rightLift.getCurrentPosition() > 100) {//if lift is below 100, slow down so we dont blow up the lift
-//                rightLift.setVelocity(-manualLiftPower * 0.95 * powerToVelocity * 0.3);
-//            } else {
-//                rightLift.setVelocity(-manualLiftPower * 0.3 * powerToVelocity * 0.3);
-//            }
-            if(rightLift.getCurrentPosition() > 100)
-            {
-                rightLift.setVelocity(gamepad.left_trigger*-manualLiftPower * 0.6 * powerToVelocity);
-            }
-            else
-
-            {rightLift.setVelocity(-manualLiftPower * 0.5 * powerToVelocity * 0.3);}
-
-
-            holdingPosRight = -1;
-        } else if (rightLift.getCurrentPosition() > 20 && rightLift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) { // holding
-            isHolding = true;
-            if (holdingPosRight == -1) {
-                holdingPosLeft = leftLift.getCurrentPosition();
-                holdingPosRight = rightLift.getCurrentPosition();
-            }
-        } else { // prevents holding when lift is at bottom
-            kill = prevKill;
-            startTime = startTimeTemp;
-            isHolding = prevHolding;
-//            holdingPosRight = -1;
-//            holdingPosLeft = -1;
-            isHolding = true;
-        }
-        if (gamepad.right_bumper || ((System.currentTimeMillis() - startTime) > 120000)  || Math.min(leftLift.getCurrentPosition(), rightLift.getCurrentPosition())<0) { // kills lift power
-            rightLift.setPower(0);
-            leftLift.setPower(0);
-            rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            holdingPosLeft = -1;
-            holdingPosRight = -1;
-            kill = true;
-            isHolding = false;
-        }
-
-        if (holdingPosRight != -1 && !kill) { // holds power
-
-            if (isHolding) { // maintains current height
-                liftToPosition(holdingPosLeft, holdingPosRight, holdLiftPower);
+            currentMode = LIFT_MODE.MANUAL;
+            if (rightLift.getCurrentPosition() > 100) {
+                rightLift.setVelocity(gamepad.left_trigger * -manualLiftPower * 0.6 * powerToVelocity);
             } else {
+                rightLift.setVelocity(gamepad.left_trigger *-manualLiftPower * 0.2 * powerToVelocity);
+            }
+        }
+
+        //HOLDING
+        else if (rightLift.getCurrentPosition() > 100 && currentMode == LIFT_MODE.MANUAL) { // hold after manual ends
+            currentMode = LIFT_MODE.HOLD;
+            holdingPosLeft = leftLift.getCurrentPosition();
+            holdingPosRight = rightLift.getCurrentPosition();
+
+        }
+
+        //ANALYSIS OF MODE
+        if (currentMode != LIFT_MODE.MANUAL && currentMode != LIFT_MODE.NONE) { // goes to position asked for if needed
+            if (currentMode == LIFT_MODE.HOLD){
+                liftToPosition(holdingPosLeft, holdingPosRight, holdLiftPower);
+            }
+            else {
                 liftToPosition(holdingPosLeft, holdingPosRight, macroLiftPower);
             }
         }
     }
+
+
     public void liftToZero(){holdingPosRight = 0;}
     public void liftToMedium() {
         holdingPosRight = 1860;
