@@ -7,6 +7,10 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
+import java.util.*;
+
 public class Lift {
 
     private enum LIFT_MODE {
@@ -14,7 +18,7 @@ public class Lift {
     }
     public DcMotorEx leftLift;
     public DcMotorEx rightLift;
-    public DigitalChannel limitSwitch;
+    //public DigitalChannel limitSwitch;
 
     public double startTime;
     public int holdingPosLeft;
@@ -22,12 +26,14 @@ public class Lift {
     public boolean kill;
 
     //LIFT CONSTANTS
-
+    private LinkedList<Double> storeCurrents = new LinkedList<>();
+    public double rollingAverageCurrent = 0;
     private final double powerToVelocity = 435 * 384.5 / 60; //converts power into ticks per second
     private final double manualLiftPower = 0.8;
     private final double holdLiftPower = 0.3;
     private final double macroLiftPower = 0.8;
     private final double liftLimit = 2750; //upper lift limit
+    private final double hertz = 20;
 
     public LIFT_MODE currentMode;
 
@@ -39,7 +45,8 @@ public class Lift {
         currentMode = LIFT_MODE.NONE;
         rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
         leftLift = hardwareMap.get(DcMotorEx.class, "leftLift");
-
+        //limitSwitch = hardwareMap.get(DigitalChannel.class, "liftLimitSwitch");
+        //limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
         rightLift.setDirection(DcMotor.Direction.FORWARD);
 
@@ -105,8 +112,12 @@ public class Lift {
                 currentMode = LIFT_MODE.MANUAL;
                 if (rightLift.getCurrentPosition() > 100) {
                     rightLift.setVelocity(gamepad.left_trigger * -manualLiftPower * 0.6 * powerToVelocity);
-                }{
-                    rightLift.setVelocity(gamepad.left_trigger *-manualLiftPower * 0.2 * powerToVelocity);
+                }else if(rightLift.getCurrentPosition() > 0){
+                    rightLift.setVelocity(gamepad.left_trigger * -manualLiftPower * 0.2 * powerToVelocity);
+                }
+                else
+                {
+                    currentMode = LIFT_MODE.RESET;
                 }
             }
 
@@ -139,7 +150,7 @@ public class Lift {
                 {
                     startedHoldingTime = System.currentTimeMillis();
                 }
-                if(System.currentTimeMillis() - startedHoldingTime >= 60000)
+                if(System.currentTimeMillis() - startedHoldingTime >= 20000)
                 {
                     currentMode = LIFT_MODE.KILLED;
                 }
@@ -147,6 +158,21 @@ public class Lift {
             else
             {
                 startedHoldingTime = 0;
+            }
+
+            //Rolling Average Current
+            if(storeCurrents.size() <= hertz*10)//10 seconds until start doing a rolling average
+            {
+
+                rollingAverageCurrent = rollingAverageCurrent * storeCurrents.size()/(storeCurrents.size()+1);
+                rollingAverageCurrent += rightLift.getCurrent(CurrentUnit.AMPS)/(storeCurrents.size()+1);
+                storeCurrents.add(rightLift.getCurrent(CurrentUnit.AMPS));
+            }
+            else
+            {
+                rollingAverageCurrent -= storeCurrents.pop()/(storeCurrents.size());
+                storeCurrents.add(rightLift.getCurrent(CurrentUnit.AMPS));
+                rollingAverageCurrent += rightLift.getCurrent(CurrentUnit.AMPS)/(storeCurrents.size());
             }
         }
         else

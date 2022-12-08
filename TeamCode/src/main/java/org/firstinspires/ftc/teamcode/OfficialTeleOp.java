@@ -37,6 +37,7 @@ public class OfficialTeleOp extends LinearOpMode {
         robot.lift.newBotStart();
 
         waitForStart();
+        double startTime = System.currentTimeMillis();
         double endTime = -1;
         while (opModeIsActive()) {
             double power = -gamepad1.left_stick_y; // remember this is reversed
@@ -78,15 +79,14 @@ public class OfficialTeleOp extends LinearOpMode {
             telemetry.addData("Right Lift PID: ", robot.lift.rightLift.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
             telemetry.addData("CURRENT LIFT MODE: ", robot.lift.currentMode);
             telemetry.addData("HoldingPosLeft: ", robot.lift.holdingPosLeft);
-            telemetry.addData("lF vel", robot.drive.leftFront.getVelocity());
-            telemetry.addData("rF vel", robot.drive.rightFront.getVelocity());
-            telemetry.addData("pass", robot.drive.leftFront.getVelocity()>200 && robot.drive.rightFront.getVelocity()>200);
-            telemetry.addData("current Left", robot.lift.leftLift.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("current Right", robot.lift.rightLift.getCurrent(CurrentUnit.AMPS));
-
+            telemetry.addData("current Right Average", robot.lift.rollingAverageCurrent);
+            telemetry.addData("Hertz", 1000.0/(System.currentTimeMillis() - startTime));
+            //telemetry.addData("Lift Limit Switch", robot.lift.limitSwitch.getState());
             telemetry.addData("Limiter", temp);
 
             telemetry.update();
+            startTime = System.currentTimeMillis();
         }
     }
 }
