@@ -16,4 +16,10 @@ public class Robot {
         lift = new Lift(hardwareMap);
         intake = new Intake(hardwareMap);
     }
+
+    public Robot(HardwareMap hardwareMap, int i) {
+        drive = new Drive(hardwareMap);
+        lift = new Lift(hardwareMap);
+        intake = new Intake(hardwareMap, i);
+    }
 }

@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.auton;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -356,7 +355,7 @@ public class AutonAsync extends OpMode{
         } else {
             startTime = System.currentTimeMillis();
             if (robot.lift.rightLift.getCurrentPosition() > 50) {
-                robot.lift.liftToPosition(0, 0, 0.4);
+                robot.lift.oldBotLiftToPosition(0, 0, 0.4);
             }
         }
         if(liftTo>=1)robot.lift.autonRequest();

@@ -179,6 +179,14 @@ public class Drive extends MecanumDrive {
         return limiter;
     }
 
+    public void moveTeleOp(double power, double strafe, double turn) {
+        if (isFieldCentric) {
+            fieldCentric(power, strafe, turn);
+        } else {
+            robotCentric(power, strafe, turn);
+        }
+    }
+
     public void robotCentric(double power, double strafe, double turn) {
         double denominator = Math.max(Math.abs(power) + Math.abs(strafe) + Math.abs(turn), 1);
         double frontLeftPower = (power + strafe + turn) / denominator;

@@ -19,6 +19,7 @@ public class Lift {
     public double startTime;
     public int holdingPosLeft;
     public int holdingPosRight;
+    public boolean kill;
 
     //LIFT CONSTANTS
 
@@ -54,7 +55,7 @@ public class Lift {
 
     }
 
-    public void liftToPosition(int posLeft, int posRight, double power) {//power here is a fallacy; it just is percentage of lift velocity capability
+    public void oldBotLiftToPosition(int posLeft, int posRight, double power) {//power here is a fallacy; it just is percentage of lift velocity capability
         rightLift.setTargetPosition(posRight);
         rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         if (Math.abs(posRight - rightLift.getCurrentPosition()) <= 20) {
@@ -119,10 +120,10 @@ public class Lift {
             //ANALYSIS OF MODE
             if (currentMode == LIFT_MODE.HOLD || currentMode == LIFT_MODE.MACRO) { // goes to position asked for if needed
                 if (currentMode == LIFT_MODE.HOLD){
-                    liftToPosition(holdingPosLeft, holdingPosRight, holdLiftPower);
+                    oldBotLiftToPosition(holdingPosLeft, holdingPosRight, holdLiftPower);
                 }
                 else {
-                    liftToPosition(holdingPosLeft, holdingPosRight, macroLiftPower);
+                    oldBotLiftToPosition(holdingPosLeft, holdingPosRight, macroLiftPower);
                 }
             }
             else if(currentMode == LIFT_MODE.RESET)
@@ -178,7 +179,8 @@ public class Lift {
         holdingPosRight = 2700;
     }
 
-    public void autonRequest() {liftToPosition(100,holdingPosRight,macroLiftPower);}
+    public void autonRequest() {
+        oldBotLiftToPosition(100,holdingPosRight,macroLiftPower);}
 
 
     public void newBotStart() {
@@ -189,5 +191,74 @@ public class Lift {
         rightLift.setDirection(DcMotorEx.Direction.FORWARD);
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void oldBotRestart() {
+        leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public void oldBotMacros(Gamepad gamepad1) {
+        if (gamepad1.square) {
+            startTime = System.currentTimeMillis();
+            kill = false;
+            holdingPosLeft = 600;
+            holdingPosRight = 600;
+        } else if (gamepad1.circle) {
+            startTime = System.currentTimeMillis();
+            kill = false;
+            holdingPosLeft = 380;
+            holdingPosRight = 380;
+        } else if (gamepad1.dpad_up) {
+            startTime = System.currentTimeMillis();
+            kill = false;
+            holdingPosLeft = 135;
+            holdingPosRight = 135;
+        } else if (gamepad1.right_trigger > 0.5) {
+            startTime = System.currentTimeMillis();
+            kill = false;
+            rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftLift.setPower(0.5);
+            rightLift.setPower(0.5);
+            holdingPosLeft = -1;
+            holdingPosRight = -1;
+        } else if (gamepad1.left_trigger > 0.5) {
+            startTime = System.currentTimeMillis();
+            kill = false;
+            rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftLift.setPower(-0.5);
+            rightLift.setPower(-0.5);
+            holdingPosLeft = -1;
+            holdingPosRight = -1;
+        } else if (rightLift.getCurrentPosition() > 30 && rightLift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+            if (holdingPosLeft == -1) {
+                holdingPosLeft = rightLift.getCurrentPosition();
+                holdingPosRight = rightLift.getCurrentPosition();
+            }
+        }
+
+        if(holdingPosLeft != -1 && !kill) {
+            oldBotLiftToPosition(holdingPosLeft, holdingPosRight);
+        }
+
+        if(gamepad1.dpad_down || ((System.currentTimeMillis() - startTime)>15000)) {
+            oldBotLiftToPosition(0, 0);
+            rightLift.setPower(0);
+            leftLift.setPower(0);
+            kill = true;
+        }
+    }
+
+    public void oldBotLiftToPosition(int posLeft, int posRight) {
+        rightLift.setTargetPosition(posLeft);
+        leftLift.setTargetPosition(posRight);
+        rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightLift.setPower(0.5);
+        leftLift.setPower(0.5);
     }
 }

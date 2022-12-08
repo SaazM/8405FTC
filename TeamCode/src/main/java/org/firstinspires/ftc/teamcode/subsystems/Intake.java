@@ -12,6 +12,10 @@ public class Intake {
     public CRServo roller2;
     public DigitalChannel limitSwitch;
 
+    public Servo claw;
+    public int counter;
+    public boolean open;
+
     public Intake(HardwareMap hardwareMap) {
         roller1 = hardwareMap.get(CRServo.class, "rollerLeft");
         roller1.resetDeviceConfigurationForOpMode();
@@ -19,6 +23,34 @@ public class Intake {
         roller2.resetDeviceConfigurationForOpMode();
         limitSwitch = hardwareMap.get(DigitalChannel.class, "limitSwitch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+    }
+
+    public Intake(HardwareMap hardwareMap, int i) {
+        claw = hardwareMap.get(Servo.class, "intake");
+        claw.resetDeviceConfigurationForOpMode();
+    }
+
+    public void open() {
+        claw.setPosition(0.5);
+    }
+
+    public void close() {
+        claw.setPosition(0.8);
+    }
+
+    public void moveClaw() {
+        if (counter == 0) {
+            if (open) {
+                open();
+            } else {
+                close();
+            }
+            open = !open;
+        }
+    }
+
+    public void resetCounter() {
+        counter = 0;
     }
 
     public void outtake() {
