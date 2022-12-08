@@ -9,8 +9,8 @@ import org.checkerframework.checker.units.qual.Current;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
-@TeleOp(name="Drive Official")
-public class OfficialTeleOp extends LinearOpMode {
+@TeleOp(name="Washington School")
+public class WashingtonSchoolTeleOp extends LinearOpMode {
     private final double inches_per_revolution = 60/25.4*Math.PI; //60 mm * (1 inches)/(25.4 mm) is the diameter of the wheel in inches, *pi for circumference
     private final double ticks_per_revolution = 360*6.0; //4 ticks per cycle & 360 cycle per revolution
     private final double mm_to_inches = 0.03937008;
@@ -53,7 +53,7 @@ public class OfficialTeleOp extends LinearOpMode {
                 robot.drive.fastMode();
             }
 
-            if (gamepad1.cross) {
+            if (gamepad2.cross) {
                 robot.intake.outtake();
                 endTime = System.currentTimeMillis() + 1500;
             } else if(endTime > 0 && System.currentTimeMillis() < endTime) {
@@ -68,7 +68,9 @@ public class OfficialTeleOp extends LinearOpMode {
             double temp = robot.drive.moveTeleOp(power, strafe, turn, liftPos);
 
             //robot.lift.isHolding = false;
-            robot.lift.liftTeleOp(gamepad1);
+            robot.lift.liftTeleOp(gamepad2);
+
+
             telemetry.addData("IMU Heading: ", 180/Math.PI * robot.drive.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);
             telemetry.addData("speed multiplier: ", robot.drive.speedMultiplier);
