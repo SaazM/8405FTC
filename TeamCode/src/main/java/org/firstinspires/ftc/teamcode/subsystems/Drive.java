@@ -70,7 +70,7 @@ public class Drive extends MecanumDrive {
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
-
+    public boolean switchingSpeed = false;
 
 
     private PIDFController turnController;
@@ -280,12 +280,12 @@ public class Drive extends MecanumDrive {
         isFieldCentric = !isFieldCentric;
     }
 
-    public void slowMode() {
-        speedMultiplier = 0.5;
-    }
-
-    public void fastMode() {
-        speedMultiplier = 0.8;
+    public void switchSpeed() {
+        if(!switchingSpeed) {
+            if (speedMultiplier == 0.5) { speedMultiplier = 0.8; }
+            else { speedMultiplier = 0.5; }
+        }
+        switchingSpeed = true;
     }
 
     public void turnToPosition(double rotation) {

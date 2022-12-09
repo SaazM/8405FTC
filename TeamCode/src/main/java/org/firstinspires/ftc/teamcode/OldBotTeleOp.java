@@ -44,9 +44,9 @@ public class OldBotTeleOp extends LinearOpMode {
             double turn = gamepad1.right_stick_x;
 
             if (gamepad1.left_bumper) {
-                robot.drive.slowMode();
+                robot.drive.switchSpeed();
             } else {
-                robot.drive.fastMode();
+                robot.drive.switchingSpeed = false;
             }
 
             robot.drive.moveTeleOp(power, strafe, turn);
