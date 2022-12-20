@@ -166,25 +166,16 @@ public class Drive extends MecanumDrive {
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(translational_error, translational_error, Math.toRadians(turn_error)), timeout);
     }
 
-    public double moveTeleOp(double power, double strafe, double turn, double liftPos) {
-        //double limiter = (3100 - liftPos) / 3100;
-        double limiter = driveAntiTip(liftPos/3100, 435);
+    public void moveTeleOp(double power, double strafe, double turn, double liftPos) {
+
+
 
         if (isFieldCentric) {
-            fieldCentric(power*limiter, strafe*limiter, turn);
+            fieldCentric(driveAntiTip(power,liftPos), driveAntiTip(strafe,liftPos), driveAntiTip(turn, liftPos));
         } else {
-            robotCentric(power*limiter * 3/4 + power/4, strafe, turn);
-            robotCentric(power*limiter, strafe*limiter, turn);
+            robotCentric(driveAntiTip(power,liftPos), driveAntiTip(strafe,liftPos), driveAntiTip(turn, liftPos));
         }
-        return limiter;
-    }
 
-    public void moveTeleOp(double power, double strafe, double turn) {
-        if (isFieldCentric) {
-            fieldCentric(power, strafe, turn);
-        } else {
-            robotCentric(power, strafe, turn);
-        }
     }
 
     public void robotCentric(double power, double strafe, double turn) {
@@ -209,9 +200,32 @@ public class Drive extends MecanumDrive {
 
         setDrivePowers(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
     }
-    public double driveAntiTip(double liftPosition,  double startLimitPoint)
+    public double driveAntiTip(double value, double liftPosition)
     {
-        return Math.min(1, Math.exp(-1.5*(liftPosition - startLimitPoint/3100)));
+        liftPosition = Math.max(liftPosition, 0);
+
+        int c = 1;
+        double liftMax = 3100;
+        double minimumMaxSpeed = 0.15;
+        double minMaxDegree = 2.1;
+        double b = c+(minimumMaxSpeed-c)*Math.pow(liftPosition/liftMax, minMaxDegree);
+
+
+
+        boolean sign = value >= 0;
+        int minAmplitude = 0;
+        double amplitudeDegree = 2.2;
+
+
+
+
+
+
+        double finalValue = minAmplitude+(b-minAmplitude)*Math.pow(Math.abs(value), amplitudeDegree);
+        if(value < 0){finalValue *= -1;}
+        return finalValue;
+
+
     }
     public void setDrivePowers(double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower) {
         double dampenBy = 0.3;
@@ -219,40 +233,7 @@ public class Drive extends MecanumDrive {
         double rearLeftRequest = backLeftPower * speedMultiplier * powerToVelocity;
         double frontRightRequest = frontRightPower * speedMultiplier * powerToVelocity;
         double rearRightRequest = backRightPower * speedMultiplier * powerToVelocity;
-//        if(frontLeftRequest >= 0 && frontRightRequest >= 0)
-//        {
-//            frontLeftRequest = Math.min(1, frontLeftRequest*1.75);
-//            rearLeftRequest = Math.min(1, rearLeftRequest*1.75);
-//            frontRightRequest = Math.min(1, frontRightRequest*1.75);
-//            rearRightRequest = Math.min(1, rearRightRequest*1.75);
-//        }
-//
-//        if(Math.abs(leftFront.getVelocity())>200 && Math.abs(rightFront.getVelocity()) > 200 && (Math.signum(leftFront.getVelocity()) == Math.signum(rightFront.getVelocity()))){
-//            if(Math.abs(leftFront.getVelocity() - frontLeftRequest) > 200){
-//                frontLeftRequest *= dampenBy;
-//                rearLeftRequest *= dampenBy;
-//                frontRightRequest *= dampenBy;
-//                rearRightRequest *= dampenBy;
-//            }
-//        }
- 
-//        if(leftFront.getVelocity()>500 && rightFront.getVelocity()>500 ){
-//            if(frontLeftRequest<0){
-//                frontLeftRequest *= 0.1;
-//                rearLeftRequest *= 0.1;
-//                frontRightRequest *= 0.1;
-//                rearRightRequest *= 0.1;
-//            }
-//        }
-//        if(leftFront.getVelocity()<-500 && rightFront.getVelocity()<-500){
-//            if(frontLeftRequest>0){
-//                frontLeftRequest *= 0.1;
-//                rearLeftRequest *= 0.1;
-//                frontRightRequest *= 0.1;
-//                rearRightRequest *= 0.1;
-//            }
-//        }
-
+        //dampening
         if(leftFront.getVelocity()<-200 && rightFront.getVelocity() < -200){
             if(frontLeftRequest>0 && frontRightRequest>0){
                 frontLeftRequest *= dampenBy;

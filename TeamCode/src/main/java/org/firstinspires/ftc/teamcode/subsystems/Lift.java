@@ -31,7 +31,7 @@ public class Lift {
     private final double powerToVelocity = 435 * 384.5 / 60; //converts power into ticks per second
     private final double manualLiftPower = 0.8;
     private final double holdLiftPower = 0.3;
-    private final double macroLiftPower = 0.8;
+    private final double macroLiftPower = 0.5;
     private final double liftLimit = 2750; //upper lift limit
     private final double hertz = 20;
 
@@ -86,7 +86,7 @@ public class Lift {
             } else if (gamepad.circle) { // low goal macro
                 liftToLow();
                 currentMode = LIFT_MODE.MACRO;
-            } else if (gamepad.dpad_up) { // stack macro
+            } else if (gamepad.left_bumper) { // stack macro
                 liftToTopStack();
                 currentMode = LIFT_MODE.MACRO;
             } else if (gamepad.triangle) { // high goal macro

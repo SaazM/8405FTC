@@ -9,7 +9,7 @@ import org.checkerframework.checker.units.qual.Current;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
-@TeleOp(name="Toggle Slowmode Official Teleop")
+@TeleOp(name="Official Teleop")
 public class OfficialTeleOpWithToggle extends LinearOpMode {
     private final double inches_per_revolution = 60/25.4*Math.PI; //60 mm * (1 inches)/(25.4 mm) is the diameter of the wheel in inches, *pi for circumference
     private final double ticks_per_revolution = 360*6.0; //4 ticks per cycle & 360 cycle per revolution
@@ -48,7 +48,7 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
                 robot.drive.switchDrive();
             }
 
-            if (gamepad1.left_bumper) {
+            if (gamepad1.right_stick_button) {
                 robot.drive.switchSpeed();
             } else {
                 robot.drive.switchingSpeed = false;
@@ -65,9 +65,9 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
                 endTime = -1;
             }
 
-            double liftPos = (double) (robot.lift.leftLift.getCurrentPosition() + robot.lift.rightLift.getCurrentPosition()) / 2;
+            double liftPos = (double) (robot.lift.rightLift.getCurrentPosition());
 
-            double temp = robot.drive.moveTeleOp(power, strafe, turn, liftPos);
+            robot.drive.moveTeleOp(power, strafe, turn, liftPos);
 
             //robot.lift.isHolding = false;
             robot.lift.liftTeleOp(gamepad1);
@@ -84,7 +84,7 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
             telemetry.addData("current Right Average", robot.lift.rollingAverageCurrent);
             telemetry.addData("Hertz", 1000.0/(System.currentTimeMillis() - startTime));
             //telemetry.addData("Lift Limit Switch", robot.lift.limitSwitch.getState());
-            telemetry.addData("Limiter", temp);
+
 
             telemetry.update();
             startTime = System.currentTimeMillis();

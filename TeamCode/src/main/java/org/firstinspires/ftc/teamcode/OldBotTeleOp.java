@@ -49,7 +49,7 @@ public class OldBotTeleOp extends LinearOpMode {
                 robot.drive.switchingSpeed = false;
             }
 
-            robot.drive.moveTeleOp(power, strafe, turn);
+            //robot.drive.moveTeleOp(power, strafe, turn);
 
             if (gamepad1.cross) {
                 robot.intake.moveClaw();
