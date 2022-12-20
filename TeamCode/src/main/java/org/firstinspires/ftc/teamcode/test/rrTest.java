@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Robot;
 public class rrTest extends LinearOpMode {
     @Override
     public void runOpMode() {
-        Robot robot = new Robot(hardwareMap);
+        Robot robot = new Robot(hardwareMap, gamepad1);
 
         // --- RESET ALL MOTOR POWERS TO 0 --- //
         robot.drive.leftRear.setPower(0);

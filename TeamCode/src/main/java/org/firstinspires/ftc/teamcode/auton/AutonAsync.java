@@ -47,7 +47,7 @@ public class AutonAsync extends OpMode{
 
     public AutonAsync(int tag_id, HardwareMap hardwareMap, Telemetry t) {
         startTime = System.currentTimeMillis();
-        robot = new Robot(hardwareMap);
+        robot = new Robot(hardwareMap, gamepad1);
 
         timer = new ElapsedTime();
         //liftLeft = robot.lift.leftLift;
@@ -355,7 +355,7 @@ public class AutonAsync extends OpMode{
         } else {
             startTime = System.currentTimeMillis();
             if (robot.lift.rightLift.getCurrentPosition() > 50) {
-                robot.lift.oldBotLiftToPosition(0, 0, 0.4);
+                robot.lift.liftToPosition(0, 0, 0.4);
             }
         }
         if(liftTo>=1)robot.lift.autonRequest();

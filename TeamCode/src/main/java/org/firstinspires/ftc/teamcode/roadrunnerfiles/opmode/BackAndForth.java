@@ -32,7 +32,7 @@ public class BackAndForth extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Robot robot = new Robot(hardwareMap);
+        Robot robot = new Robot(hardwareMap, gamepad1);
 
         Trajectory trajectoryForward = robot.drive.trajectoryBuilder(new Pose2d())
                 .forward(DISTANCE)

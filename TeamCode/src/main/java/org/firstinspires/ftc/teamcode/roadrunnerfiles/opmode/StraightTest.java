@@ -22,7 +22,7 @@ public class StraightTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        Robot robot = new Robot(hardwareMap);
+        Robot robot = new Robot(hardwareMap, gamepad1);
 
         Trajectory trajectory = robot.drive.trajectoryBuilder(new Pose2d())
                 .forward(DISTANCE)

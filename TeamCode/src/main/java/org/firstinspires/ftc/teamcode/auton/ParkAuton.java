@@ -26,7 +26,7 @@ public class ParkAuton extends LinearOpMode
         int finalID = init.stopAndSave();
         telemetry.addLine(Integer.toString(finalID));
         telemetry.update();
-        Auton auton = new Auton(false, finalID, new Robot(hardwareMap));
+        Auton auton = new Auton(false, finalID, new Robot(hardwareMap, gamepad1));
         auton.runAutonParkOnly();
     }
 

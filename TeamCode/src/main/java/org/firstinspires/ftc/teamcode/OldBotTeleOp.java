@@ -28,13 +28,13 @@ public class OldBotTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Robot robot = new Robot(hardwareMap, 1);
+        Robot robot = new Robot(hardwareMap, gamepad1);
 
         waitForStart();
 
         if (isStopRequested()) return;
 
-        robot.lift.oldBotRestart();
+        //robot.lift.oldBotRestart();
 
         double startTime = System.currentTimeMillis();
         while (opModeIsActive()) {
@@ -61,7 +61,7 @@ public class OldBotTeleOp extends LinearOpMode {
                 robot.drive.switchDrive();
             }
 
-            robot.lift.oldBotMacros(gamepad1);
+            //robot.lift.oldBotMacros(gamepad1);
 
             telemetry.addData("IMU Heading: ", -robot.drive.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);

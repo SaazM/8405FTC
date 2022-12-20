@@ -209,23 +209,12 @@ public class Drive extends MecanumDrive {
         double minimumMaxSpeed = 0.15;
         double minMaxDegree = 2.1;
         double b = c+(minimumMaxSpeed-c)*Math.pow(liftPosition/liftMax, minMaxDegree);
-
-
-
         boolean sign = value >= 0;
         int minAmplitude = 0;
         double amplitudeDegree = 2.2;
-
-
-
-
-
-
         double finalValue = minAmplitude+(b-minAmplitude)*Math.pow(Math.abs(value), amplitudeDegree);
         if(value < 0){finalValue *= -1;}
         return finalValue;
-
-
     }
     public void setDrivePowers(double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower) {
         double dampenBy = 0.3;

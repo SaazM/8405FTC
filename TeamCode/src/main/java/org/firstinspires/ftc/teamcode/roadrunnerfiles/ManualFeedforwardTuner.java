@@ -70,7 +70,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        robot = new Robot(hardwareMap);
+        robot = new Robot(hardwareMap, gamepad1);
 
         mode = Mode.TUNING_MODE;
 

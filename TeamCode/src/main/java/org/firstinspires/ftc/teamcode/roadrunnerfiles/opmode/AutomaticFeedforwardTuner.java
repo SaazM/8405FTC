@@ -46,7 +46,7 @@ public class AutomaticFeedforwardTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        Robot robot = new Robot(hardwareMap);
+        Robot robot = new Robot(hardwareMap, gamepad1);
 
         NanoClock clock = NanoClock.system();
 
