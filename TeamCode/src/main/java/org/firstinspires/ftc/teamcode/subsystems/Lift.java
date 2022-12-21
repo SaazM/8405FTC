@@ -29,7 +29,8 @@ public class Lift {
     private LinkedList<Double> storeCurrents = new LinkedList<>();
     public double rollingAverageCurrent = 0;
     private final double powerToVelocity = 435 * 384.5 / 60; //converts power into ticks per second
-    private final double manualLiftPower = 0.8;
+    private final double manualLiftPowerUp = 0.8;
+    private final double manualLiftPowerDown = 0.4;
     private final double holdLiftPower = 0.3;
     private final double macroLiftPower = 0.5;
     private final double liftLimit = 2750; //upper lift limit
@@ -108,16 +109,16 @@ public class Lift {
     {
         if (gamepad.right_trigger > 0.5) { // move lift up
             if (rightLift.getCurrentPosition() < liftLimit - 20) {
-                setLiftSpeed(gamepad.right_trigger*manualLiftPower * 0.95 * powerToVelocity);
+                setLiftSpeed(gamepad.right_trigger*manualLiftPowerUp * powerToVelocity);
             }
             if (rightLift.getCurrentPosition() > liftLimit) {
                 setLiftSpeed(0);
             }
         } else if (gamepad.left_trigger > 0.5) { // move lift down
             if (rightLift.getCurrentPosition() > 100) {
-                setLiftSpeed(gamepad.left_trigger * -manualLiftPower * 0.6 * powerToVelocity);
+                setLiftSpeed(gamepad.left_trigger * -manualLiftPowerDown * powerToVelocity);
             }else if(rightLift.getCurrentPosition() > 0){
-                setLiftSpeed(gamepad.left_trigger * -manualLiftPower * 0.2 * powerToVelocity);
+                setLiftSpeed(gamepad.left_trigger * -manualLiftPowerDown * 0.2 * powerToVelocity);
             }
             else
             {

@@ -26,7 +26,7 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
         if (Math.abs(input) <= deadzone) {
             return 0;
         } else {
-            return sign * eerp(Math.abs(input), degree, minval, 1);
+            return input;
         }
     }
 
