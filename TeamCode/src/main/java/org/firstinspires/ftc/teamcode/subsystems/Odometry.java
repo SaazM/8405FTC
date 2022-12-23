@@ -8,9 +8,9 @@ public class Odometry {
     private DcMotor perpendicularEncoder;
     private double trackWidth;
     private double forwardOffset;
-    private final double wheel_circumference_inches = 60/25.4*Math.PI;
+    private final double wheel_circumference_inches = 63/32.0*Math.PI;
     private final double mm_to_inches = 0.03937008;
-    private final double ticks_per_revolution = 360*6;
+    private final double ticks_per_revolution = 8192.0;
 
     private double prev_left_encoder_pos = 0.0;
     private double prev_right_encoder_pos = 0.0;
@@ -26,8 +26,8 @@ public class Odometry {
         leftEncoder = getLeftEncoder;
         rightEncoder = getRightEncoder;
         perpendicularEncoder = getPerpEncoder;
-        trackWidth = 15.75; // get actual measurement
-        forwardOffset = 1.0; // get actual measurement
+        trackWidth = 109.375*2*mm_to_inches; // get actual measurement
+        forwardOffset = 4.5; // get actual measurement
     }
 
     // run odometry and return list of doubles in form [x, y, heading]
