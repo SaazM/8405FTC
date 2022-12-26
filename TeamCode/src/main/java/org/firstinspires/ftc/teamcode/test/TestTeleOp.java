@@ -19,6 +19,7 @@ public class TestTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
         //DcMotorEx lift = hardwareMap.get(DcMotorEx.class, "rightLift");
         DcMotor leftEncoder = hardwareMap.get(DcMotor.class, "leftEncoder");
         DcMotor rightEncoder = hardwareMap.get(DcMotor.class, "rightEncoder");
@@ -38,7 +39,29 @@ public class TestTeleOp extends LinearOpMode {
             telemetry.addLine(odom.getX() + "");
             telemetry.addLine(odom.getY() + "");
             telemetry.addLine(odom.getHeading() + "");
+            telemetry.addLine("" + leftEncoder.getCurrentPosition());
+            telemetry.addLine("" + rightEncoder.getCurrentPosition());
+            telemetry.addLine("" + perpEncoder.getCurrentPosition());
             telemetry.update();
         }
+
+        /**
+        DcMotorEx lift = hardwareMap.get(DcMotorEx.class, "leftLift");
+
+        waitForStart();
+        while(opModeIsActive())
+        {
+            if(gamepad1.left_trigger > 0.5)
+            {
+                lift.setPower(0.3);
+            }
+            else
+
+            {
+                lift.setPower(0);
+            }
+        }
+         **/
+
     }
 }

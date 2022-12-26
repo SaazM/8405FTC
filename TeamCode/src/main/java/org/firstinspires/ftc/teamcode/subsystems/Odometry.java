@@ -27,7 +27,7 @@ public class Odometry {
         rightEncoder = getRightEncoder;
         perpendicularEncoder = getPerpEncoder;
         trackWidth = 109.375*2*mm_to_inches; // get actual measurement
-        forwardOffset = 4.5; // get actual measurement
+        forwardOffset = -(112.6125+2)*mm_to_inches; // get actual measurement - 112.6125
     }
 
     // run odometry and return list of doubles in form [x, y, heading]
@@ -45,6 +45,9 @@ public class Odometry {
         double delta_perp_pos = delta_perpendicular_encoder_pos - forwardOffset * phi;
         double delta_x;
         double delta_y;
+        delta_x = delta_middle_pos * Math.cos(heading) - delta_perp_pos * Math.sin(heading);
+        delta_y = delta_middle_pos * Math.sin(heading) + delta_perp_pos * Math.cos(heading);
+        /**
         if (phi != 0) {
             delta_x = Math.cos(heading) * ((Math.sin(phi)/phi)*delta_middle_pos + (Math.cos(phi)-1)/phi * delta_perp_pos) -
                     Math.sin(heading)*((1-Math.cos(phi))/phi * delta_middle_pos + (Math.sin(phi)/phi)*delta_perp_pos);
@@ -55,6 +58,7 @@ public class Odometry {
             delta_x = delta_middle_pos * Math.cos(heading) - delta_perp_pos * Math.sin(heading);
             delta_y = delta_middle_pos * Math.sin(heading) + delta_perp_pos * Math.cos(heading);
         }
+         **/
 
         x_pos += delta_x;
         y_pos += delta_y;

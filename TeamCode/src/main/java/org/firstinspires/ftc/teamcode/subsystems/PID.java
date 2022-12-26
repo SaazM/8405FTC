@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 public class PID {
     private double Kp;
     private double Ki;
@@ -8,20 +10,20 @@ public class PID {
     private double integralSum = 0.0;
     private double lastError = 0.0;
 
-    private long startTime;
+    private ElapsedTime timer;
 
-    private double dT = 20;
 
     public PID(double p, double i, double d) {
         Kp = p;
         Ki = i;
         Kd = d;
-        startTime = System.currentTimeMillis();
+        timer = new ElapsedTime();
+        timer.reset();
     }
 
     // error is given by the user so that this class has multiple use cases
     public double getValue(double error) {
-
+        double dT = timer.seconds();
         double derivative = (error - lastError) / dT;
 
         // sum all the error over time
@@ -33,13 +35,17 @@ public class PID {
 
         lastError = error;
 
+        timer.reset();
+
         return out;
     }
+    public void reset()
+    {
+        lastError = 0;
+        integralSum = 0;
+        timer.reset();
 
-    public void resetTimer() {
-        startTime = System.currentTimeMillis();
     }
-
     public double getKp() {
         return Kp;
     }

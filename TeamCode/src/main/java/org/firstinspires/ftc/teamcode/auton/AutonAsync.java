@@ -355,7 +355,7 @@ public class AutonAsync extends OpMode{
         } else {
             startTime = System.currentTimeMillis();
             if (robot.lift.rightLift.getCurrentPosition() > 50) {
-                robot.lift.liftToPosition(0, 0, 0.4);
+                robot.lift.liftToPosition(0, 0.4);
             }
         }
         if(liftTo>=1)robot.lift.autonRequest();

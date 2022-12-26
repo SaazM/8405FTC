@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+import org.firstinspires.ftc.teamcode.roadrunnerfiles.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
 
 import java.util.List;
@@ -63,8 +64,8 @@ public class Drive extends MecanumDrive {
     public DcMotorEx rightFront;
     public DcMotorEx rightRear;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
     public static double LATERAL_MULTIPLIER = 1;//-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -95,7 +96,7 @@ public class Drive extends MecanumDrive {
 
     public Drive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
-
+        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
         turnController = new PIDFController(HEADING_PID);
         turnController.setInputBounds(0, 2 * Math.PI);
 

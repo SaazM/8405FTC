@@ -42,7 +42,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Robot;
 @Config
 @Autonomous(group = "drive")
 public class ManualFeedforwardTuner extends LinearOpMode {
-    public static double DISTANCE = 30; // in
+    public static double DISTANCE = 60; // in
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
