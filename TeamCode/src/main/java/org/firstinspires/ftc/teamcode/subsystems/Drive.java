@@ -64,9 +64,9 @@ public class Drive extends MecanumDrive {
     public DcMotorEx rightFront;
     public DcMotorEx rightRear;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
-    public static double LATERAL_MULTIPLIER = 1;//-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(1, 0, 0);//0.4
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.5, 0, 0);//0.3
+    public static double LATERAL_MULTIPLIER = 60/51.5 * 60/55.0 * 60/57.4;//-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
@@ -218,6 +218,7 @@ public class Drive extends MecanumDrive {
         return finalValue;
     }
     public void setDrivePowers(double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower) {
+        /**
         double dampenBy = 0.3;
         double frontLeftRequest = frontLeftPower * speedMultiplier * powerToVelocity;
         double rearLeftRequest = backLeftPower * speedMultiplier * powerToVelocity;
@@ -245,6 +246,11 @@ public class Drive extends MecanumDrive {
         leftRear.setVelocity(rearLeftRequest);
         rightFront.setVelocity(frontRightRequest);
         rightRear.setVelocity(rearRightRequest);
+         **/
+        leftFront.setPower(frontLeftPower);
+        leftRear.setPower(backLeftPower);
+        rightFront.setPower(frontRightPower);
+        rightRear.setPower(backRightPower);
     }
 
     public void switchDrive() {
@@ -419,10 +425,7 @@ public class Drive extends MecanumDrive {
         rightFront.setVelocity(v3 * powerToVelocity);
     }
 
-    @Override
-    public double getRawExternalHeading() {
-        return imu.getAngularOrientation().firstAngle;
-    }
+
 
     @Override
     public Double getExternalHeadingVelocity() {
@@ -438,5 +441,10 @@ public class Drive extends MecanumDrive {
 
     public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
         return new ProfileAccelerationConstraint(maxAccel);
+    }
+
+    @Override
+    protected double getRawExternalHeading() {
+        return 0;
     }
 }

@@ -35,8 +35,8 @@ public class DriveConstantsCurrent {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = false;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(5, 2, 3,
-            8);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
+            0);
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -48,7 +48,7 @@ public class DriveConstantsCurrent {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; //* 61.5/60.688487933704074; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 9.0; // in
+    public static double TRACK_WIDTH = 8.8; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -57,9 +57,9 @@ public class DriveConstantsCurrent {
      * empirically tuned.
      */
     public static double MAX_VEL = 66.76640180569838;
-    public static double kV = 1.0 / MAX_VEL; // 0.011522978602550106
-    public static double kA = 0.002;
-    public static double kStatic = 0;
+    public static double kV = 0.011; // 0.011522978602550106
+    public static double kA = 0.0030;
+    public static double kStatic = 0.067;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -80,7 +80,7 @@ public class DriveConstantsCurrent {
      * max velocity. The theoretically maximum velocity is 86.08623605293286 in/s.
      * Just make sure that your bot can actually reach this maximum velocity. Path following will be detrimentally
      * affected if it is aiming for a velocity not actually possible.
-     *
+     * y
      * The maximum acceleration is somewhat arbitrary and it is recommended that you tweak this yourself based on
      * actual testing. Just set it at a reasonable value and keep increasing until your path following starts
      * to degrade. As of now, it simply mirrors the velocity, resulting in 73.17330064499293 in/s/s
@@ -90,7 +90,7 @@ public class DriveConstantsCurrent {
 
      */
 
-    public static double MAX_ACCEL = 73.17330064499293*0.8;
+    public static double MAX_ACCEL = 73.17330064499293*0.5;
     public static double MAX_ANG_VEL = Math.toRadians(360);
     public static double MAX_ANG_ACCEL = Math.toRadians(360);
 

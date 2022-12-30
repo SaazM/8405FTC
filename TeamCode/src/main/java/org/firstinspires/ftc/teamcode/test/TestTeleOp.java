@@ -26,22 +26,19 @@ public class TestTeleOp extends LinearOpMode {
         DcMotor perpEncoder = hardwareMap.get(DcMotor.class, "leftLift");
 
         rightEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
-        Odometry odom = new Odometry(leftEncoder, rightEncoder, perpEncoder);
+
         waitForStart();
         int lStart = leftEncoder.getCurrentPosition();
         int rStart = rightEncoder.getCurrentPosition();
         int pStart = perpEncoder.getCurrentPosition();
-        odom.reset();
+
         while(opModeIsActive())
         {
-            odom.runOdom();
+
             //lift.setPower(-0.8);
-            telemetry.addLine(odom.getX() + "");
-            telemetry.addLine(odom.getY() + "");
-            telemetry.addLine(odom.getHeading() + "");
-            telemetry.addLine("" + leftEncoder.getCurrentPosition());
-            telemetry.addLine("" + rightEncoder.getCurrentPosition());
-            telemetry.addLine("" + perpEncoder.getCurrentPosition());
+
+            telemetry.addLine("" + (rightEncoder.getCurrentPosition() - lStart));
+
             telemetry.update();
         }
 
