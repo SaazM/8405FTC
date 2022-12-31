@@ -32,13 +32,13 @@ public class RightAuton extends OpMode
     @Override
     public void start()
     {
-        int finalID = init.stopAndSave() + 1;
-        if(finalID == 1){finalID = 2;}
-        else if(finalID == 2){finalID = 1;}
-        telemetry.addLine(Integer.toString(finalID));
-        telemetry.update();
-        auton = new AutonAsync(finalID, hardwareMap, telemetry);
-        auton.runAutonHighSpamRight();
+        // int finalID = init.stopAndSave() + 1;
+        // if(finalID == 1){finalID = 2;}
+        // else if(finalID == 2){finalID = 1;}
+        // telemetry.addLine(Integer.toString(finalID));
+        // telemetry.update();
+        // auton = new AutonAsync(finalID, hardwareMap, telemetry);
+        auton.runAutonHighSpamRightNoLift();
         //auton.runAutonHighSpamThree();
         auton.liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         activated = true;
