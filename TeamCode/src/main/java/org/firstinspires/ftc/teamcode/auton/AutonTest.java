@@ -52,13 +52,11 @@ public class AutonTest extends LinearOpMode {
             if(rightLift.getCurrentPosition() <= 2100 && !moveON)
             {
                 rightLift.setPower(0.3);
-
             }
             else
             {
                 moveON = true;
                 rightLift.setPower(-0.1);
-
             }
             rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

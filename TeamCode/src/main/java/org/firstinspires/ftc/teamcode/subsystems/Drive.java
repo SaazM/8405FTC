@@ -64,9 +64,10 @@ public class Drive extends MecanumDrive {
     public DcMotorEx rightFront;
     public DcMotorEx rightRear;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(1.5, 0, 0);//0.4 //1, 0, 0
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2.5, 0, 0);//0.4 //1, 0, 0
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);//0.3 //1.5, 0, 0
-    public static double LATERAL_MULTIPLIER = 60/51.5 * 60/55.0 * 60/57.4;//-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
+//    public static double LATERAL_MULTIPLIER = 60/51.5 * 60/55.0 * 60/57.4 * 24/22.3;//-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
+    public static double LATERAL_MULTIPLIER = 1; //-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
@@ -147,7 +148,7 @@ public class Drive extends MecanumDrive {
             setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
