@@ -21,7 +21,7 @@ public class RightAuton extends OpMode
     aprilTagsInit init;
     AutonAsync auton;
     boolean activated = false;
-    Trajectory t1, t2, t3;
+    Trajectory t1, t2, t3,t4,t5,t6,t7,t8,t9,t10,t11,t12;
     Gamepad gamepad1;
 
     @Override
@@ -54,12 +54,54 @@ public class RightAuton extends OpMode
         // change first movement bc tile omegalol
 
         t1 = auton.robot.drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(48)
+                .lineToLinearHeading(new Pose2d(0,-55, Math.toRadians(-45)))
+                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t2))
                 .build();
 
-//        t2 = auton.robot.drive.trajectorySequenceBuilder(t1.end())
-                //.lineToLinearHeading(new Pose2d(t1.end().getX(), t1.end().getY(), Math.toRadians(-45)))
-//                .build();
+        t2 = auton.robot.drive.trajectoryBuilder(t1.end())//1 cone
+                .lineToLinearHeading(new Pose2d(13, -50, Math.toRadians(-90)))
+                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t3))
+                .build();
+
+        t3 = auton.robot.drive.trajectoryBuilder(t2.end())
+                .lineToSplineHeading(new Pose2d(-22, -53, Math.toRadians(179.95)))
+                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t4))
+                .build();
+
+        t4 = auton.robot.drive.trajectoryBuilder(t3.end())//2 cone
+                .lineToLinearHeading(new Pose2d(13, -50, Math.toRadians(-90)))
+                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t5))
+                .build();
+
+        t5 = auton.robot.drive.trajectoryBuilder(t4.end())
+                .lineToSplineHeading(new Pose2d(-22, -53, Math.toRadians(179.95)))
+                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t6))
+                .build();
+
+        t6 = auton.robot.drive.trajectoryBuilder(t5.end())//2 cone
+                .lineToLinearHeading(new Pose2d(13, -50, Math.toRadians(-90)))
+                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t7))
+                .build();
+
+        t7 = auton.robot.drive.trajectoryBuilder(t6.end())
+                .lineToSplineHeading(new Pose2d(-22, -53, Math.toRadians(179.95)))
+                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t8))
+                .build();
+
+        t8 = auton.robot.drive.trajectoryBuilder(t7.end())//2 cone
+                .lineToLinearHeading(new Pose2d(13, -50, Math.toRadians(-90)))
+                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t9))
+                .build();
+
+        t9 = auton.robot.drive.trajectoryBuilder(t8.end())
+                .lineToSplineHeading(new Pose2d(-22, -53, Math.toRadians(179.95)))
+                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t10))
+                .build();
+
+        t10 = auton.robot.drive.trajectoryBuilder(t9.end())//2 cone
+                .lineToLinearHeading(new Pose2d(13, -50, Math.toRadians(-90)))
+
+                .build();
 
 
         auton.robot.drive.followTrajectoryAsync(t1);
@@ -72,6 +114,9 @@ public class RightAuton extends OpMode
     public void loop() {
         if(activated)
         {
+            telemetry.addData("X: ", auton.robot.drive.getPoseEstimate().getX());
+            telemetry.addData("Y: ", auton.robot.drive.getPoseEstimate().getY());
+            telemetry.addData("Heading: ", auton.robot.drive.getPoseEstimate().getHeading());
             auton.robot.drive.update();
             //auton.lift_thingies();
             //auton.intaking();

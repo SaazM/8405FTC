@@ -61,7 +61,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         return Arrays.asList(
                 encoderTicksToInches(leftEncoder.getCurrentPosition()),
                 encoderTicksToInches(rightEncoder.getCurrentPosition()),
-                encoderTicksToInches(frontEncoder.getCurrentPosition() * 24/22.1)
+                encoderTicksToInches(frontEncoder.getCurrentPosition() * 24/22.1*22.5/23.5)
         );
     }
 
@@ -75,7 +75,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         return Arrays.asList(
                 encoderTicksToInches(leftEncoder.getCorrectedVelocity()),
                 encoderTicksToInches(rightEncoder.getCorrectedVelocity()),
-                encoderTicksToInches(frontEncoder.getCorrectedVelocity() * 24/22.1)
+                encoderTicksToInches(frontEncoder.getCorrectedVelocity() * 24/22.1*22.5/23.5)
         );
     }
 }
