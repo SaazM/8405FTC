@@ -21,7 +21,7 @@ public class RightAuton extends OpMode
     aprilTagsInit init;
     AutonAsync auton;
     boolean activated = false;
-    Trajectory t1, t2, t3,t4,t5,t6,t7,t8,t9,t10,t11,t12;
+    Trajectory t1, t2, t3,t4,t5,t6,t7,t8,t9,t10,t11,t12, park;
     Gamepad gamepad1;
 
     @Override
@@ -49,6 +49,7 @@ public class RightAuton extends OpMode
 //        auton.runAutonRight();
         //auton.liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //.addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t2))
+        int parkingZone = 1;
 
 
         // change first movement bc tile omegalol
@@ -100,13 +101,37 @@ public class RightAuton extends OpMode
 
         t10 = auton.robot.drive.trajectoryBuilder(t9.end())//2 cone
                 .lineToLinearHeading(new Pose2d(13, -50, Math.toRadians(-90)))
-
+                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t11))
                 .build();
+
+        t11 = auton.robot.drive.trajectoryBuilder(t10.end())
+                .lineToSplineHeading(new Pose2d(-22, -53, Math.toRadians(179.95)))
+                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t12))
+                .build();
+
+        t12 = auton.robot.drive.trajectoryBuilder(t11.end())//2 cone
+                .lineToLinearHeading(new Pose2d(13, -50, Math.toRadians(-90)))
+                .build();
+//
+//        if  (parkingZone == 1)  {
+//            park = auton.robot.drive.trajectoryBuilder(t12.end())
+//                    .lineToLinearHeading(new Pose2d(24, -53, Math.toRadians(-90)))
+//                    .build();
+//        } else if  (parkingZone == 2) {
+//            park = auton.robot.drive.trajectoryBuilder(t12.end())
+//                    .lineToLinearHeading(new Pose2d(0, -53, Math.toRadians(-90)))
+//                    .build();
+//        } else  {
+//            park = auton.robot.drive.trajectoryBuilder(t12.end())
+//                    .lineToLinearHeading(new Pose2d(-24, -53, Math.toRadians(-90)))
+//                    .build();
+//        }
+
 
 
         auton.robot.drive.followTrajectoryAsync(t1);
         activated = true;
-        telemetry.addData("extermnal heading velo: ", auton.robot.drive.getExternalHeadingVelocity());
+        telemetry.addData("external heading velo: ", auton.robot.drive.getExternalHeadingVelocity());
         telemetry.addData("activated? ", activated);
         telemetry.update();
     }
