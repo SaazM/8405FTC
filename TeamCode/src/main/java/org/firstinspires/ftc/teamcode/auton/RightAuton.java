@@ -60,7 +60,7 @@ public class RightAuton extends OpMode
                 .build();
 
         t2 = auton.robot.drive.trajectoryBuilder(t1.end())//1 cone
-                .lineToLinearHeading(new Pose2d(13, -50, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(13, -45, Math.toRadians(-90)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t3))
                 .build();
 

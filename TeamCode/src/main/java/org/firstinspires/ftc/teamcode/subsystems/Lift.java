@@ -28,7 +28,7 @@ public class Lift {
 
     //LIFT CONSTANTS
     public double rollingAverageCurrent = 0;
-    private final double manualLiftPowerUp = 0.3;
+    private final double manualLiftPowerUp = 0.5;
     private final double manualLiftPowerDown = 0.1;
     private final double holdLiftPower = 0.3;
     private final double macroLiftPower = 0.5;
@@ -73,18 +73,14 @@ public class Lift {
         if(posRequest > 0 && posRequest<liftLimit)
         {
             rightLift.setPower(power);
+            leftLift.setPower(power);
         }
 
     }
     private void setLiftPower(double power)
     {
 
-        if(power >= 0){
-            leftLift.setPower(power);
-        }
-        else{
-            leftLift.setMotorDisable();
-        }
+        leftLift.setPower(power);
         //rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightLift.setPower(power);
 
@@ -177,6 +173,8 @@ public class Lift {
 
                     rightLift.setMotorEnable();
                     rightLift.setPower(-0.6);
+                    leftLift.setMotorEnable();
+                    leftLift.setPower(-0.6);
                 }
 
             else if(killTimer.milliseconds() < 1000 || killTimer.milliseconds() > 2000)
