@@ -83,6 +83,12 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
             telemetry.addData("current Right", robot.lift.rightLift.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("current Right Average", robot.lift.rollingAverageCurrent);
             telemetry.addData("Hertz", 1000.0/(System.currentTimeMillis() - startTime));
+            telemetry.addData("RIGHT LIFT MOTOR: ", gamepad1.right_bumper);
+            telemetry.addData("RIGHT LIFT MOTOR: ", robot.lift.rightLift.isMotorEnabled());
+            telemetry.addData("RIGHT LIFT MOTOR POWER: ", robot.lift.rightLift.getPower());
+            telemetry.addData("LEFT LIFT MOTOR: ", robot.lift.leftLift.isMotorEnabled());
+            telemetry.addData("LEFT LIFT MOTOR POWER: ", robot.lift.leftLift.getPower());
+            if(robot.lift.killTimer != null){telemetry.addData("kill timer: ", robot.lift.killTimer.seconds());}
             //telemetry.addData("Lift Limit Switch", robot.lift.limitSwitch.getState());
 
 

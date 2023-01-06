@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurre
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.MAX_VEL;
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.TRACK_WIDTH;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
@@ -54,7 +55,7 @@ import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurre
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.kA;
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.kStatic;
 import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent.kV;
-
+@Config
 public class Drive extends MecanumDrive {
     public BNO055IMU imu;
     public boolean isFieldCentric;
@@ -71,6 +72,8 @@ public class Drive extends MecanumDrive {
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
+
+    public static double drive_multipliers_lf =1 , drive_multipliers_lb =1, drive_multipliers_rf =1, drive_multipliers_rb =1;
 
     public boolean switchingSpeed = false;
 
@@ -169,9 +172,6 @@ public class Drive extends MecanumDrive {
     }
 
     public void moveTeleOp(double power, double strafe, double turn, double liftPos) {
-
-
-
         if (isFieldCentric) {
             fieldCentric(driveAntiTip(power,liftPos), driveAntiTip(strafe,liftPos), driveAntiTip(turn, liftPos));
         } else {
@@ -187,7 +187,10 @@ public class Drive extends MecanumDrive {
         double frontRightPower = (power - strafe - turn) / denominator;
         double backRightPower = (power + strafe - turn) / denominator;
 
-        setDrivePowers(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
+        setDrivePowers(frontLeftPower*drive_multipliers_lf,
+                backLeftPower * drive_multipliers_lb,
+                frontRightPower * drive_multipliers_rf,
+                backRightPower * drive_multipliers_rb);
     }
 
     public void fieldCentric(double power, double strafe, double turn) {
@@ -200,7 +203,10 @@ public class Drive extends MecanumDrive {
         double frontRightPower = (rotationY - rotationX - turn) / denominator;
         double backRightPower = (rotationY + rotationX - turn) / denominator;
 
-        setDrivePowers(frontLeftPower, backLeftPower, frontRightPower, backRightPower);
+        setDrivePowers(frontLeftPower*drive_multipliers_lf,
+                backLeftPower * drive_multipliers_lb,
+                frontRightPower * drive_multipliers_rf,
+                backRightPower * drive_multipliers_rb);
     }
     public double driveAntiTip(double value, double liftPosition)
     {
