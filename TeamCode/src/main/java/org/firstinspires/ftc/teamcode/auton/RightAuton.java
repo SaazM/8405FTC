@@ -55,7 +55,7 @@ public class RightAuton extends OpMode
         // change first movement bc tile omegalol
 
         t1 = auton.robot.drive.trajectoryBuilder(new Pose2d())
-                .lineToLinearHeading(new Pose2d(0,-55, Math.toRadians(-45)))
+                .lineToLinearHeading(new Pose2d(0,-50, Math.toRadians(-45)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t2))
                 .build();
 
