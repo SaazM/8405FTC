@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import java.util.*;
 
@@ -28,12 +29,13 @@ public class Lift {
 
     //LIFT CONSTANTS
     public double rollingAverageCurrent = 0;
-    private final double manualLiftPowerUp = 0.5;
-    private final double manualLiftPowerDown = 0.1;
+    private final double manualLiftPowerUp = 0.8;
+    private final double manualLiftPowerDown = 0.5;
     private final double holdLiftPower = 0.3;
     private final double macroLiftPower = 0.5;
     private final double liftLimit = 2750; //upper lift limit
     public ElapsedTime killTimer = null;
+
     private final double hertz = 20;
 
     public LIFT_MODE currentMode;
@@ -41,6 +43,7 @@ public class Lift {
     private double startedHoldingTime = 0;
     private Gamepad gamepad;
     private PID pid;
+    private double initLeftLift;
 
 
 
@@ -52,6 +55,7 @@ public class Lift {
         rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightLift.setDirection(DcMotor.Direction.FORWARD);
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftLift.setDirection(DcMotor.Direction.FORWARD);
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -95,10 +99,7 @@ public class Lift {
         }
         else
         {
-            rightLift.setMotorEnable();
-            leftLift.setMotorEnable();
-            rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
             if (gamepad.square) { // medium goal macro
                 liftToMedium();
             } else if (gamepad.circle) { // low goal macro
@@ -117,10 +118,7 @@ public class Lift {
     }
     private void liftManual()
     {
-        rightLift.setMotorEnable();
-        leftLift.setMotorEnable();
-        rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         if (gamepad.right_trigger > 0.5) { // move lift up
             if (rightLift.getCurrentPosition() < liftLimit - 20) {
@@ -162,28 +160,32 @@ public class Lift {
         }
         else if(currentMode == LIFT_MODE.RESET)
         {
-            if(killTimer == null){
-                killTimer = new ElapsedTime();
-                killTimer.reset();
-
+            if(rightLift.getCurrentPosition() > 250)
+            {
+                setLiftPower(-0.6);
             }
-            if(killTimer.milliseconds() >= 1000 &&
-                killTimer.milliseconds() <= 2000)
+            else
+            {
+                if(killTimer == null){
+                    killTimer = new ElapsedTime();
+                    killTimer.reset();
+
+                }
+                if(killTimer.milliseconds() <=500)
+                {
+                    setLiftPower(-0.25);
+                }
+                else
                 {
 
-                    rightLift.setMotorEnable();
-                    rightLift.setPower(-0.6);
-                    leftLift.setMotorEnable();
-                    leftLift.setPower(-0.6);
+                    rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    rightLift.setPower(0);
+                    leftLift.setPower(0);
                 }
-
-            else if(killTimer.milliseconds() < 1000 || killTimer.milliseconds() > 2000)
-            {
-                leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                leftLift.setMotorDisable();
-                rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rightLift.setMotorDisable();
             }
+
+
             //
             // pid.reset();
 
@@ -192,8 +194,6 @@ public class Lift {
         if(currentMode != LIFT_MODE.RESET)
         {
             killTimer = null;
-            rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         }
 
@@ -219,6 +219,8 @@ public class Lift {
         this.gamepad = gamepad;
         if(currentMode != LIFT_MODE.KILLED)
         {
+            rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             //whenever new action is taken, lift PID should be reset
             //MACROS
