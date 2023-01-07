@@ -36,15 +36,10 @@ public class Lift {
     private final double liftLimit = 2750; //upper lift limit
     public ElapsedTime killTimer = null;
 
-    private final double hertz = 20;
-
     public LIFT_MODE currentMode;
 
     private double startedHoldingTime = 0;
     private Gamepad gamepad;
-    private PID pid;
-    private double initLeftLift;
-
 
 
     public Lift(HardwareMap hardwareMap, Gamepad gamepad) {
@@ -63,27 +58,37 @@ public class Lift {
         newBotStart();
         startTime = System.currentTimeMillis();
         holdingPosRight = -1;
-        pid = new PID(7.5,0,0);
-
+        holdingPosLeft = -1;
     }
 
-    public void liftToPosition(int posRequest, double power) {//power here is a fallacy; it just is percentage of lift velocity capability
-        double adjustPower = power * pid.getValue(posRequest - rightLift.getCurrentPosition());
-        setLiftPower(adjustPower);
+    public void liftToPosition(int posRequest, int posRequestLeft, double power) {//power here is a fallacy; it just is percentage of lift velocity capability
         if (Math.abs(posRequest - rightLift.getCurrentPosition()) <= 20) {
             currentMode = LIFT_MODE.HOLD;
         }
         //DETERMINE VALIDITY OF POSITION
-        if(posRequest > 0 && posRequest<liftLimit)
+        if(posRequest > 10  && posRequest<liftLimit)
         {
+            rightLift.setTargetPosition(posRequest);
+            leftLift.setTargetPosition(posRequestLeft);
+            rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
             rightLift.setPower(power);
             leftLift.setPower(power);
+        }
+        else
+        {
+            rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightLift.setPower(0);
+            leftLift.setPower(0);
         }
 
     }
     private void setLiftPower(double power)
     {
-
+        rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftLift.setPower(power);
         //rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightLift.setPower(power);
@@ -118,8 +123,6 @@ public class Lift {
     }
     private void liftManual()
     {
-
-
         if (gamepad.right_trigger > 0.5) { // move lift up
             if (rightLift.getCurrentPosition() < liftLimit - 20) {
                 setLiftPower(gamepad.right_trigger*manualLiftPowerUp);
@@ -133,15 +136,13 @@ public class Lift {
         }
         else if (gamepad.left_trigger > 0.5) { // move lift down
             if (rightLift.getCurrentPosition() > 100) {
-                if(!rightLift.isMotorEnabled())rightLift.setMotorEnable();
                 setLiftPower(gamepad.left_trigger * -manualLiftPowerDown);
-            }else if(rightLift.getCurrentPosition() > 0){
-                if(!rightLift.isMotorEnabled())rightLift.setMotorEnable();
+            } else if(rightLift.getCurrentPosition() > 0){
                 setLiftPower(gamepad.left_trigger * -manualLiftPowerDown * 0.2);
             }
             else
             {
-                //currentMode = LIFT_MODE.RESET;
+                setLiftPower(0);
             }
         }
 
@@ -151,11 +152,10 @@ public class Lift {
         if (currentMode == LIFT_MODE.HOLD || currentMode == LIFT_MODE.MACRO) { // goes to position asked for if needed
 
             if (currentMode == LIFT_MODE.HOLD){
-                //liftToPosition(holdingPosRight, holdLiftPower);
-                setLiftPower(0);
+                liftToPosition(holdingPosRight, holdingPosLeft, holdLiftPower);
             }
             else {
-                liftToPosition(holdingPosRight, macroLiftPower);
+                liftToPosition(holdingPosRight, holdingPosLeft, macroLiftPower);
             }
         }
         else if(currentMode == LIFT_MODE.RESET)
@@ -171,24 +171,17 @@ public class Lift {
                     killTimer.reset();
 
                 }
-                if(killTimer.milliseconds() <=500)
+                if(killTimer.milliseconds() <= 1000)
                 {
-                    setLiftPower(-0.25);
+                    setLiftPower(-0.4);
                 }
                 else
                 {
 
                     rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    rightLift.setPower(0);
-                    leftLift.setPower(0);
                 }
             }
-
-
-            //
-            // pid.reset();
-
         }
 
         if(currentMode != LIFT_MODE.RESET)
@@ -219,8 +212,7 @@ public class Lift {
         this.gamepad = gamepad;
         if(currentMode != LIFT_MODE.KILLED)
         {
-            rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
             //whenever new action is taken, lift PID should be reset
             //MACROS
@@ -250,6 +242,7 @@ public class Lift {
 
                 //pid.reset();
                 holdingPosRight = rightLift.getCurrentPosition();
+                holdingPosLeft = leftLift.getCurrentPosition();
             }
 
             //ANALYSIS OF MODE
@@ -264,26 +257,32 @@ public class Lift {
     }
 
 
-    public void liftToZero(){holdingPosRight = 0;}
     public void liftToMedium() {
         holdingPosRight = 1860;
+        holdingPosLeft = 1860;
     }
 
     public void liftToLow() {
         holdingPosRight = 930;
+        holdingPosLeft = 930;
     }
 
     public void liftToTopStack() {
         holdingPosRight = 320;
+        holdingPosLeft = 320;
     }
 
     public void liftToMiddleOfStack() {
         holdingPosRight = 200;
+        holdingPosLeft = 200;
     }
 
     public void liftToHigh() {
         holdingPosRight = 2700;
+        holdingPosLeft = 2700;
     }
+
+
     public void autonRequest()
     {
         liftAnalysis(true);
