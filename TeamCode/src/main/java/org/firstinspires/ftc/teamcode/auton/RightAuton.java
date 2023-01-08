@@ -75,17 +75,27 @@ public class RightAuton extends OpMode
 
         // change first movement bc tile omegalol
 
+        auton.robot.intake.intake();
+
         t1 = auton.robot.drive.trajectoryBuilder(new Pose2d())
+                .addTemporalMarker(1, () -> {
+                    auton.robot.intake.outtake();
+                })
                 .addDisplacementMarker(() -> currLift = 1)
                 .lineToLinearHeading(new Pose2d(-2.5,-54, Math.toRadians(-45)))
 
-                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t1_1))
+                .addDisplacementMarker(() -> {
+                    auton.robot.drive.followTrajectoryAsync(t1_1);
+                })
                 .build();
 
         t1_1 = auton.robot.drive.trajectoryBuilder(t1.end())
                 .addDisplacementMarker(() -> currLift = 2)
                 .lineToLinearHeading(new Pose2d(-12.5, -50.5, Math.toRadians(180)))
-                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t1_2))
+                .addDisplacementMarker(() -> {
+                    auton.robot.intake.intake();
+                    auton.robot.drive.followTrajectoryAsync(t1_2);
+                })
                 .build();
         t1_2 = auton.robot.drive.trajectoryBuilder(t1_1.end())
                 .lineToLinearHeading(new Pose2d(-26, -50.5, Math.toRadians(175)))
@@ -147,19 +157,20 @@ public class RightAuton extends OpMode
 
 
 
-//        if  (parkingZone == 1)  {
-//            park = auton.robot.drive.trajectoryBuilder(t12.end())
-//                    .lineToLinearHeading(new Pose2d(24, -53, Math.toRadians(-90)))
-//                    .build();
-//        } else if  (parkingZone == 2) {
-//            park = auton.robot.drive.trajectoryBuilder(t12.end())
-//                    .lineToLinearHeading(new Pose2d(0, -53, Math.toRadians(-90)))
-//                    .build();
-//        } else  {
-//            park = auton.robot.drive.trajectoryBuilder(t12.end())
-//                    .lineToLinearHeading(new Pose2d(-24, -53, Math.toRadians(-90)))
-//                    .build();
-//        }
+        if  (parkingZone == 1)  {
+            park = auton.robot.drive.trajectoryBuilder(t5.end())
+                    .lineToLinearHeading(new Pose2d(24, -53, Math.toRadians(-90)))
+                    .build();
+        } else if  (parkingZone == 2) {
+            park = auton.robot.drive.trajectoryBuilder(t5.end())
+                    .lineToLinearHeading(new Pose2d(0, -53, Math.toRadians(-90)))
+                    .build();
+        } else  {
+            park = auton.robot.drive.trajectoryBuilder(t5.end())
+                    .lineToLinearHeading(new Pose2d(-24, -53, Math.toRadians(-90)))
+                    .build();
+        }
+        auton.robot.drive.followTrajectoryAsync(park);
 
 
 
