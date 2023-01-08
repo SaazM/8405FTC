@@ -18,6 +18,7 @@ import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.roadrunnerfiles.StandardTrackingWheelLocalizer;
@@ -231,6 +232,7 @@ public class Drive extends MecanumDrive {
         if(value < 0){finalValue *= -1;}
         return finalValue;
     }
+
     public void setDrivePowers(double frontLeftPower, double backLeftPower, double frontRightPower, double backRightPower) {
         /**
         double dampenBy = 0.3;
@@ -433,10 +435,10 @@ public class Drive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setVelocity(v * powerToVelocity);
-        leftRear.setVelocity(v1 * powerToVelocity);
-        rightRear.setVelocity(v2 * powerToVelocity);
-        rightFront.setVelocity(v3 * powerToVelocity);
+        leftFront.setPower(v);
+        leftRear.setPower(v1);
+        rightRear.setPower(v2);
+        rightFront.setPower(v3);
     }
 
 
