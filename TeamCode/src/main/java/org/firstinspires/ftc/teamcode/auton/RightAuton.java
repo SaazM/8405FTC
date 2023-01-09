@@ -37,7 +37,6 @@ public class RightAuton extends OpMode
     {
         //init.search();
         //int finalID = init.stopAndSave() + 1;
-
     }
     public void liftAsync()
     {
@@ -78,96 +77,95 @@ public class RightAuton extends OpMode
 
         auton.robot.intake.intake();
 
-        t1 = auton.robot.drive.trajectoryBuilder(new Pose2d())
+        t1 = auton.robot.drive.trajectoryBuilder(new Pose2d(-2, 0, 0)) // SCORE autoloaded
                 .addTemporalMarker(2, () -> {
                     auton.robot.intake.outtake();
                 })
                 .addDisplacementMarker(() -> currLift = 1)
-                .lineToLinearHeading(new Pose2d(4.5,-57, Math.toRadians(-45)))
+                .lineToLinearHeading(new Pose2d(8,-53, Math.toRadians(-40)))
 
                 .addDisplacementMarker(() -> {
                     auton.robot.drive.followTrajectoryAsync(t1_1);
                 })
                 .build();
 
-        t1_1 = auton.robot.drive.trajectoryBuilder(t1.end())
+        t1_1 = auton.robot.drive.trajectoryBuilder(t1.end()) // go back and turn
                 .addTemporalMarker(0.5,() -> currLift = 2)
-                .lineToLinearHeading(new Pose2d(0, -55, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(4, -50, Math.toRadians(180)))
                 .addDisplacementMarker(() -> {
                     auton.robot.intake.intake();
                     auton.robot.drive.followTrajectoryAsync(t1_2);
                 })
                 .build();
-        t1_2 = auton.robot.drive.trajectoryBuilder(t1_1.end())
 
-                .lineToLinearHeading(new Pose2d(-24, -55, Math.toRadians(180) ))
+        t1_2 = auton.robot.drive.trajectoryBuilder(t1_1.end()) // go to the cone stack
+                .lineToLinearHeading(new Pose2d(-22, -55, Math.toRadians(190)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t2))
                 .build();
 
-
-       t2 = auton.robot.drive.trajectoryBuilder(t1_2.end())//2nd cone
+       t2 = auton.robot.drive.trajectoryBuilder(t1_2.end()) // slide back and score SECOND
                .addDisplacementMarker(() -> currLift = 1)
                .addTemporalMarker(1.75, () -> {auton.robot.intake.outtake();})
-                .lineToLinearHeading(new Pose2d(16, -52, Math.toRadians(-90)))
-                .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t2_1))
-                .build();
-        t2_1 = auton.robot.drive.trajectoryBuilder(t2.end())//2nd cone
+               .lineToLinearHeading(new Pose2d(17, -51, Math.toRadians(-70)))
+               .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t2_1))
+               .build();
+
+       t2_1 = auton.robot.drive.trajectoryBuilder(t2.end()) // go back and turn
                 .addTemporalMarker(1.5, () -> currLift = 2)
                 .addTemporalMarker(1, () -> auton.robot.intake.intake())
-                .lineToLinearHeading(new Pose2d(0, -55, Math.toRadians(-180)))
+                .lineToLinearHeading(new Pose2d(-2, -55, Math.toRadians(-180)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t2_2))
                 .build();
-        t2_2 = auton.robot.drive.trajectoryBuilder(t2_1.end())//2nd cone
-                .lineToLinearHeading(new Pose2d(-24, -55, Math.toRadians(-180)))
+
+       t2_2 = auton.robot.drive.trajectoryBuilder(t2_1.end()) // go to cone stack
+                .lineToLinearHeading(new Pose2d(-22, -55, Math.toRadians(192)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t3))
                 .build();
 
-        t3 = auton.robot.drive.trajectoryBuilder(t2_2.end())//2nd cone
+       t3 = auton.robot.drive.trajectoryBuilder(t2_2.end()) // slide back and score THIRD
                 .addDisplacementMarker(() -> currLift = 1)
                 .addTemporalMarker(1.75, () -> {auton.robot.intake.outtake();})
                 .addTemporalMarker(1.5, () -> {auton.robot.intake.outtake();})
-                .lineToLinearHeading(new Pose2d(16, -52.5, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(18, -51, Math.toRadians(-70)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t3_1))
                 .build();
-        t3_1 = auton.robot.drive.trajectoryBuilder(t3.end())//2nd cone
+
+       t3_1 = auton.robot.drive.trajectoryBuilder(t3.end()) // go back and turn
                 .addTemporalMarker(1.5, () -> currLift = 3)
                 .addTemporalMarker(1, () -> auton.robot.intake.intake())
-
-                .lineToLinearHeading(new Pose2d(0, -55, Math.toRadians(-180)))
+                .lineToLinearHeading(new Pose2d(-2, -55, Math.toRadians(-180)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t3_2))
                 .build();
-        t3_2 = auton.robot.drive.trajectoryBuilder(t3_1.end())//2nd cone
-                .lineToLinearHeading(new Pose2d(-24, -55, Math.toRadians(-180)))
+
+       t3_2 = auton.robot.drive.trajectoryBuilder(t3_1.end()) // go to cone stack
+                .lineToLinearHeading(new Pose2d(-22, -55, Math.toRadians(192)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t4))
                 .build();
 
-        t4 = auton.robot.drive.trajectoryBuilder(t3_2.end())//2nd cone
+       t4 = auton.robot.drive.trajectoryBuilder(t3_2.end()) // slide back and score FOURTH
                 .addDisplacementMarker(() -> currLift = 1)
                 .addTemporalMarker(1.75, () -> {auton.robot.intake.outtake();})
-                .lineToLinearHeading(new Pose2d(15, -52.5, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(19, -51.5, Math.toRadians(-70)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t4_1))
                 .build();
-        t4_1 = auton.robot.drive.trajectoryBuilder(t4.end())//2nd cone
+       t4_1 = auton.robot.drive.trajectoryBuilder(t4.end()) // go back and turn
                 .addTemporalMarker(1.5, () -> currLift = 3)
                 .addTemporalMarker(1, () -> auton.robot.intake.intake())
-                .lineToLinearHeading(new Pose2d(0, -55, Math.toRadians(-180)))
+                .lineToLinearHeading(new Pose2d(-2, -55, Math.toRadians(-180)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t4_2))
                 .build();
-        t4_2 = auton.robot.drive.trajectoryBuilder(t4_1.end())//2nd cone
-                .lineToLinearHeading(new Pose2d(-24, -55, Math.toRadians(-180)))
+       t4_2 = auton.robot.drive.trajectoryBuilder(t4_1.end()) // go to cone stack
+                .lineToLinearHeading(new Pose2d(-22, -55, Math.toRadians(192)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t5))
                 .build();
-        t5 = auton.robot.drive.trajectoryBuilder(t4_2.end())//2nd cone
+
+       t5 = auton.robot.drive.trajectoryBuilder(t4_2.end()) // slide back and score FIFTH
                 .addDisplacementMarker(() -> currLift = 1)
                 .addTemporalMarker(1.75, () -> {auton.robot.intake.outtake();})
-                .lineToLinearHeading(new Pose2d(15, -52.5, Math.toRadians(-90)))
-
+               .lineToLinearHeading(new Pose2d(19.6, -52.3, Math.toRadians(-70)))
                 .build();
 
                 //.addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t4))
-
-
-
 
         if  (parkingZone == 1)  {
             park = auton.robot.drive.trajectoryBuilder(t5.end())
