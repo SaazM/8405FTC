@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.test;
 
 import android.graphics.LinearGradient;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,23 +22,20 @@ public class TestTeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         //DcMotorEx lift = hardwareMap.get(DcMotorEx.class, "rightLift");
-        DcMotor leftEncoder = hardwareMap.get(DcMotor.class, "leftEncoder");
-        DcMotor rightEncoder = hardwareMap.get(DcMotor.class, "rightEncoder");
-        DcMotor perpEncoder = hardwareMap.get(DcMotor.class, "leftLift");
-
-        rightEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        BNO055IMU imu;
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(parameters);
         waitForStart();
-        int lStart = leftEncoder.getCurrentPosition();
-        int rStart = rightEncoder.getCurrentPosition();
-        int pStart = perpEncoder.getCurrentPosition();
-
         while(opModeIsActive())
         {
 
             //lift.setPower(-0.8);
 
-            telemetry.addLine("" + (rightEncoder.getCurrentPosition() - lStart));
+            telemetry.addData("FIRST: ", imu.getAngularOrientation().firstAngle);
+            telemetry.addData("SECOND: ", imu.getAngularOrientation().secondAngle);
+            telemetry.addData("THIRD: ", imu.getAngularOrientation().thirdAngle);
 
             telemetry.update();
         }

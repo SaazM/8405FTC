@@ -22,6 +22,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.roadrunnerfiles.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.roadrunnerfiles.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
 
 import java.util.List;
@@ -102,11 +103,11 @@ public class Drive extends MecanumDrive {
 
     public Drive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
-        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
         turnController = new PIDFController(HEADING_PID);
         turnController.setInputBounds(0, 2 * Math.PI);
 
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.3, 0.3, Math.toRadians(0.5)), 1);
+        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.1, 0.1, Math.toRadians(0.5)), 1);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
@@ -460,7 +461,7 @@ public class Drive extends MecanumDrive {
     }
 
     @Override
-    protected double getRawExternalHeading() {
-        return 0;
+    public double getRawExternalHeading() {
+        return imu.getAngularOrientation().firstAngle;
     }
 }

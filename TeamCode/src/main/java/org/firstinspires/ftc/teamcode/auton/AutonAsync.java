@@ -48,7 +48,7 @@ public class AutonAsync extends OpMode{
         startTime = System.currentTimeMillis();
         robot = new Robot(hardwareMap, gamepad1);
 
-//        timer = new ElapsedTime();
+        timer = new ElapsedTime();
         //liftLeft = robot.lift.leftLift;
 //        liftRight = robot.lift.rightLift;
         //liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

@@ -32,7 +32,7 @@ public class Lift {
     private final double manualLiftPowerUp = 0.8;
     private final double manualLiftPowerDown = 0.5;
     private final double holdLiftPower = 0.3;
-    private final double macroLiftPower = 0.5;
+    private final double macroLiftPower = 0.8;
     private final double liftLimit = 2750; //upper lift limit
     public ElapsedTime killTimer = null;
 
