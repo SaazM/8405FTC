@@ -32,7 +32,7 @@ public class Lift {
     private final double manualLiftPowerUp = 0.8;
     private final double manualLiftPowerDown = 0.5;
     private final double holdLiftPower = 0.3;
-    private final double macroLiftPower = 0.8;
+    private final double macroLiftPower = 1;
     private final double liftLimit = 2750; //upper lift limit
     public ElapsedTime killTimer = null;
 
@@ -270,14 +270,19 @@ public class Lift {
     }
 
     public void liftToTopStack() {
-        holdingPosRight = 320;
-        holdingPosLeft = 320;
+        holdingPosRight = 380;
+        holdingPosLeft = 380;
         currentMode = LIFT_MODE.MACRO;
     }
 
     public void liftToMiddleOfStack() {
-        holdingPosRight = 200;
-        holdingPosLeft = 200;
+        holdingPosRight = 240;
+        holdingPosLeft = 240;
+        currentMode = LIFT_MODE.MACRO;
+    }
+    public void liftToBottomOfStack() {
+        holdingPosRight = 150;
+        holdingPosLeft = 150;
         currentMode = LIFT_MODE.MACRO;
     }
 
