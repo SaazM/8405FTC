@@ -29,15 +29,17 @@ public class RightAuton extends OpMode
 
     @Override
     public void init() {
-        //init = new aprilTagsInit(hardwareMap, telemetry);
-        //init.initialize();
+        init = new aprilTagsInit(hardwareMap, telemetry);
+        init.initialize();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
     @Override
     public void init_loop()
     {
-        //init.search();
-        //int finalID = init.stopAndSave() + 1;
+        init.search();
+        parkingZone = init.stopAndSave();
+        telemetry.addData("ZONE: ", parkingZone);
+        telemetry.update();
     }
     public void liftAsync()
     {
@@ -74,7 +76,7 @@ public class RightAuton extends OpMode
 //        auton.runAutonRight();
         //auton.liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //.addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t2))
-        this.parkingZone = 1;
+
         auton.robot.drive.auton();
 
 

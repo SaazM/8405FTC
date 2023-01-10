@@ -78,6 +78,7 @@ public class aprilTagsInit {
                         temp = 2;
                     }
                     else if (temp==2) {temp=1; }
+                    tagOfInterest.id = temp;
                     tm.addData("Tag of interest is in sight!\n\nparking:", temp);
                     tagFound = true;
                     break;
