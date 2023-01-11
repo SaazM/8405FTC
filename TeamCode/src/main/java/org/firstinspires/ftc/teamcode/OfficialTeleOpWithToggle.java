@@ -71,6 +71,8 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
 
             //robot.lift.isHolding = false;
             robot.lift.liftTeleOp(gamepad1);
+
+
             telemetry.addData("IMU Heading: ", 180/Math.PI * robot.drive.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);
             telemetry.addData("speed multiplier: ", robot.drive.speedMultiplier);
