@@ -38,7 +38,7 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
         robot.lift.newBotStart();
 
         waitForStart();
-        robot.drive.odomRetraction.setPosition(1);
+        robot.drive.odomRetraction.setPosition(0);
         double startTime = System.currentTimeMillis();
         double endTime = -1;
         while (opModeIsActive()) {
