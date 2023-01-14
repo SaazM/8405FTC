@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
+import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
@@ -63,7 +64,7 @@ public class RightAuton extends OpMode
                 auton.robot.lift.liftToBottomOfStack();
                 break;
             case 5:
-                auton.robot.lift.liftToBottom();
+                auton.robot.lift.currentMode = Lift.LIFT_MODE.RESET;
                 break;
         }
     }
@@ -241,17 +242,17 @@ public class RightAuton extends OpMode
 
        if (parkingZone == 1) {
            park = auton.robot.drive.trajectoryBuilder(t4.end())
-                .addTemporalMarker(1, () -> currLift = 4)
+                .addTemporalMarker(1, () -> currLift = 5)
                 .lineToLinearHeading(new Pose2d(24, -50, Math.toRadians(-90)))
                 .build();
        } else if (parkingZone == 2) {
             park = auton.robot.drive.trajectoryBuilder(t4.end())
-                .addTemporalMarker(1, () -> currLift = 4)
+                .addTemporalMarker(1, () -> currLift = 5)
                 .lineToLinearHeading(new Pose2d(0, -50, Math.toRadians(-90)))
                 .build();
        } else {
             park = auton.robot.drive.trajectoryBuilder(t4.end())
-                .addTemporalMarker(1, () -> currLift = 4)
+                .addTemporalMarker(1, () -> currLift = 5)
                 .lineToLinearHeading(new Pose2d(-24, -50, Math.toRadians(-90)))
                 .build();
        }

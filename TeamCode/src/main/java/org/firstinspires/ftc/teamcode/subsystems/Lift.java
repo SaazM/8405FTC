@@ -15,7 +15,7 @@ import java.util.*;
 
 public class Lift {
     // -- DECLARATIONS -- //
-    private enum LIFT_MODE {
+    public enum LIFT_MODE {
         MANUAL,MACRO,HOLD,NONE,RESET, KILLED
     }
     public DcMotorEx leftLift;
