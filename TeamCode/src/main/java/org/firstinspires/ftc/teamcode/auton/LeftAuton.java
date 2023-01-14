@@ -40,7 +40,6 @@ public class LeftAuton extends OpMode
         telemetry.addLine(Integer.toString(finalID));
         telemetry.update();
         auton = new AutonAsync(finalID, hardwareMap, telemetry, gamepad1);
-//        auton.runAutonThreeConeDefensiveLeft();
         auton.runAutonParkOnly();
         auton.liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         activated = true;

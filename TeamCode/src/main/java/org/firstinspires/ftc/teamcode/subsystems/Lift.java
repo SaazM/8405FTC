@@ -14,20 +14,18 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 import java.util.*;
 
 public class Lift {
-
+    // -- DECLARATIONS -- //
     private enum LIFT_MODE {
         MANUAL,MACRO,HOLD,NONE,RESET, KILLED
     }
     public DcMotorEx leftLift;
     public DcMotorEx rightLift;
-    //public DigitalChannel limitSwitch;
-
     public double startTime;
     public int holdingPosLeft;
     public int holdingPosRight;
     public boolean kill;
 
-    //LIFT CONSTANTS
+    // -- LIFT CONSTANTS -- //
     public double rollingAverageCurrent = 0;
     private final double manualLiftPowerUp = 0.8;
     private final double manualLiftPowerDown = 0.5;
@@ -35,9 +33,7 @@ public class Lift {
     private final double macroLiftPower = 1;
     private final double liftLimit = 2750; //upper lift limit
     public ElapsedTime killTimer = null;
-
     public LIFT_MODE currentMode;
-
     private double startedHoldingTime = 0;
     private Gamepad gamepad;
 
@@ -61,18 +57,17 @@ public class Lift {
         holdingPosLeft = -1;
     }
 
-    public void liftToPosition(int posRequest, int posRequestLeft, double power) {//power here is a fallacy; it just is percentage of lift velocity capability
+    public void liftToPosition(int posRequest, int posRequestLeft, double power) {
         if (Math.abs(posRequest - rightLift.getCurrentPosition()) <= 20) {
             currentMode = LIFT_MODE.HOLD;
         }
         //DETERMINE VALIDITY OF POSITION
-        if(posRequest > 10  && posRequest<liftLimit)
+        if(posRequest > 10  && posRequest < liftLimit)
         {
             rightLift.setTargetPosition(posRequest);
             leftLift.setTargetPosition(posRequestLeft);
             rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
             rightLift.setPower(power);
             leftLift.setPower(power);
         }
@@ -85,26 +80,23 @@ public class Lift {
         }
 
     }
+
     private void setLiftPower(double power)
     {
-        rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftLift.setPower(power);
-        //rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightLift.setPower(power);
-
-
     }
+
     private void liftMacro()
     {
-
         if (gamepad.right_bumper)
         {
             currentMode = LIFT_MODE.RESET;
         }
         else
         {
-
             if (gamepad.square) { // medium goal macro
                 liftToMedium();
             } else if (gamepad.circle) { // low goal macro
@@ -212,35 +204,26 @@ public class Lift {
         this.gamepad = gamepad;
         if(currentMode != LIFT_MODE.KILLED)
         {
-
-
-            //whenever new action is taken, lift PID should be reset
-            //MACROS
-
             if(gamepad.square || gamepad.circle || gamepad.left_bumper || gamepad.triangle || gamepad.right_bumper)
             {
-                //pid.reset();
                 currentMode = LIFT_MODE.MACRO;
                 liftMacro();
             }
 
 
 
-            //MANUAL
-
+            // MANUAL
             if(gamepad.right_trigger > 0.5 || gamepad.left_trigger > 0.5)
             {
-                //pid.reset();
                 currentMode = LIFT_MODE.MANUAL;
                 liftManual();
 
             }
 
-            //HOLDING
+            // HOLDING
             else if (rightLift.getCurrentPosition() > 100 && currentMode == LIFT_MODE.MANUAL) { // hold after manual ends
                 currentMode = LIFT_MODE.HOLD;
 
-                //pid.reset();
                 holdingPosRight = rightLift.getCurrentPosition();
                 holdingPosLeft = leftLift.getCurrentPosition();
             }
@@ -289,6 +272,12 @@ public class Lift {
     public void liftToHigh() {
         holdingPosRight = 2550;
         holdingPosLeft = 2550;
+        currentMode = LIFT_MODE.MACRO;
+    }
+
+    public void liftToBottom() {
+        holdingPosRight = 0;
+        holdingPosLeft = 0;
         currentMode = LIFT_MODE.MACRO;
     }
 

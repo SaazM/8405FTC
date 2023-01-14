@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.auton;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
 import org.firstinspires.ftc.teamcode.subsystems.*;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @TeleOp
 public class ParkAuton extends LinearOpMode
@@ -26,8 +28,29 @@ public class ParkAuton extends LinearOpMode
         int finalID = init.stopAndSave();
         telemetry.addLine(Integer.toString(finalID));
         telemetry.update();
-        Auton auton = new Auton(false, finalID, new Robot(hardwareMap, gamepad1));
-        auton.runAutonParkOnly();
+
+        Robot robot = new Robot(hardwareMap, gamepad1);
+        robot.intake.intake();
+        TrajectorySequence park;
+        robot.drive.odomRetraction.setPosition(2);
+
+        if (finalID == 1) {
+            park = robot.drive.trajectorySequenceBuilder(new Pose2d())
+                    .strafeRight(30)
+                    .forward(24)
+                    .build();
+        } else if (finalID == 2) {
+            park = robot.drive.trajectorySequenceBuilder(new Pose2d())
+                    .strafeRight(30)
+                    .build();
+        } else {
+            park = robot.drive.trajectorySequenceBuilder(new Pose2d())
+                    .strafeRight(30)
+                    .back(24)
+                    .build();
+        }
+
+        robot.drive.followTrajectorySequence(park);
     }
 
 }

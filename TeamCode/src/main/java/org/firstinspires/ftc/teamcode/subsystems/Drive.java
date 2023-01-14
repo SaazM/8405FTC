@@ -16,9 +16,11 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.roadrunnerfiles.StandardTrackingWheelLocalizer;
@@ -60,6 +62,7 @@ import static org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurre
 @Config
 public class Drive extends MecanumDrive {
     public BNO055IMU imu;
+    public Servo odomRetraction;
     public boolean isFieldCentric;
 
     public DcMotorEx leftFront;
@@ -145,6 +148,9 @@ public class Drive extends MecanumDrive {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
+        odomRetraction = hardwareMap.get(Servo.class, "odomRetraction");
+        odomRetraction.resetDeviceConfigurationForOpMode();
+
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
             motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
@@ -154,8 +160,6 @@ public class Drive extends MecanumDrive {
         if (RUN_USING_ENCODER) {
             setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-
-
 
         if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
@@ -183,7 +187,7 @@ public class Drive extends MecanumDrive {
         }
 
     }
-    public void auton(){
+    public void auton() {
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
