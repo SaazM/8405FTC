@@ -259,8 +259,8 @@ public class Lift {
     }
 
     public void liftToMiddleOfStack() {
-        holdingPosRight = 240;
-        holdingPosLeft = 240;
+        holdingPosRight = 230;
+        holdingPosLeft = 230;
         currentMode = LIFT_MODE.MACRO;
     }
     public void liftToBottomOfStack() {

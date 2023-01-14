@@ -20,7 +20,7 @@ public class aprilTagsInit {
     double tagsize = 0.0406;//meters
 
     final int ID_LEFT = 1;
-    final int ID_MIDDLE = 0;
+    final int ID_MIDDLE = 3;
     final int ID_RIGHT = 2;
 
     AprilTagDetection tagOfInterest = null;
@@ -68,18 +68,22 @@ public class aprilTagsInit {
             boolean tagFound = false;
             for (AprilTagDetection tag : currentDetections)
             {
-                if (tag.id == ID_LEFT || tag.id == ID_MIDDLE || tag.id == ID_RIGHT) {
-
-
+                if (tag.id == ID_LEFT) {
                     tagOfInterest = tag;
-                    int temp = tag.id+1;
-                    if (temp == 1)
-                    {
-                        temp = 2;
-                    }
-                    else if (temp==2) {temp=1; }
-                    tagOfInterest.id = temp;
-                    tm.addData("Tag of interest is in sight!\n\nparking:", temp);
+                    tagOfInterest.id = 1;
+                    tm.addData("Tag of interest is in sight!\n\nparking:", 1);
+                    tagFound = true;
+                    break;
+                } else if (tag.id == ID_MIDDLE) {
+                    tagOfInterest = tag;
+                    tagOfInterest.id = 2;
+                    tm.addData("Tag of interest is in sight!\n\nparking:", 2);
+                    tagFound = true;
+                    break;
+                } else if (tag.id == ID_RIGHT) {
+                    tagOfInterest = tag;
+                    tagOfInterest.id = 3;
+                    tm.addData("Tag of interest is in sight!\n\nparking:", 3);
                     tagFound = true;
                     break;
                 }
