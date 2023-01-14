@@ -113,7 +113,7 @@ public class RightAuton extends OpMode
         t2 = auton.robot.drive.trajectoryBuilder(t1_2.end()) // slide back and score SECOND
                 .addDisplacementMarker(() -> currLift = 1)
                 .addTemporalMarker(2, () -> {auton.robot.intake.outtake();})
-                .lineToLinearHeading(new Pose2d(16, -52, Math.toRadians(-80)))
+                .lineToLinearHeading(new Pose2d(16, -52.5, Math.toRadians(-80)))
                 .addTemporalMarker(3, () -> auton.robot.drive.followTrajectoryAsync(t2_1))
                 .build();
 
@@ -133,7 +133,7 @@ public class RightAuton extends OpMode
                 .addDisplacementMarker(() -> currLift = 1)
 
                 .addTemporalMarker(2, () -> {auton.robot.intake.outtake();})
-                .lineToLinearHeading(new Pose2d(16, -52.5, Math.toRadians(-80)))
+                .lineToLinearHeading(new Pose2d(16, -53, Math.toRadians(-80)))
                 .addTemporalMarker(3,() -> auton.robot.drive.followTrajectoryAsync(t3_1))
                 .build();
         t3_1 = auton.robot.drive.trajectoryBuilder(t3.end()) // go back and turn
