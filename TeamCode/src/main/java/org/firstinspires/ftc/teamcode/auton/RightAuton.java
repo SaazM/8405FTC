@@ -80,6 +80,7 @@ public class RightAuton extends OpMode
 
 
         // SAVED THREE CONE AUTON //
+        // USE THIS AUTON PLEASE //
         auton.robot.intake.intake();
 
         t1 = auton.robot.drive.trajectoryBuilder(new Pose2d()) // SCORE autoloaded
