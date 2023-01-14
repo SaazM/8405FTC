@@ -23,6 +23,9 @@ public class aprilTagsInit {
     final int ID_MIDDLE = 3;
     final int ID_RIGHT = 2;
 
+    double tagSum = 0;
+    double numOfTags = 0;
+
     AprilTagDetection tagOfInterest = null;
     private HardwareMap hm;
     private Telemetry tm;
@@ -36,7 +39,13 @@ public class aprilTagsInit {
     }
     public int stopAndSave()
     {
-        return tagOfInterest==null ? -1 : tagOfInterest.id;//shut the program down and return the last known
+        if (tagSum / numOfTags < 1.9) {
+            return 1;
+        } else if (tagSum / numOfTags < 2.8) {
+            return 2;
+        } else {
+            return 3;
+        }
     }
     public void initialize()
     {
@@ -73,18 +82,24 @@ public class aprilTagsInit {
                     tagOfInterest.id = 1;
                     tm.addData("Tag of interest is in sight!\n\nparking:", 1);
                     tagFound = true;
+                    tagSum += (double) tagOfInterest.id;
+                    numOfTags++;
                     break;
                 } else if (tag.id == ID_MIDDLE) {
                     tagOfInterest = tag;
                     tagOfInterest.id = 2;
                     tm.addData("Tag of interest is in sight!\n\nparking:", 2);
                     tagFound = true;
+                    tagSum += (double) tagOfInterest.id;
+                    numOfTags++;
                     break;
                 } else if (tag.id == ID_RIGHT) {
                     tagOfInterest = tag;
                     tagOfInterest.id = 3;
                     tm.addData("Tag of interest is in sight!\n\nparking:", 3);
                     tagFound = true;
+                    tagSum+= (double) tagOfInterest.id;
+                    numOfTags++;
                     break;
                 }
             }
