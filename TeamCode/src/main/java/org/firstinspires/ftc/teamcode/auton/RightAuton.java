@@ -242,17 +242,17 @@ public class RightAuton extends OpMode
        if (parkingZone == 1) {
            park = auton.robot.drive.trajectoryBuilder(t4.end())
                 .addTemporalMarker(1, () -> currLift = 4)
-                .lineToLinearHeading(new Pose2d(24, -56, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(24, -50, Math.toRadians(-90)))
                 .build();
        } else if (parkingZone == 2) {
             park = auton.robot.drive.trajectoryBuilder(t4.end())
                 .addTemporalMarker(1, () -> currLift = 4)
-                .lineToLinearHeading(new Pose2d(0, -56, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(0, -50, Math.toRadians(-90)))
                 .build();
        } else {
             park = auton.robot.drive.trajectoryBuilder(t4.end())
                 .addTemporalMarker(1, () -> currLift = 4)
-                .lineToLinearHeading(new Pose2d(-24, -56, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-24, -50, Math.toRadians(-90)))
                 .build();
        }
 
