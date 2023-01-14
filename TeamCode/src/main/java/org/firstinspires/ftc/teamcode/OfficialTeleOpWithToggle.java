@@ -23,6 +23,7 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
 
     public double deadband(double deadzone, double minval, double input, double degree) {
         int sign = input >= 0 ? 1 : -1;
+
         if (Math.abs(input) <= deadzone) {
             return 0;
         } else {
@@ -37,6 +38,7 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
         robot.lift.newBotStart();
 
         waitForStart();
+        robot.drive.odomRetraction.setPosition(0);
         double startTime = System.currentTimeMillis();
         double endTime = -1;
         while (opModeIsActive()) {
@@ -44,10 +46,9 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
             double strafe = gamepad1.left_stick_x * 1.1; // counteract imperfect strafing
             double turn = gamepad1.right_stick_x;
 
-            if (gamepad1.dpad_down) {
-//                robot.drive.switchDrive();
+            if (gamepad1.dpad_down) { // odom DOWN
                 robot.drive.odomRetraction.setPosition(1);
-            } else if (gamepad1.dpad_up) {
+            } else if (gamepad1.dpad_up) { // odom RETRACT
                 robot.drive.odomRetraction.setPosition(0);
             }
 
