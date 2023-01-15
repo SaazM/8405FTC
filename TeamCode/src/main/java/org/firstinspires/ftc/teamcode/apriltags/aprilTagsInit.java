@@ -41,7 +41,7 @@ public class aprilTagsInit {
     {
         if (tagSum / numOfTags < 1.9) {
             return 1;
-        } else if (tagSum / numOfTags < 2.8) {
+        } else if (tagSum / numOfTags < 2.5) {
             return 2;
         } else {
             return 3;
@@ -80,26 +80,26 @@ public class aprilTagsInit {
                 if (tag.id == ID_LEFT) {
                     tagOfInterest = tag;
                     tagOfInterest.id = 1;
-                    tm.addData("Tag of interest is in sight!\n\nparking:", 1);
-                    tagFound = true;
                     tagSum += (double) tagOfInterest.id;
                     numOfTags++;
+                    tm.addData("Tag of interest is in sight!\n\nAverage: ", tagSum/numOfTags);
+                    tagFound = true;
                     break;
                 } else if (tag.id == ID_MIDDLE) {
                     tagOfInterest = tag;
                     tagOfInterest.id = 2;
-                    tm.addData("Tag of interest is in sight!\n\nparking:", 2);
-                    tagFound = true;
                     tagSum += (double) tagOfInterest.id;
                     numOfTags++;
+                    tm.addData("Tag of interest is in sight!\n\nAverage: ", tagSum/numOfTags);
+                    tagFound = true;
                     break;
                 } else if (tag.id == ID_RIGHT) {
                     tagOfInterest = tag;
                     tagOfInterest.id = 3;
-                    tm.addData("Tag of interest is in sight!\n\nparking:", 3);
-                    tagFound = true;
-                    tagSum+= (double) tagOfInterest.id;
+                    tagSum += (double) tagOfInterest.id;
                     numOfTags++;
+                    tm.addData("Tag of interest is in sight!\n\nAverage: ", tagSum/numOfTags);
+                    tagFound = true;
                     break;
                 }
             }

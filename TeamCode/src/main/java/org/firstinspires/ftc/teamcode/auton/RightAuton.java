@@ -144,7 +144,7 @@ public class RightAuton extends OpMode
                 .build();
 
         t3_2 = auton.robot.drive.trajectoryBuilder(t3_1.end()) // go to cone stack
-                .lineToLinearHeading(new Pose2d(-24.6, -54, Math.toRadians(190)))
+                .lineToLinearHeading(new Pose2d(-24.6, -54, Math.toRadians(215)))
                 .addDisplacementMarker(() -> auton.robot.drive.followTrajectoryAsync(t4))
                 .build();
         t4 = auton.robot.drive.trajectoryBuilder(t3_2.end()) // slide back and score FOURTH
