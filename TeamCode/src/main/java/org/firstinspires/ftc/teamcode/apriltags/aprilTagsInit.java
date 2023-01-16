@@ -39,7 +39,7 @@ public class aprilTagsInit {
     }
     public int stopAndSave()
     {
-        if (tagSum / numOfTags == 0) {
+        if (tagSum == 0) {
             return 1;
         } else if (tagSum / numOfTags < 2.5) {
             return 2;
