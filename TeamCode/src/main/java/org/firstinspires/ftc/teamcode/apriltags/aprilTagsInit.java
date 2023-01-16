@@ -39,7 +39,7 @@ public class aprilTagsInit {
     }
     public int stopAndSave()
     {
-        if (tagSum / numOfTags < 1.9) {
+        if (tagSum / numOfTags == 0) {
             return 1;
         } else if (tagSum / numOfTags < 2.5) {
             return 2;
@@ -80,9 +80,7 @@ public class aprilTagsInit {
                 if (tag.id == ID_LEFT) {
                     tagOfInterest = tag;
                     tagOfInterest.id = 1;
-                    tagSum += (double) tagOfInterest.id;
-                    numOfTags++;
-                    tm.addData("Tag of interest is in sight!\n\nAverage: ", tagSum/numOfTags);
+                    tm.addData("Tag of interest is in sight!\n\nAverage: ", 1.0);
                     tagFound = true;
                     break;
                 } else if (tag.id == ID_MIDDLE) {
