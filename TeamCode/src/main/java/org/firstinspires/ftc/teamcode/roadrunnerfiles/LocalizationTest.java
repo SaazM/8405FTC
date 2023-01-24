@@ -21,14 +21,14 @@ public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Robot robot = new Robot(hardwareMap, gamepad1);
-        Encoder leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftEncoder"));
+
         Encoder rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightEncoder"));
         rightEncoder.setDirection(Encoder.Direction.REVERSE);
-        Encoder frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontLeft"));
+        Encoder frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "perpEncoder"));
 
         robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         long rightInitial = rightEncoder.getCurrentPosition();
-        long leftInitial = leftEncoder.getCurrentPosition();
+        //long leftInitial = leftEncoder.getCurrentPosition();
         long perpInitial = frontEncoder.getCurrentPosition();
         waitForStart();
 
@@ -48,10 +48,10 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.addData("right encoder: ", rightEncoder.getCurrentPosition() - rightInitial);
-            telemetry.addData("left encoder: ", leftEncoder.getCurrentPosition() - leftInitial);
+            //telemetry.addData("left encoder: ", leftEncoder.getCurrentPosition() - leftInitial);
             telemetry.addData("perpendicular: ", frontEncoder.getCurrentPosition() - perpInitial);
             telemetry.addData("right encoder vel: ", rightEncoder.getCorrectedVelocity()/8192.0 * 63/32.0 * Math.PI);
-            telemetry.addData("left encoder vel: ", leftEncoder.getCorrectedVelocity()/8192.0 * 63/32.0 * Math.PI);
+            //telemetry.addData("left encoder vel: ", leftEncoder.getCorrectedVelocity()/8192.0 * 63/32.0 * Math.PI);
             telemetry.addData("perpendicular vel: ", frontEncoder.getCorrectedVelocity()/8192.0 * 63/32.0 * Math.PI);
             telemetry.update();
         }

@@ -39,6 +39,7 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
 
         waitForStart();
         robot.drive.odomRetraction.setPosition(0);
+        robot.drive.toggleMode();
         double startTime = System.currentTimeMillis();
         double endTime = -1;
         while (opModeIsActive()) {
@@ -56,6 +57,11 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
                 robot.drive.switchSpeed();
             } else {
                 robot.drive.switchingSpeed = false;
+            }
+
+            if(gamepad1.dpad_right)
+            {
+                robot.drive.toggleMode();
             }
 
 
@@ -84,7 +90,7 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
             telemetry.addData("Right Lift Requested Position", robot.lift.holdingPosRight);
             telemetry.addData("RIGHT Lift Position", robot.lift.rightLift.getCurrentPosition());
             telemetry.addData("Right Lift PID: ", robot.lift.rightLift.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
-            telemetry.addData("CURRENT LIFT MODE: ", robot.lift.currentMode);
+            telemetry.addData("CURRENT DRIVE MODE: ", robot.drive.leftFront.getMode());
             telemetry.addData("HoldingPosLeft: ", robot.lift.holdingPosLeft);
             telemetry.addData("current Right", robot.lift.rightLift.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("current Right Average", robot.lift.rollingAverageCurrent);

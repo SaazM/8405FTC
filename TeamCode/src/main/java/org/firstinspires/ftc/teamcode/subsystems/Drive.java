@@ -157,13 +157,7 @@ public class Drive extends MecanumDrive {
             motor.setMotorType(motorConfigurationType);
         }
 
-        if (RUN_USING_ENCODER) {
-            setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
 
-        if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
-            setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
-        }
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
 
@@ -177,6 +171,17 @@ public class Drive extends MecanumDrive {
 
     public void changeFollowerAccuracy(double timeout, double translational_error, double turn_error) {
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(translational_error, translational_error, Math.toRadians(turn_error)), timeout);
+    }
+    public void toggleMode()
+    {
+        if(leftFront.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
+        {
+            setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+        else
+        {
+            setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
     }
 
     public void moveTeleOp(double power, double strafe, double turn, double liftPos) {
@@ -268,10 +273,21 @@ public class Drive extends MecanumDrive {
         rightFront.setVelocity(frontRightRequest);
         rightRear.setVelocity(rearRightRequest);
          **/
-        leftFront.setPower(frontLeftPower);
-        leftRear.setPower(backLeftPower);
-        rightFront.setPower(frontRightPower);
-        rightRear.setPower(backRightPower);
+        if(leftFront.getMode() == DcMotor.RunMode.RUN_USING_ENCODER)
+        {
+            leftFront.setVelocity(frontLeftPower*powerToVelocity);
+            leftRear.setVelocity(backLeftPower*powerToVelocity);
+            rightFront.setVelocity(frontRightPower*powerToVelocity);
+            rightRear.setVelocity(backRightPower*powerToVelocity);
+        }
+        else if(leftFront.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
+        {
+            leftFront.setPower(frontLeftPower);
+            leftRear.setPower(backLeftPower);
+            rightFront.setPower(frontRightPower);
+            rightRear.setPower(backRightPower);
+        }
+
     }
 
     public void switchDrive() {
