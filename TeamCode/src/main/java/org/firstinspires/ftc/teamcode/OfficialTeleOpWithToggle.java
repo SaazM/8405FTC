@@ -92,8 +92,9 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
             telemetry.addData("Right Lift PID: ", robot.lift.rightLift.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
             telemetry.addData("CURRENT DRIVE MODE: ", robot.drive.leftFront.getMode());
             telemetry.addData("HoldingPosLeft: ", robot.lift.holdingPosLeft);
-            telemetry.addData("current Right", robot.lift.rightLift.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("current Right Average", robot.lift.rollingAverageCurrent);
+            telemetry.addData("Power: ", power);
+            telemetry.addData("Strafe: ", strafe);
+            telemetry.addData("Turn: ", turn);
             telemetry.addData("Hertz", 1000.0/(System.currentTimeMillis() - startTime));
             telemetry.addData("RIGHT LIFT MOTOR: ", gamepad1.right_bumper);
             telemetry.addData("RIGHT LIFT MOTOR: ", robot.lift.rightLift.isMotorEnabled());

@@ -1,65 +1,145 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.firstinspires.ftc.teamcode.auton;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
+import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+@TeleOp
+public class AutonTest extends OpMode
+{
+    AutonAsync auton;
+    Trajectory t0, t1, t2, t3,t4, t5, t1_1, t1_2, t2_1, t2_2, t3_1, t3_2, t4_1, t4_2, t5_1, t5_2,park;
+    Gamepad gamepad1;
+    double parkingZone;
+    int currLift = 0;
+    boolean intaking = true;
+    int checkNum = -1;
 
-@TeleOp(name="AutonTest")
-//@Disabled
-public class AutonTest extends LinearOpMode {
     @Override
-    public void runOpMode() {
-        DcMotorEx rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
-        rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        boolean moveON = false;
-        waitForStart();
-        while(opModeIsActive())
+    public void init() {
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+    }
+    @Override
+    public void init_loop()
+    {
+
+    }
+    public void liftAsync()
+    {
+        switch(currLift)
         {
-            if(rightLift.getCurrentPosition() <= 2100 && !moveON)
-            {
-                rightLift.setPower(0.3);
-            }
-            else
-            {
-                moveON = true;
-                rightLift.setPower(-0.1);
-            }
-            rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            case 0:
+                break;
+            case 1:
+                telemetry.addLine("HIGH GOAL");
+                auton.robot.lift.liftToHigh();
+                break;
+            case 2:
+                telemetry.addLine("HIGH STACK");
+                auton.robot.lift.liftToTopStack();
+                break;
+            case 3:
+                telemetry.addLine("LOW STACK");
+                auton.robot.lift.liftToMiddleOfStack();
+                break;
+            case 4:
+                auton.robot.lift.liftToBottomOfStack();
+                break;
+            case 5:
+                auton.robot.lift.currentMode = Lift.LIFT_MODE.RESET;
+                break;
+        }
+    }
+    @Override
+    public void start()
+    {
+        // int finalID = init.stopAndSave() + 1;
+        // if(finalID == 1){finalID = 2;}
+        // else if(finalID == 2){finalID = 1;}
+        telemetry.addLine(Integer.toString(0));
+        telemetry.update();
+        auton = new AutonAsync(0, hardwareMap, telemetry, gamepad1);
+
+
+        currLift = 1;
+        t1 = auton.robot.drive.trajectoryBuilder(new Pose2d())
+
+                .lineToLinearHeading(new Pose2d(-5, 0, Math.toRadians(90)))
+                .addDisplacementMarker(() -> {
+                    checkNum = 1;
+                })
+                .build();
+
+
+
+
+
+
+        auton.robot.drive.followTrajectoryAsync(t1);
+
+        telemetry.addData("external heading velo: ", auton.robot.drive.getExternalHeadingVelocity());
+
+        telemetry.update();
+    }
+    public void intake()
+    {
+        if(intaking)
+        {
+            auton.robot.intake.intake();
 
         }
+        else
+        {
+            auton.robot.intake.outtake();
+        }
+    }
+    public void fulfillChecks()
+    {
+
+        switch(checkNum)
+        {
+            case 1:
+                auton.robot.drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                if(!(auton.robot.distanceSensor.getDistance(DistanceUnit.INCH)< 3))
+                {
+                    auton.robot.drive.moveTeleOp(0,-0.25,0, 0);
+                }
+                else
+                {
+                    auton.robot.drive.robotCentric(0,0,0);
+                    checkNum = 2;
+                }
+                break;
+        }
+
+    }
+    @Override
+    public void loop() {
+        checkNum = 1;
+        telemetry.addData("X: ", auton.robot.drive.getPoseEstimate().getX());
+        telemetry.addData("Y: ", auton.robot.drive.getPoseEstimate().getY());
+        telemetry.addData("Heading: ", auton.robot.drive.getPoseEstimate().getHeading());
+        //auton.robot.drive.update();
+        auton.robot.drive.getLocalizer().update();
+        liftAsync();
+        //intake();
+        fulfillChecks();
+        auton.robot.lift.autonRequest();
+        telemetry.update();
+
     }
 }

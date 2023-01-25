@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.internal.android.dx.dex.file.DebugInfoEncoder;
 import org.firstinspires.ftc.teamcode.subsystems.Odometry;
+import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 @TeleOp(name="TEST TELEOP")
@@ -30,15 +31,16 @@ public class TestTeleOp extends LinearOpMode {
 
         ColorSensor colorSensor;
         colorSensor = hardwareMap.get(ColorSensor.class, "color");
-
+        Robot robot = new Robot(hardwareMap, gamepad1);
         waitForStart();
         while(opModeIsActive())
         {
 
-            telemetry.addData("RED: ", colorSensor.red());
-            telemetry.addData("GREEN: ", colorSensor.green());
-            telemetry.addData("BLUE: ", colorSensor.blue());
-            telemetry.addData("ALPHA: ", colorSensor.alpha());
+            telemetry.addData("FRONT LEFT ENCODER: ", robot.drive.leftFront.getCurrentPosition());
+
+            telemetry.addData("FRONT Right ENCODER: ", robot.drive.rightFront.getCurrentPosition());
+            telemetry.addData("BACK LEFT ENCODER: ", robot.drive.leftRear.getCurrentPosition());
+            telemetry.addData("BACK RIGHT ENCODER: ", robot.drive.rightRear.getCurrentPosition());
             telemetry.addData("DIST: ", distanceSensor.getDistance(DistanceUnit.INCH));
             telemetry.update();
         }
