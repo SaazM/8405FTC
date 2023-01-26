@@ -19,16 +19,23 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+
 @TeleOp
 public class AutonTest extends OpMode
 {
+    private enum ADJUSTMENT_LEVEL
+    {
+        FOLLOW_TRAJECTORY, FORWARD, STRAFE, DROP_AND_RETURN, STOP
+    }
+
     AutonAsync auton;
-    Trajectory t0, t1, t2, t3,t4, t5, t1_1, t1_2, t2_1, t2_2, t3_1, t3_2, t4_1, t4_2, t5_1, t5_2,park;
+    Trajectory trajectory;
     Gamepad gamepad1;
     double parkingZone;
     int currLift = 0;
     boolean intaking = true;
     int checkNum = -1;
+    ADJUSTMENT_LEVEL toAdjust = ADJUSTMENT_LEVEL.FOLLOW_TRAJECTORY;
     ElapsedTime timer = null;
 
     @Override
@@ -71,38 +78,19 @@ public class AutonTest extends OpMode
     @Override
     public void start()
     {
-        checkNum = -1;
-        // int finalID = init.stopAndSave() + 1;
-        // if(finalID == 1){finalID = 2;}
-        // else if(finalID == 2){finalID = 1;}
-        telemetry.addLine(Integer.toString(0));
-        telemetry.update();
         auton = new AutonAsync(0, hardwareMap, telemetry, gamepad1);
         auton.robot.drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         auton.robot.drive.auton();
         intaking = true;
-
-
         currLift = 1;
-        t1 = auton.robot.drive.trajectoryBuilder(new Pose2d())
-
+        trajectory = auton.robot.drive.trajectoryBuilder(new Pose2d())
                 .lineToLinearHeading(new Pose2d(-25, 1.5, Math.toRadians(90)))
                 .addDisplacementMarker(() -> {
-                    checkNum = 1;
+                    toAdjust = ADJUSTMENT_LEVEL.STRAFE;
                 })
                 .build();
+        auton.robot.drive.followTrajectoryAsync(trajectory);
 
-
-
-
-
-
-
-        auton.robot.drive.followTrajectoryAsync(t1);
-
-        telemetry.addData("external heading velo: ", auton.robot.drive.getExternalHeadingVelocity());
-
-        telemetry.update();
     }
     public void intake()
     {
@@ -116,51 +104,63 @@ public class AutonTest extends OpMode
             auton.robot.intake.outtake();
         }
     }
-    public void fulfillChecks()
+    public void makeAdjustments()
     {
 
-
-        switch(checkNum)
+        switch(toAdjust)
         {
-            case 1:
+            case STOP:
+                auton.robot.drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                auton.robot.drive.moveTeleOp(0,-0,0, 0);
+                break;
+            case DROP_AND_RETURN:
+                double dropLength = 1;
+                double dist = auton.robot.distanceSensor.getDistance(DistanceUnit.INCH);
+                double thresh = 0.25;
+                if(dist - dropLength > thresh)
+                {
+                    auton.robot.drive.moveTeleOp(0.25,0,0, 0);
+                }
+                else if(dist - dropLength < -thresh)
+                {
+                    auton.robot.drive.moveTeleOp(-0.25, 0, 0, 0);
+                }
+                else
+                {
+                    auton.robot.drive.moveTeleOp(0,-0,0, 0);
+                    if (timer == null) {
+                        timer = new ElapsedTime();
+                        timer.reset();
+                    }
+                    if (timer.milliseconds() <= 1000) {
+                        intaking = false;
+                    }
+                    else
+                    {
+                        toAdjust = ADJUSTMENT_LEVEL.FOLLOW_TRAJECTORY;
+                        intaking = true;
+                        auton.robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        trajectory = auton.robot.drive.trajectoryBuilder(auton.robot.drive.getPoseEstimate())
+                                .lineToLinearHeading(new Pose2d(-12,0, Math.toRadians(0)))
+                                .build();
+                        auton.robot.drive.followTrajectoryAsync(trajectory);
+                        timer = null;
 
+                    }
+                }
+                break;
+            case STRAFE:
                 if(!(auton.robot.distanceSensor.getDistance(DistanceUnit.INCH)< 3))
                 {
                     auton.robot.drive.moveTeleOp(0,-0.4,0, 0);
                 }
                 else {
-                    if (timer == null) {
-                        timer = new ElapsedTime();
-                        timer.reset();
-                    }
-                    auton.robot.drive.moveTeleOp(0,-0,0, 0);
-                    if (timer.milliseconds() <= 1000) {
-                        intaking = false;
-
-                    } else
-                    {
-
-                        intaking = true;
-                        checkNum = -1;
-                        auton.robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                        t2 = auton.robot.drive.trajectoryBuilder(auton.robot.drive.getPoseEstimate())
-                                .addTemporalMarker(3, () -> {checkNum = 2;})
-                                .lineToLinearHeading(new Pose2d(-25,0, Math.toRadians(0)))
-
-                                .build();
-                        auton.robot.drive.followTrajectoryAsync(t2);
-                        timer = null;
-
-                    }
-
-
+                    auton.robot.drive.moveTeleOp(0,0,0, 0);
+                    toAdjust = ADJUSTMENT_LEVEL.DROP_AND_RETURN;
                 }
                 break;
 
-            case 0:
-                auton.robot.drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                auton.robot.drive.moveTeleOp(0,-0,0, 0);
-            case 2:
+            case FORWARD:
                 auton.robot.drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 if(!(auton.robot.distanceSensor.getDistance(DistanceUnit.INCH)< 3))
                 {
@@ -169,6 +169,7 @@ public class AutonTest extends OpMode
                 else {
                     auton.robot.drive.moveTeleOp(0,0,0, 0);
                 }
+                break;
         }
 
     }
@@ -179,10 +180,10 @@ public class AutonTest extends OpMode
         telemetry.addData("Y: ", auton.robot.drive.getPoseEstimate().getY());
         telemetry.addData("Heading: ", Math.toDegrees(auton.robot.drive.getPoseEstimate().getHeading()));
         telemetry.addData("CHECKNUM: ", checkNum);
-        if(checkNum == -1)auton.robot.drive.update();
-        else fulfillChecks();
-        //auton.robot.drive.getLocalizer().update();
-        //liftAsync();
+        if(toAdjust == ADJUSTMENT_LEVEL.FOLLOW_TRAJECTORY)auton.robot.drive.update();
+        else makeAdjustments();
+        auton.robot.drive.getLocalizer().update();
+        liftAsync();
         intake();
 
         auton.robot.lift.autonRequest();
