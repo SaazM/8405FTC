@@ -20,8 +20,8 @@ public class aprilTagsInit {
     double tagsize = 0.0406;//meters
 
     final int ID_LEFT = 1;
-    final int ID_MIDDLE = 3;
-    final int ID_RIGHT = 2;
+    final int ID_MIDDLE = 10;
+    final int ID_RIGHT = 7;
 
     double tagSum = 0;
     double numOfTags = 0;
@@ -39,13 +39,7 @@ public class aprilTagsInit {
     }
     public int stopAndSave()
     {
-        if (tagSum == 0) {
-            return 1;
-        } else if (tagSum / numOfTags < 2.5) {
-            return 2;
-        } else {
-            return 3;
-        }
+        return tagOfInterest==null ? -1 : tagOfInterest.id;//shut the program down and return the last known
     }
     public void initialize()
     {

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 // roadrunner imports
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,6 +14,7 @@ public class Robot {
     public Lift lift;
     public Intake intake;
     public DistanceSensor distanceSensor;
+    public ColorSensor colorSensor;
 
 
     public Robot(HardwareMap hardwareMap, Gamepad gamepad) {
@@ -20,5 +22,6 @@ public class Robot {
         lift = new Lift(hardwareMap, gamepad);
         intake = new Intake(hardwareMap);
         distanceSensor = hardwareMap.get(DistanceSensor.class, "color");
+        colorSensor = hardwareMap.get(ColorSensor.class, "color");
     }
 }

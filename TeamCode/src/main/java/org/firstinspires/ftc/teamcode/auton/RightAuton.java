@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
@@ -22,10 +23,11 @@ public class RightAuton extends OpMode
     aprilTagsInit init;
     AutonAsync auton;
     boolean activated = false;
-    Trajectory t0, t1, t2, t3,t4, t5, t1_1, t1_2, t2_1, t2_2, t3_1, t3_2, t4_1, t4_2, t5_1, t5_2,park;
+    Trajectory t0, t1, t2, t3,t4, t5, t1_0,  t1_1, t1_2, t2_1, t2_2, t3_1, t3_2, t4_1, t4_2, t5_1, t5_2,park;
     Gamepad gamepad1;
     double parkingZone;
     int currLift = 0;
+    boolean coneON = false;
 
     @Override
     public void init() {
@@ -66,6 +68,16 @@ public class RightAuton extends OpMode
             case 5:
                 auton.robot.lift.currentMode = Lift.LIFT_MODE.RESET;
                 break;
+            case 6:
+                auton.robot.lift.liftToHigh2();
+                break;
+        }
+    }
+    public void assertCone()
+    {
+        if(auton.robot.distanceSensor.getDistance(DistanceUnit.INCH) <= 3)
+        {
+            coneON = true;
         }
     }
     @Override
@@ -78,6 +90,7 @@ public class RightAuton extends OpMode
         telemetry.update();
         auton = new AutonAsync(0, hardwareMap, telemetry, gamepad1);
         auton.robot.drive.auton();
+        auton.robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         // SAVED THREE CONE AUTON //
@@ -85,15 +98,20 @@ public class RightAuton extends OpMode
         auton.robot.intake.intake();
 
         t1 = auton.robot.drive.trajectoryBuilder(new Pose2d()) // SCORE autoloaded
+
+                .addDisplacementMarker(() -> currLift = 6)
+                .lineToLinearHeading(new Pose2d(1,-45, Math.toRadians(0)))
+
                 .addTemporalMarker(3, () -> {
+                    auton.robot.drive.followTrajectoryAsync(t1_0);
+                })
+                .build();
+        t1_0 = auton.robot.drive.trajectoryBuilder(t1.end()) // SCORE autoloaded
+                .addTemporalMarker(6, () -> {
                     auton.robot.intake.outtake();
                 })
-                .addDisplacementMarker(() -> currLift = 1)
-                .lineToLinearHeading(new Pose2d(6.5,-55.5, Math.toRadians(-50)))
+                .lineToLinearHeading(new Pose2d(10,-56.5, Math.toRadians(-45)))
 
-                .addTemporalMarker(4, () -> {
-                    auton.robot.drive.followTrajectoryAsync(t1_1);
-                })
                 .build();
 
         t1_1 = auton.robot.drive.trajectoryBuilder(t1.end()) // go back and turn
@@ -271,6 +289,7 @@ public class RightAuton extends OpMode
             telemetry.addData("X: ", auton.robot.drive.getPoseEstimate().getX());
             telemetry.addData("Y: ", auton.robot.drive.getPoseEstimate().getY());
             telemetry.addData("Heading: ", auton.robot.drive.getPoseEstimate().getHeading());
+            telemetry.addData("DISTANCE: ", auton.robot.distanceSensor.getDistance(DistanceUnit.INCH));
             auton.robot.drive.update();
             auton.robot.drive.getLocalizer().update();
             liftAsync();

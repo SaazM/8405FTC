@@ -42,6 +42,10 @@ public class TestTeleOp extends LinearOpMode {
             telemetry.addData("BACK LEFT ENCODER: ", robot.drive.leftRear.getCurrentPosition());
             telemetry.addData("BACK RIGHT ENCODER: ", robot.drive.rightRear.getCurrentPosition());
             telemetry.addData("DIST: ", distanceSensor.getDistance(DistanceUnit.INCH));
+            telemetry.addData("RED: ", colorSensor.red());
+            telemetry.addData("BLUE: ", colorSensor.blue());
+            telemetry.addData("GREEN: ", colorSensor.green());
+            telemetry.addData("ALPHA: ", colorSensor.alpha());
             telemetry.update();
         }
     }
