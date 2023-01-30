@@ -56,7 +56,7 @@ public class DriveConstantsCurrent {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double MAX_VEL = 42; //was 66
+    public static double MAX_VEL = 15; //was 66
     public static double kV = 0.0115; // 0.011522978602550106
     public static double kA = 0.0030;
     public static double kStatic = 0.067;

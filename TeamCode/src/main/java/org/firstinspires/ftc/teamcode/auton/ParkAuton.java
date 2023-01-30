@@ -26,6 +26,7 @@ public class ParkAuton extends LinearOpMode
         }
         waitForStart();
         int finalID = init.stopAndSave();
+        telemetry.addLine("HERE");
         telemetry.addLine(Integer.toString(finalID));
         telemetry.update();
 
@@ -35,22 +36,27 @@ public class ParkAuton extends LinearOpMode
         robot.drive.odomRetraction.setPosition(2);
 
         if (finalID == 1) {
+            telemetry.addData("park: ", 1);
             park = robot.drive.trajectorySequenceBuilder(new Pose2d())
                     .strafeRight(30)
                     .forward(24)
                     .build();
         } else if (finalID == 2) {
+            telemetry.addData("park: ", 2);
             park = robot.drive.trajectorySequenceBuilder(new Pose2d())
                     .strafeRight(30)
                     .build();
         } else {
+            telemetry.addData("park: ", 3);
             park = robot.drive.trajectorySequenceBuilder(new Pose2d())
                     .strafeRight(30)
                     .back(24)
                     .build();
         }
 
+        
         robot.drive.followTrajectorySequence(park);
+
     }
 
 }
