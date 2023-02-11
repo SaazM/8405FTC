@@ -46,20 +46,13 @@ public class BackAndForth extends LinearOpMode {
 
         waitForStart();
 
-        Encoder leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftEncoder"));
-        Encoder rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightEncoder"));
-        rightEncoder.setDirection(Encoder.Direction.REVERSE);
-        Encoder frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftLift"));
 
-        long leftStart = leftEncoder.getCurrentPosition();
-        long rightStart = rightEncoder.getCurrentPosition();
-        long frontStart = frontEncoder.getCurrentPosition();
+
+
         while (opModeIsActive() && !isStopRequested()) {
             robot.drive.followTrajectory(trajectoryForward);
             robot.drive.followTrajectory(trajectoryBackward);
-            telemetry.addData("right encoder: ", rightEncoder.getCurrentPosition() - rightStart);
-            telemetry.addData("left encoder: ", leftEncoder.getCurrentPosition() - leftStart);
-            telemetry.addData("perpendicular: ", frontEncoder.getCurrentPosition() - frontStart);
+
             telemetry.update();
 
 
