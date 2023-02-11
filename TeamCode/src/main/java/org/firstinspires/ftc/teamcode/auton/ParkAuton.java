@@ -33,7 +33,7 @@ public class ParkAuton extends LinearOpMode
         Robot robot = new Robot(hardwareMap, gamepad1);
         robot.intake.intake();
         TrajectorySequence park;
-        robot.drive.odomRetraction.setPosition(2);
+//        robot.drive.odomRetraction.setPosition(2);
 
         if (finalID == 1) {
             telemetry.addData("park: ", 1);

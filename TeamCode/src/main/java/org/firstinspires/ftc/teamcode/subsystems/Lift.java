@@ -294,11 +294,11 @@ public class Lift {
 
 
     public void newBotStart() {
-        leftLift.setDirection(DcMotorEx.Direction.REVERSE);
+        leftLift.setDirection(DcMotorEx.Direction.FORWARD);
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        rightLift.setDirection(DcMotorEx.Direction.FORWARD);
+        rightLift.setDirection(DcMotorEx.Direction.REVERSE);
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }

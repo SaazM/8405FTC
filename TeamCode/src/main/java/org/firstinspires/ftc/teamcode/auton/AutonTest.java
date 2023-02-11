@@ -195,7 +195,7 @@ public class AutonTest extends OpMode
                 }
                 break;
             case STOP:
-                auton.robot.drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                auton.robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 auton.robot.drive.moveTeleOp(0,-0,0, 0);
                 break;
             case DROP_AND_RETURN:

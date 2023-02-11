@@ -21,7 +21,7 @@ public class Robot {
         drive = new Drive(hardwareMap);
         lift = new Lift(hardwareMap, gamepad);
         intake = new Intake(hardwareMap);
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "color");
-        colorSensor = hardwareMap.get(ColorSensor.class, "color");
+//        distanceSensor = hardwareMap.get(DistanceSensor.class, "color");
+//        colorSensor = hardwareMap.get(ColorSensor.class, "color");
     }
 }

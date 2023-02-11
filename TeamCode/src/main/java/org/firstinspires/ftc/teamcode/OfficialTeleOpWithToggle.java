@@ -38,8 +38,8 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
         robot.lift.newBotStart();
 
         waitForStart();
-        robot.drive.odomRetraction.setPosition(0);
-        robot.drive.toggleMode();
+//        robot.drive.odomRetraction.setPosition(0);
+
         double startTime = System.currentTimeMillis();
         double endTime = -1;
         while (opModeIsActive()) {
@@ -48,20 +48,15 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
             double turn = gamepad1.right_stick_x;
 
             if (gamepad1.dpad_down) { // odom DOWN
-                robot.drive.odomRetraction.setPosition(1);
+//                robot.drive.odomRetraction.setPosition(1);
             } else if (gamepad1.dpad_up) { // odom RETRACT
-                robot.drive.odomRetraction.setPosition(0);
+//                robot.drive.odomRetraction.setPosition(0);
             }
 
             if (gamepad1.right_stick_button) {
                 robot.drive.switchSpeed();
             } else {
                 robot.drive.switchingSpeed = false;
-            }
-
-            if(gamepad1.dpad_right)
-            {
-                robot.drive.toggleMode();
             }
 
 
@@ -83,7 +78,6 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
             robot.lift.liftTeleOp(gamepad1);
 
 
-            telemetry.addData("IMU Heading: ", 180/Math.PI * robot.drive.imu.getAngularOrientation().firstAngle);
             telemetry.addData("Field Centric: ", robot.drive.isFieldCentric);
             telemetry.addData("speed multiplier: ", robot.drive.speedMultiplier);
             telemetry.addData("IsFieldCentric? ", robot.drive.isFieldCentric);
@@ -92,6 +86,8 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
             telemetry.addData("Right Lift PID: ", robot.lift.rightLift.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
             telemetry.addData("CURRENT DRIVE MODE: ", robot.drive.leftFront.getMode());
             telemetry.addData("HoldingPosLeft: ", robot.lift.holdingPosLeft);
+            telemetry.addData("LEFT Lift Position", robot.lift.leftLift.getCurrentPosition());
+            telemetry.addData("Left Lift PID: ", robot.lift.leftLift.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
             telemetry.addData("Power: ", power);
             telemetry.addData("Strafe: ", strafe);
             telemetry.addData("Turn: ", turn);

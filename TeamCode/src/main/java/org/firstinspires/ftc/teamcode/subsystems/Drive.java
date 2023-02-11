@@ -70,8 +70,8 @@ public class Drive extends MecanumDrive {
     public DcMotorEx rightFront;
     public DcMotorEx rightRear;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(12, 0, 0);//0.4 //1, 0, 0
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(10, 0, 0);//0.3 //1.5, 0, 0
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);//0.4 //1, 0, 0
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);//0.3 //1.5, 0, 0
 //    public static double LATERAL_MULTIPLIER = 60/51.5 * 60/55.0 * 60/57.4 * 24/22.3;//-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double LATERAL_MULTIPLIER = 1; //-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double VX_WEIGHT = 1;
@@ -106,7 +106,8 @@ public class Drive extends MecanumDrive {
 
     public Drive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
-        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
+        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+
         turnController = new PIDFController(HEADING_PID);
         turnController.setInputBounds(0, 2 * Math.PI);
 
@@ -120,10 +121,10 @@ public class Drive extends MecanumDrive {
 
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        imu.initialize(parameters);
+//        imu = hardwareMap.get(BNO055IMU.class, "imu");
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+//        imu.initialize(parameters);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
         leftFront.setDirection(DcMotor.Direction.REVERSE); // motor direction
@@ -148,8 +149,8 @@ public class Drive extends MecanumDrive {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        odomRetraction = hardwareMap.get(Servo.class, "odomRetraction");
-        odomRetraction.resetDeviceConfigurationForOpMode();
+//        odomRetraction = hardwareMap.get(Servo.class, "odomRetraction");
+//        odomRetraction.resetDeviceConfigurationForOpMode();
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -172,17 +173,7 @@ public class Drive extends MecanumDrive {
     public void changeFollowerAccuracy(double timeout, double translational_error, double turn_error) {
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(translational_error, translational_error, Math.toRadians(turn_error)), timeout);
     }
-    public void toggleMode()
-    {
-        if(leftFront.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-        {
-            setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-        else
-        {
-            setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-    }
+
 
     public void moveTeleOp(double power, double strafe, double turn, double liftPos) {
         if (isFieldCentric) {
@@ -287,20 +278,13 @@ public class Drive extends MecanumDrive {
         rightFront.setVelocity(frontRightRequest);
         rightRear.setVelocity(rearRightRequest);
          **/
-        if(leftFront.getMode() == DcMotor.RunMode.RUN_USING_ENCODER)
-        {
-            leftFront.setVelocity(frontLeftPower*powerToVelocity);
-            leftRear.setVelocity(backLeftPower*powerToVelocity);
-            rightFront.setVelocity(frontRightPower*powerToVelocity);
-            rightRear.setVelocity(backRightPower*powerToVelocity);
-        }
-        else if(leftFront.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-        {
-            leftFront.setPower(frontLeftPower);
-            leftRear.setPower(backLeftPower);
-            rightFront.setPower(frontRightPower);
-            rightRear.setPower(backRightPower);
-        }
+
+        leftFront.setPower(frontLeftPower);
+        leftRear.setPower(backLeftPower);
+        rightFront.setPower(frontRightPower);
+        rightRear.setPower(backRightPower);
+
+
 
     }
 
@@ -496,6 +480,7 @@ public class Drive extends MecanumDrive {
 
     @Override
     public double getRawExternalHeading() {
-        return imu.getAngularOrientation().firstAngle;
+//        return imu.getAngularOrientation().firstAngle;
+        return 0;
     }
 }
