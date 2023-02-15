@@ -49,14 +49,6 @@ public class AutonAsync extends OpMode{
         robot = new Robot(hardwareMap, gamepad1);
 
         timer = new ElapsedTime();
-        //liftLeft = robot.lift.leftLift;
-//        liftRight = robot.lift.rightLift;
-        //liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //liftLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        liftRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        intake = robot.intake;
-//        telemetry = t;
 
         if (tag_id == 3) { // parking zone 1
             tagForward = -27;

@@ -48,9 +48,13 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
             double turn = gamepad1.right_stick_x;
 
             if (gamepad1.dpad_down) { // odom DOWN
-//                robot.drive.odomRetraction.setPosition(1);
+                robot.aligner.outAligner();
             } else if (gamepad1.dpad_up) { // odom RETRACT
-//                robot.drive.odomRetraction.setPosition(0);
+                robot.aligner.retractAligner();
+            }
+            else if(gamepad1.dpad_left)
+            {
+                robot.aligner.alignAligner();
             }
 
             if (gamepad1.right_stick_button) {

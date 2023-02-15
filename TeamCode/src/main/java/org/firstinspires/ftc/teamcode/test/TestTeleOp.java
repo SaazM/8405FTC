@@ -23,29 +23,30 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 @TeleOp(name="TEST TELEOP")
 public class TestTeleOp extends LinearOpMode {
 
+
     @Override
     public void runOpMode() throws InterruptedException {
-
-        DistanceSensor distanceSensor;
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "color");
-
-        ColorSensor colorSensor;
-        colorSensor = hardwareMap.get(ColorSensor.class, "color");
         Robot robot = new Robot(hardwareMap, gamepad1);
+
+        robot.lift.newBotStart();
+
         waitForStart();
-        while(opModeIsActive())
-        {
 
-            telemetry.addData("FRONT LEFT ENCODER: ", robot.drive.leftFront.getCurrentPosition());
+        while (opModeIsActive()) {
+            if(gamepad1.square) {
+                robot.aligner.retractAligner();
+            }
+            if(gamepad1.cross) {
+                robot.aligner.alignAligner();
+            }
+            if(gamepad1.circle) {
+                robot.aligner.outAligner();
+            }
 
-            telemetry.addData("FRONT Right ENCODER: ", robot.drive.rightFront.getCurrentPosition());
-            telemetry.addData("BACK LEFT ENCODER: ", robot.drive.leftRear.getCurrentPosition());
-            telemetry.addData("BACK RIGHT ENCODER: ", robot.drive.rightRear.getCurrentPosition());
-            telemetry.addData("DIST: ", distanceSensor.getDistance(DistanceUnit.INCH));
-            telemetry.addData("RED: ", colorSensor.red());
-            telemetry.addData("BLUE: ", colorSensor.blue());
-            telemetry.addData("GREEN: ", colorSensor.green());
-            telemetry.addData("ALPHA: ", colorSensor.alpha());
+            //robot.aligner.aligner.setPosition(gamepad1.right_stick_y);
+
+            telemetry.addData("Pos: ", robot.aligner.aligner.getPosition());
+
             telemetry.update();
         }
     }

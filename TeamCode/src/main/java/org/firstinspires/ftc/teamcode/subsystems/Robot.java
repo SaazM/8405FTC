@@ -13,14 +13,13 @@ public class Robot {
     public Drive drive;
     public Lift lift;
     public Intake intake;
-    public DistanceSensor distanceSensor;
-    public ColorSensor colorSensor;
-
+    public Aligner aligner;
 
     public Robot(HardwareMap hardwareMap, Gamepad gamepad) {
         drive = new Drive(hardwareMap);
         lift = new Lift(hardwareMap, gamepad);
         intake = new Intake(hardwareMap);
+        aligner = new Aligner(hardwareMap);
 //        distanceSensor = hardwareMap.get(DistanceSensor.class, "color");
 //        colorSensor = hardwareMap.get(ColorSensor.class, "color");
     }

@@ -70,8 +70,8 @@ public class Drive extends MecanumDrive {
     public DcMotorEx rightFront;
     public DcMotorEx rightRear;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 0);//0.4 //1, 0, 0
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);//0.3 //1.5, 0, 0
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(6, 0, 0);//0.4 //1, 0, 0
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(7, 0, 0);//0.3 //1.5, 0, 0
 //    public static double LATERAL_MULTIPLIER = 60/51.5 * 60/55.0 * 60/57.4 * 24/22.3;//-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double LATERAL_MULTIPLIER = 1; //-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double VX_WEIGHT = 1;
@@ -111,7 +111,7 @@ public class Drive extends MecanumDrive {
         turnController = new PIDFController(HEADING_PID);
         turnController.setInputBounds(0, 2 * Math.PI);
 
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.001, 0.001, Math.toRadians(0.1)), 3);
+        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.001, 0.001, Math.toRadians(0.1)), 20);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
@@ -144,10 +144,10 @@ public class Drive extends MecanumDrive {
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 //        odomRetraction = hardwareMap.get(Servo.class, "odomRetraction");
 //        odomRetraction.resetDeviceConfigurationForOpMode();
@@ -217,7 +217,7 @@ public class Drive extends MecanumDrive {
     }
 
     public void fieldCentric(double power, double strafe, double turn) {
-        double botHeading = -imu.getAngularOrientation().thirdAngle;
+        double botHeading = 0;//-imu.getAngularOrientation().thirdAngle;
         double rotationX = strafe * Math.cos(botHeading) - power * Math.sin(botHeading);
         double rotationY = strafe * Math.sin(botHeading) + power * Math.cos(botHeading);
         double denominator = Math.max(Math.abs(power) + Math.abs(strafe) + Math.abs(turn), 1);
@@ -462,10 +462,10 @@ public class Drive extends MecanumDrive {
 
 
 
-    @Override
-    public Double getExternalHeadingVelocity() {
-        return (double) imu.getAngularVelocity().xRotationRate;
-    }
+//    @Override
+//    public Double getExternalHeadingVelocity() {
+//        return (double) imu.getAngularVelocity().xRotationRate;
+//    }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
         return new MinVelocityConstraint(Arrays.asList(
