@@ -270,8 +270,8 @@ public class Lift {
     }
 
     public void liftToHigh() {
-        holdingPosRight = 2650;
-        holdingPosLeft = 2650;
+        holdingPosRight = 2630;
+        holdingPosLeft = 2630;
         currentMode = LIFT_MODE.MACRO;
     }
     public void liftToHigh2() {

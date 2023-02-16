@@ -16,7 +16,7 @@ public class Aligner {
     }
     public void alignAligner()
     {
-        aligner.setPosition(0.62);
+        aligner.setPosition(0.56);
     }
     public void outAligner()
     {
