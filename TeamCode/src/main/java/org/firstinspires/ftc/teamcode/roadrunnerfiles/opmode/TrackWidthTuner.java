@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.MovingStatistics;
 
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
+import org.firstinspires.ftc.teamcode.roadrunnerfiles.DriveConstantsCurrent;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 
 /*
@@ -66,8 +67,8 @@ public class TrackWidthTuner extends LinearOpMode {
                 robot.drive.update();
             }
 
-            //double trackWidth = DriveConstantsCurrent.TRACK_WIDTH * Math.toRadians(ANGLE) / headingAccumulator;
-            //trackWidthStats.add(trackWidth);
+            double trackWidth = DriveConstantsCurrent.TRACK_WIDTH * Math.toRadians(ANGLE) / headingAccumulator;
+            trackWidthStats.add(trackWidth);
 
             sleep(DELAY);
         }

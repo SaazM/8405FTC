@@ -85,8 +85,8 @@ public class NewAuton extends OpMode
                 .addTemporalMarker(0.4, () -> {
                     auton.robot.aligner.alignAligner();
                 })
-                .lineToLinearHeading(new Pose2d(-30,0, Math.toRadians(-90)))
-                .addTemporalMarker(3, () -> {
+                .lineToLinearHeading(new Pose2d(-34,0, Math.toRadians(0)))
+                .addTemporalMarker(4, () -> {
                     auton.robot.drive.followTrajectoryAsync(t1_0);
                 })
                 .build();
@@ -94,7 +94,7 @@ public class NewAuton extends OpMode
         t1_0 = auton.robot.drive.trajectoryBuilder(t1.end()) // score preloaded
 
                 //.addTemporalMarker(15, () -> auton.robot.drive.followTrajectoryAsync(park))
-                .lineToLinearHeading(new Pose2d(-37.5,0, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-34.01,0, Math.toRadians(90)))
                 .addTemporalMarker(2, () -> {
                     intaking = false;
                 })
@@ -102,33 +102,35 @@ public class NewAuton extends OpMode
                     auton.robot.aligner.outAligner();
                 })
                 .addTemporalMarker(3.5, () -> auton.robot.aligner.retractAligner())
-                .addTemporalMarker(4, () -> intaking = true)
+                .addTemporalMarker(4, () -> {intaking = true; auton.robot.drive.followTrajectoryAsync(t1_1);})
+
                 .build();
 
         t1_1 = auton.robot.drive.trajectoryBuilder(t1_0.end()) // go to the cone stack
-                .addDisplacementMarker(() -> currLift = 2)
-                .lineToLinearHeading(new Pose2d(-5, 0, Math.toRadians(0)))
+                .addTemporalMarker(0.5, () -> currLift = 2)
+                .lineToLinearHeading(new Pose2d(-34, 0, Math.toRadians(0)))
+                .addTemporalMarker(3, () -> auton.robot.drive.followTrajectoryAsync(t2))
                 .build();
 
-        t2 = auton.robot.drive.trajectoryBuilder(t1_1.end()) // slide back and score FIRST
-                .lineToLinearHeading(new Pose2d(-37.5,0, Math.toRadians(-90)))
-                .addTemporalMarker(2, () -> {
-                    intaking = false;
-                })
-                .addTemporalMarker(2.5, () -> {
-                    auton.robot.aligner.outAligner();
-                })
-                .addTemporalMarker(3.5, () -> auton.robot.aligner.retractAligner())
-                .addTemporalMarker(4, () -> intaking = true)
+        t2 = auton.robot.drive.trajectoryBuilder(t1_1.end()) // come back for cone
+                .lineToLinearHeading(new Pose2d(0,0, Math.toRadians(0)))
+
+                .addTemporalMarker(4, () -> {currLift =1;auton.robot.drive.followTrajectoryAsync(t2_1);})
                 .build();
 
         t2_1 = auton.robot.drive.trajectoryBuilder(t2.end()) // go to the cone stack
-                .addDisplacementMarker(() -> currLift = 3)
-                .lineToLinearHeading(new Pose2d(-5, 0, Math.toRadians(0)))
+                .addTemporalMarker(0.4, () -> {
+                    auton.robot.aligner.alignAligner();
+                })
+                .lineToLinearHeading(new Pose2d(-34,0, Math.toRadians(0)))
+                .addTemporalMarker(4, () -> {
+                    auton.robot.drive.followTrajectoryAsync(t3);
+                })
                 .build();
 
         t3 = auton.robot.drive.trajectoryBuilder(t2_1.end()) // slide back and score SECOND
-                .lineToLinearHeading(new Pose2d(-37.5,0, Math.toRadians(-90)))
+                //.addTemporalMarker(15, () -> auton.robot.drive.followTrajectoryAsync(park))
+                .lineToLinearHeading(new Pose2d(-34.01,0, Math.toRadians(90)))
                 .addTemporalMarker(2, () -> {
                     intaking = false;
                 })
@@ -136,24 +138,20 @@ public class NewAuton extends OpMode
                     auton.robot.aligner.outAligner();
                 })
                 .addTemporalMarker(3.5, () -> auton.robot.aligner.retractAligner())
-                .addTemporalMarker(4, () -> intaking = true)
+                .addTemporalMarker(4, () -> {intaking = true; auton.robot.drive.followTrajectoryAsync(t3_1);})
+
                 .build();
 
         t3_1 = auton.robot.drive.trajectoryBuilder(t3.end()) // go to cone stack
-                .addDisplacementMarker(() -> currLift = 3)
-                .lineToLinearHeading(new Pose2d(-5, 0, Math.toRadians(0)))
+                .addTemporalMarker(0.5, () -> currLift = 2)
+                .lineToLinearHeading(new Pose2d(-20, 0, Math.toRadians(0)))
+                .addTemporalMarker(3, () -> auton.robot.drive.followTrajectoryAsync(t3_2))
                 .build();
 
         t3_2 = auton.robot.drive.trajectoryBuilder(t3_1.end()) // slide back and score THIRD
-                .lineToLinearHeading(new Pose2d(-37.5,0, Math.toRadians(-90)))
-                .addTemporalMarker(2, () -> {
-                    intaking = false;
-                })
-                .addTemporalMarker(2.5, () -> {
-                    auton.robot.aligner.outAligner();
-                })
-                .addTemporalMarker(3.5, () -> auton.robot.aligner.retractAligner())
-                .addTemporalMarker(4, () -> intaking = true)
+                .lineToLinearHeading(new Pose2d(0,0, Math.toRadians(0)))
+
+                .addTemporalMarker(4, () -> {currLift =1;})//auton.robot.drive.followTrajectoryAsync(t4);})
                 .build();
 
         t4 = auton.robot.drive.trajectoryBuilder(t3_2.end()) // park
