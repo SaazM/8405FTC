@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.roadrunnerfiles;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -33,16 +34,18 @@ import java.util.List;
  *    \--------------/
  *
  */
+@Config
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double TICKS_PER_REV = 8192;
     public static double WHEEL_RADIUS = 63/64.0; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
     public static double PARALLEL_X = 0; // X is the up and down direction
-    public static double PARALLEL_Y = -108.44/25.4; // Y is the strafe direction
+    public static double PARALLEL_Y = 8.978/2.0; // Y is the strafe direction
 
-    public static double PERPENDICULAR_X = (-(112.6125))/25.4;
+    public static double PERPENDICULAR_X = -4.47;
     public static double PERPENDICULAR_Y = 0;
+    private static double Y_MULT = 71.25/72.18;
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
@@ -59,9 +62,10 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         this.drive = drive;
 
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightEncoder"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "perpEncoder"));
-        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontLeft"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backLeft"));
+        //parallelEncoder.setDirection(Encoder.Direction.REVERSE);
+        parallelEncoder.setDirection(Encoder.Direction.FORWARD);
         perpendicularEncoder.setDirection(Encoder.Direction.FORWARD);
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
@@ -86,7 +90,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public List<Double> getWheelPositions() {
         return Arrays.asList(
                 encoderTicksToInches(parallelEncoder.getCurrentPosition()),
-                encoderTicksToInches(perpendicularEncoder.getCurrentPosition())
+                encoderTicksToInches(perpendicularEncoder.getCurrentPosition()*Y_MULT)
         );
     }
 
@@ -99,7 +103,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         return Arrays.asList(
                 encoderTicksToInches(parallelEncoder.getCorrectedVelocity()),
-                encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity())
+                encoderTicksToInches(perpendicularEncoder.getCorrectedVelocity()*Y_MULT)
         );
     }
 }

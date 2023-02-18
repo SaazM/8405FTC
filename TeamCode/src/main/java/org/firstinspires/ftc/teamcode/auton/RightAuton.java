@@ -109,10 +109,6 @@ public class RightAuton extends OpMode
                 .addTemporalMarker(3, () -> {
                     currLift = 5;
                 })
-//                .addTemporalMarker(3, () -> {
-//                    auton.robot.drive.followTrajectoryAsync(t1_1);
-//                })
-
                 .build();
 
         t1_1 = auton.robot.drive.trajectoryBuilder(t1.end()) // go back and turn

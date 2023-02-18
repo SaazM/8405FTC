@@ -70,7 +70,7 @@ public class Drive extends MecanumDrive {
     public DcMotorEx rightFront;
     public DcMotorEx rightRear;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(12, 0, 0);//0.4 //1, 0, 0
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);//0.4 //1, 0, 0
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0);//0.3 //1.5, 0, 0
 //    public static double LATERAL_MULTIPLIER = 60/51.5 * 60/55.0 * 60/57.4 * 24/22.3;//-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double LATERAL_MULTIPLIER = 1; //-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
@@ -106,7 +106,7 @@ public class Drive extends MecanumDrive {
 
     public Drive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
-        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
 
         turnController = new PIDFController(HEADING_PID);
         turnController.setInputBounds(0, 2 * Math.PI);
@@ -121,10 +121,10 @@ public class Drive extends MecanumDrive {
 
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-//        imu = hardwareMap.get(BNO055IMU.class, "imu");
-//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-//        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-//        imu.initialize(parameters);
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(parameters);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
         leftFront.setDirection(DcMotor.Direction.REVERSE); // motor direction
@@ -462,10 +462,10 @@ public class Drive extends MecanumDrive {
 
 
 
-//    @Override
-//    public Double getExternalHeadingVelocity() {
-//        return (double) imu.getAngularVelocity().xRotationRate;
-//    }
+    @Override
+    public Double getExternalHeadingVelocity() {
+        return (double) imu.getAngularVelocity().xRotationRate;
+    }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
         return new MinVelocityConstraint(Arrays.asList(
@@ -480,7 +480,7 @@ public class Drive extends MecanumDrive {
 
     @Override
     public double getRawExternalHeading() {
-//        return imu.getAngularOrientation().firstAngle;
-        return 0;
+        return imu.getAngularOrientation().firstAngle;
+//        return 0;
     }
 }
