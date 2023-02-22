@@ -27,7 +27,7 @@ public class PID_Drive {
     private  PIDController controllerHeading;
     public static double hP = 0.0, hI = 0.0, hD = 0.0;
 
-    private MotionProfile motionProfile = MotionProfileGenerator.generateSimpleMotionProfile(new MotionState(0, 0, 0), new MotionState(1, 0, 0), 2, 3, 4);
+    private MotionProfile motionProfile = MotionProfileGenerator.generateSimpleMotionProfile(new MotionState(0, 0, 0), new MotionState(1, 0, 0), 1, 1, 1);
     private final ElapsedTime elapsedTime = new ElapsedTime();
 
     public boolean targetReached = false;
