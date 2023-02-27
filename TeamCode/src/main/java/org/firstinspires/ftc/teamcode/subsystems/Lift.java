@@ -152,9 +152,9 @@ public class Lift {
         }
         else if(currentMode == LIFT_MODE.RESET)
         {
-            if(rightLift.getCurrentPosition() > 250)
+            if(rightLift.getCurrentPosition() > 150)
             {
-                setLiftPower(-0.6);
+                setLiftPower(-1);
             }
             else
             {
@@ -165,7 +165,7 @@ public class Lift {
                 }
                 if(killTimer.milliseconds() <= 1000)
                 {
-                    setLiftPower(-0.4);
+                    setLiftPower(-0.1);
                 }
                 else
                 {
