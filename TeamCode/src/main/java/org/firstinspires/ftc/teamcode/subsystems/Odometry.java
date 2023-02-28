@@ -27,7 +27,7 @@ public class Odometry {
         rightEncoder = getRightEncoder;
         perpendicularEncoder = getPerpEncoder;
         trackWidth = 109.375*2*mm_to_inches; // get actual measurement
-        forwardOffset = -(112.6125+2)*mm_to_inches; // get actual measurement - 112.6125
+        forwardOffset = -(109.375)*mm_to_inches; // get actual measurement - 112.6125
     }
 
     // run odometry and return list of doubles in form [x, y, heading]
