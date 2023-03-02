@@ -23,9 +23,9 @@ public class LocalizationTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Robot robot = new Robot(hardwareMap, gamepad1);
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontLeft"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
         leftEncoder.setDirection(Encoder.Direction.FORWARD);
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightEncoder"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backRight"));
         rightEncoder.setDirection(Encoder.Direction.REVERSE);
         frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backLeft"));
         frontEncoder.setDirection(Encoder.Direction.FORWARD);
@@ -50,13 +50,14 @@ public class LocalizationTest extends LinearOpMode {
             Pose2d poseEstimate = robot.drive.getPoseEstimate();
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
-            telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addData("heading", poseEstimate.getHeading() * (180/Math.PI));
             telemetry.addData("right encoder: ", rightEncoder.getCurrentPosition() - rightInitial);
             telemetry.addData("left encoder: ", leftEncoder.getCurrentPosition() - leftInitial);
             telemetry.addData("perpendicular: ", frontEncoder.getCurrentPosition() - perpInitial);
             telemetry.addData("right encoder vel: ", rightEncoder.getCorrectedVelocity()/8192.0 * 63/32.0 * Math.PI);
             //telemetry.addData("left encoder vel: ", leftEncoder.getCorrectedVelocity()/8192.0 * 63/32.0 * Math.PI);
             telemetry.addData("perpendicular vel: ", frontEncoder.getCorrectedVelocity()/8192.0 * 63/32.0 * Math.PI);
+            telemetry.addData("delta between left and right: ", (leftEncoder.getCurrentPosition() - leftInitial) - (rightEncoder.getCurrentPosition() - rightInitial));
             telemetry.update();
         }
     }
