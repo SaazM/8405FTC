@@ -121,7 +121,7 @@ public class NewAuton extends OpMode
 
         st2 = auton.robot.drive.trajectoryBuilder(st0.end()) // go back and turn
                 .addTemporalMarker(0.5,() -> currLift = 2)
-                .lineToLinearHeading(new Pose2d(0, -53, Math.toRadians(185)))
+                .lineToLinearHeading(new Pose2d(0, -53, Math.toRadians(180)))
                 .addTemporalMarker(3, () -> {
                     currLift=2;
                     intaking=true;
@@ -139,7 +139,7 @@ public class NewAuton extends OpMode
 
 
                 //.lineToLinearHeading(new Pose2d(13.5,-54, Math.toRadians(-85)))
-                .lineToLinearHeading(new Pose2d(14.5, -55.5, Math.toRadians(185)))
+                .lineToLinearHeading(new Pose2d(14.5, -58, Math.toRadians(185)))
 //                .addTemporalMarker(3, () -> {
 //                    intaking = false;
 //                })
