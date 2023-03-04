@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Odometry;
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
-@TeleOp(name="TEST TELEOP")
+@TeleOp(name="Intake Test")
 public class TestTeleOp extends LinearOpMode {
 
 
@@ -42,8 +42,8 @@ public class TestTeleOp extends LinearOpMode {
             if(gamepad1.circle) {
                 robot.aligner.outAligner();
             }
-
             //robot.aligner.aligner.setPosition(gamepad1.right_stick_y);
+            robot.intake.intake(gamepad1.right_stick_y);
 
             telemetry.addData("Pos: ", robot.aligner.aligner.getPosition());
 

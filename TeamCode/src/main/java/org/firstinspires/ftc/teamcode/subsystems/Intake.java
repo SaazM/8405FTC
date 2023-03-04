@@ -71,4 +71,15 @@ public class Intake {
             roller2.setPower(0);
         }
     }
+    public void intake(double i) { //for adjusting speed, we might not necessarily want to be going full speed with the gearbox
+        if (limitSwitch.getState()) {
+            roller1.setDirection(DcMotorSimple.Direction.REVERSE);
+            roller2.setDirection(DcMotorSimple.Direction.FORWARD);
+            roller1.setPower(i);
+            roller2.setPower(i);
+        } else {
+            roller1.setPower(0);
+            roller2.setPower(0);
+        }
+    }
 }
