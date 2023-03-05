@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 
 @TeleOp
-public class NoStrafeAuton extends OpMode
+public class NoStrafeAutonHigh extends OpMode
 {
     AutonAsync auton;
     aprilTagsInit init;
