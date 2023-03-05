@@ -70,8 +70,8 @@ public class Drive extends MecanumDrive {
     public DcMotorEx rightFront;
     public DcMotorEx rightRear;
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);//0.4 //1, 0, 0
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0);//0.3 //1.5, 0, 0
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0.5);//0.4 //1, 0, 0
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0.5);//0.3 //1.5, 0, 0
 //    public static double LATERAL_MULTIPLIER = 60/51.5 * 60/55.0 * 60/57.4 * 24/22.3;//-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double LATERAL_MULTIPLIER = 1; //-61.39376023178146/-52.0 * -61.16032488575252/-62.0;//should be 1.153846, but b/c we tuned based around 1, i will keep it at 1
     public static double VX_WEIGHT = 1;
@@ -104,15 +104,19 @@ public class Drive extends MecanumDrive {
 
     private VoltageSensor batteryVoltageSensor;
 
+    public static double xThres = 0.125;
+    public static double yThres = 0.125;
+    public static double headingThres = 0.5;
+    public static double correctionTimeout = 5;
     public Drive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
-        //setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
-        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
+        //setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
 
         turnController = new PIDFController(HEADING_PID);
         turnController.setInputBounds(0, 2 * Math.PI);
 
-        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(0.001, 0.001, Math.toRadians(0.1)), 20);
+        follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID, new Pose2d(xThres, yThres, Math.toRadians(headingThres)), correctionTimeout);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 

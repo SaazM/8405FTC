@@ -70,7 +70,7 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
             } else if(endTime > 0 && System.currentTimeMillis() < endTime) {
                 robot.intake.outtake();
             } else {
-                robot.intake.intake();
+                robot.intake.intake(0.5);
                 endTime = -1;
             }
 

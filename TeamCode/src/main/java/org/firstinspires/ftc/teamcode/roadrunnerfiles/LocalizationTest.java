@@ -23,11 +23,11 @@ public class LocalizationTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Robot robot = new Robot(hardwareMap, gamepad1);
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftEncoder")); //port E3
         leftEncoder.setDirection(Encoder.Direction.FORWARD);
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backRight"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightEncoder")); //port E0
         rightEncoder.setDirection(Encoder.Direction.REVERSE);
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backLeft"));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "backLeft")); //port C3
         frontEncoder.setDirection(Encoder.Direction.FORWARD);
 
         robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

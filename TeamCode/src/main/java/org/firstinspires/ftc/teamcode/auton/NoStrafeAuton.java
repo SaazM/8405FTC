@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 
 @TeleOp
-public class NewAuton extends OpMode
+public class NoStrafeAuton extends OpMode
 {
     AutonAsync auton;
     aprilTagsInit init;
@@ -94,23 +94,16 @@ public class NewAuton extends OpMode
 
         st0 = auton.robot.drive.trajectoryBuilder(new Pose2d()) // move to pole
                 .addDisplacementMarker(() -> currLift = 1)
-                .lineToLinearHeading(new Pose2d(0,-57.5, Math.toRadians(0)))
+                .forward(-57.5)
 
-//                .addTemporalMarker(4, () -> {
-//                    intaking=false;
-//                })
-//                .addTemporalMarker(4, () -> {
-//                    currLift = 5;
-//                })
-
-                .addTemporalMarker(6, () -> {
+                .addTemporalMarker(4, () -> {
                     auton.robot.drive.followTrajectoryAsync(st1);
                 })
                 .build();
 
 
-        st1 = auton.robot.drive.trajectoryBuilder(st0.end()) // SCORE autoloaded                .addDisplacementMarker(() -> currLift = 1)
-                .lineToLinearHeading(new Pose2d(2, -58.51, Math.toRadians(-35)))
+        st1 = auton.robot.drive.trajectoryBuilder(st0.end()) // SCORE autoloaded
+                .lineToLinearHeading(new Pose2d(2, -58.51, Math.toRadians(35)))
                 .addDisplacementMarker(() -> {
                     intaking=false;
                 })
@@ -136,8 +129,6 @@ public class NewAuton extends OpMode
                 .build();
 
         t1 = auton.robot.drive.trajectoryBuilder(st3.end()) // start from stack and go to pole
-
-
                 //.lineToLinearHeading(new Pose2d(13.5,-54, Math.toRadians(-85)))
                 .lineToLinearHeading(new Pose2d(14.5, -58, Math.toRadians(185)))
 //                .addTemporalMarker(3, () -> {
