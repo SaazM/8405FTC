@@ -52,11 +52,11 @@ public class OldBotTeleOp extends LinearOpMode {
 
             //robot.drive.moveTeleOp(power, strafe, turn);
 
-            if (gamepad1.cross) {
-                robot.intake.moveClaw();
-            } else {
-                robot.intake.resetCounter();
-            }
+//            if (gamepad1.cross) {
+//                robot.intake.moveClaw();
+//            } else {
+//                robot.intake.resetCounter();
+//            }
 
             if (gamepad1.dpad_down) {
                 robot.drive.switchDrive();

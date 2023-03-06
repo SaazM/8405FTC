@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 
 @TeleOp
-public class NoStrafeAutonHigh extends OpMode
+public class LMH_AUTON_nostrafe extends OpMode
 {
     AutonAsync auton;
     aprilTagsInit init;
@@ -72,11 +72,13 @@ public class NoStrafeAutonHigh extends OpMode
             case 4:
                 auton.robot.lift.liftToBottomOfStack();
                 break;
-            case 5:
-                auton.robot.lift.currentMode = Lift.LIFT_MODE.RESET;
-                break;
             case 6:
-                auton.robot.lift.liftToHigh2();
+                auton.robot.lift.liftToMedium();
+                break;
+            case 7:
+                auton.robot.lift.liftToLow();
+            case 8:
+                auton.robot.lift.currentMode = Lift.LIFT_MODE.RESET;
                 break;
         }
     }
@@ -94,16 +96,15 @@ public class NoStrafeAutonHigh extends OpMode
 
         st0 = auton.robot.drive.trajectoryBuilder(new Pose2d()) // move to pole
                 .addDisplacementMarker(() -> currLift = 1)
-                .forward(-57.5)
-
+                .forward(-24)
                 .addTemporalMarker(4, () -> {
                     auton.robot.drive.followTrajectoryAsync(st1);
                 })
                 .build();
 
 
-        st1 = auton.robot.drive.trajectoryBuilder(st0.end()) // SCORE autoloaded
-                .lineToLinearHeading(new Pose2d(2, -58.51, Math.toRadians(35)))
+        st1 = auton.robot.drive.trajectoryBuilder(st0.end()) // SCORE autoloaded (L)
+                .lineToLinearHeading(new Pose2d(2, -25.1, Math.toRadians(35)))
                 .addDisplacementMarker(() -> {
                     intaking=false;
                 })
@@ -112,7 +113,7 @@ public class NoStrafeAutonHigh extends OpMode
                 .build();
 
 
-        st2 = auton.robot.drive.trajectoryBuilder(st0.end()) // go back and turn
+        st2 = auton.robot.drive.trajectoryBuilder(st0.end()) // go back and turn, aim for cone stack
                 .addTemporalMarker(0.5,() -> currLift = 2)
                 .lineToLinearHeading(new Pose2d(0, -53, Math.toRadians(180)))
                 .addTemporalMarker(3, () -> {
@@ -129,19 +130,13 @@ public class NoStrafeAutonHigh extends OpMode
                 .build();
 
         t1 = auton.robot.drive.trajectoryBuilder(st3.end()) // start from stack and go to pole
-                //.lineToLinearHeading(new Pose2d(13.5,-54, Math.toRadians(-85)))
                 .lineToLinearHeading(new Pose2d(14.5, -58, Math.toRadians(185)))
-//                .addTemporalMarker(3, () -> {
-//                    intaking = false;
-//                })
                 .addTemporalMarker(4, () -> {
                     auton.robot.drive.followTrajectoryAsync(t1_0);
-                    //intaking = true;
                 })
                 .build();
 
-        t1_0 = auton.robot.drive.trajectoryBuilder(t1.end()) // score +1
-
+        t1_0 = auton.robot.drive.trajectoryBuilder(t1.end()) // score +1 (2 cones on high now)
                 .lineToLinearHeading(new Pose2d(12.5,-54.1, Math.toRadians(-83)))
                 .addTemporalMarker(2, () -> {
                     intaking = false;
@@ -150,25 +145,24 @@ public class NoStrafeAutonHigh extends OpMode
                     auton.robot.aligner.outAligner();
                 })
                 .addTemporalMarker(3.5, () -> auton.robot.aligner.retractAligner())
-//                .addTemporalMarker(4, () -> {intaking = true; auton.robot.drive.followTrajectoryAsync(t1_1);})
-                .addTemporalMarker(4, () -> {intaking = true; auton.robot.drive.followTrajectoryAsync(park);}) // TWO CONE HERE
+                .addTemporalMarker(4, () -> {intaking = true; auton.robot.drive.followTrajectoryAsync(t1_1);}) // TWO CONE HERE
 
                 .build();
 
-        t1_1 = auton.robot.drive.trajectoryBuilder(t1_0.end()) // go to the cone stack
+        t1_1 = auton.robot.drive.trajectoryBuilder(t1_0.end()) // aim for cone stack
                 .addTemporalMarker(0.5, () -> currLift = 3)
                 .lineToLinearHeading(new Pose2d(12.5, -54, Math.toRadians(-180)))
                 .addTemporalMarker(3, () -> auton.robot.drive.followTrajectoryAsync(t2))
                 .build();
 
-        t2 = auton.robot.drive.trajectoryBuilder(t1_1.end()) // come back for cone
+        t2 = auton.robot.drive.trajectoryBuilder(t1_1.end()) // go to cone stack
                 .forward(37)
                 .addTemporalMarker(4, () -> {
-                    currLift =1;
+                    currLift = 1;
                     auton.robot.drive.followTrajectoryAsync(t2_1);})
                 .build();
 
-        t2_1 = auton.robot.drive.trajectoryBuilder(t2.end()) // go to the cone stack
+        t2_1 = auton.robot.drive.trajectoryBuilder(t2.end()) // come back
                 .lineToLinearHeading(new Pose2d(12.5, -54, Math.toRadians(185)))
 
                 .addTemporalMarker(4, () -> {
@@ -176,8 +170,7 @@ public class NoStrafeAutonHigh extends OpMode
                 })
                 .build();
 
-        t3 = auton.robot.drive.trajectoryBuilder(t2_1.end()) // slide back and score SECOND
-                //.addTemporalMarker(15, () -> auton.robot.drive.followTrajectoryAsync(park))
+        t3 = auton.robot.drive.trajectoryBuilder(t2_1.end()) // score +1 (three cones on hi goal now)
                 .lineToLinearHeading(new Pose2d(15,-55.01, Math.toRadians(-90)))
                 .addTemporalMarker(2, () -> {
                     intaking = false;
@@ -186,27 +179,27 @@ public class NoStrafeAutonHigh extends OpMode
                     auton.robot.aligner.outAligner();
                 })
                 .addTemporalMarker(3.5, () -> auton.robot.aligner.retractAligner())
-                .addTemporalMarker(4, () -> {intaking = true; auton.robot.drive.followTrajectoryAsync(park);})
+                .addTemporalMarker(4, () -> {intaking = true; auton.robot.drive.followTrajectoryAsync(t3_1);})
 
                 .build();
 
-//        t3_1 = auton.robot.drive.trajectoryBuilder(t3.end()) // go to cone stack
-//                .addTemporalMarker(0.5, () -> currLift = 4)
-//                .lineToLinearHeading(new Pose2d(-35, 1, Math.toRadians(0)))
-//                .addTemporalMarker(2, () -> auton.robot.drive.followTrajectoryAsync(t3_2))
-//                .build();
-//
-//        t3_2 = auton.robot.drive.trajectoryBuilder(t3_1.end()) // slide back and score THIRD
-//                .lineToLinearHeading(new Pose2d(0,0, Math.toRadians(0)))
-//
-//                .addTemporalMarker(3, () -> {currLift =1;})
-//                .build();
-//
-//        t4 = auton.robot.drive.trajectoryBuilder(t3_2.end()) // park
-//                .addDisplacementMarker(() -> currLift = 1)
-//                .lineToLinearHeading(new Pose2d(-37.5, -10, Math.toRadians(-90)))
-//                .addTemporalMarker(2, () -> auton.robot.drive.followTrajectoryAsync(park))
-//                .build();
+        t3_1 = auton.robot.drive.trajectoryBuilder(t3.end()) // go to cone stack
+                .addTemporalMarker(0.5, () -> currLift = 4)
+                .lineToLinearHeading(new Pose2d(-35, 1, Math.toRadians(0)))
+                .addTemporalMarker(2, () -> auton.robot.drive.followTrajectoryAsync(t3_2))
+                .build();
+
+        t3_2 = auton.robot.drive.trajectoryBuilder(t3_1.end()) // slide back and score THIRD
+                .lineToLinearHeading(new Pose2d(0,0, Math.toRadians(0)))
+
+                .addTemporalMarker(3, () -> {currLift =1;})
+                .build();
+
+        t4 = auton.robot.drive.trajectoryBuilder(t3_2.end()) // park
+                .addDisplacementMarker(() -> currLift = 1)
+                .lineToLinearHeading(new Pose2d(-37.5, -10, Math.toRadians(-90)))
+                .addTemporalMarker(2, () -> auton.robot.drive.followTrajectoryAsync(park))
+                .build();
 
         currLift = 1;
 

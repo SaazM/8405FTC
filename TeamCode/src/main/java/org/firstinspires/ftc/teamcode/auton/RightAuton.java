@@ -67,9 +67,6 @@ public class RightAuton extends OpMode
             case 5:
                 auton.robot.lift.currentMode = Lift.LIFT_MODE.RESET;
                 break;
-            case 6:
-                auton.robot.lift.liftToHigh2();
-                break;
         }
     }
 

@@ -30,25 +30,6 @@ public class Intake {
         claw.resetDeviceConfigurationForOpMode();
     }
 
-    public void open() {
-        claw.setPosition(0.5);
-    }
-
-    public void close() {
-        claw.setPosition(0.8);
-    }
-
-    public void moveClaw() {
-        if (counter == 0) {
-            if (open) {
-                open();
-            } else {
-                close();
-            }
-            open = !open;
-        }
-    }
-
     public void resetCounter() {
         counter = 0;
     }
