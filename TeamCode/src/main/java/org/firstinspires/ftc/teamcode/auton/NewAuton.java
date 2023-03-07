@@ -100,7 +100,7 @@ public class NewAuton extends OpMode
 
 
         st1 = auton.robot.drive.trajectoryBuilder(st0.end()) // SCORE autoloaded
-                .lineToLinearHeading(new Pose2d(2, -58.51, Math.toRadians(-35)))
+                .lineToLinearHeading(new Pose2d(2, -58.51, Math.toRadians(-32)))
                 .addDisplacementMarker(() -> {
                     intaking=false;
                 })
@@ -111,7 +111,7 @@ public class NewAuton extends OpMode
 
         st2 = auton.robot.drive.trajectoryBuilder(st0.end()) // go back and turn
                 .addTemporalMarker(0.5,() -> currLift = 2)
-                .lineToLinearHeading(new Pose2d(0, -53, Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(0, -53, Math.toRadians(185)))
                 .addTemporalMarker(3, () -> {
                     currLift=2;
                     intaking=true;
@@ -126,7 +126,7 @@ public class NewAuton extends OpMode
                 .build();
 
         t1 = auton.robot.drive.trajectoryBuilder(st3.end()) // start from stack and go to pole
-                .lineToLinearHeading(new Pose2d(14.5, -58, Math.toRadians(185)))
+                .lineToLinearHeading(new Pose2d(14, -54, Math.toRadians(185)))
                 .addTemporalMarker(4, () -> {
                     auton.robot.drive.followTrajectoryAsync(t1_0);
                 })
