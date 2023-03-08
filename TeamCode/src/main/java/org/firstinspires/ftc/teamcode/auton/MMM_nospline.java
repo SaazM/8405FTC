@@ -20,7 +20,7 @@ public class MMM_nospline extends OpMode
     aprilTagsInit init;
     boolean activated = false;
     Trajectory t0, t1, t2, t3,t4, t5, t1_0,  t1_1, t1_2, t2_1, t2_2, t3_1, t3_2, t4_1, t4_2, t5_1, t5_2,park;
-    Trajectory st0,st0_0, st1,st1_1, st2, st2_1, st3, st4, st4_4, st5, st6, st7;
+    Trajectory st0,st0_0, st1,st1_1, st2, st2_1, st3, st4, st4_4, st5_0, st5, st6, st7;
     Gamepad gamepad1;
     double parkingZone = 2.0;
     int currLift = 0;
@@ -129,9 +129,13 @@ public class MMM_nospline extends OpMode
 
         st4_4 = auton.robot.drive.trajectoryBuilder(st4.end()) // go to the cone stack
                 .back(23.5)
+                .addTemporalMarker(3,() -> {auton.robot.drive.followTrajectoryAsync(st5_0);})
+                .build();
+        st5_0 = auton.robot.drive.trajectoryBuilder(st4_4.end()) // go to the cone stack
+                .lineToLinearHeading(new Pose2d(-3, -52, Math.toRadians(320)))
                 .addTemporalMarker(3,() -> {auton.robot.drive.followTrajectoryAsync(st5);})
                 .build();
-        st5 = auton.robot.drive.trajectoryBuilder(st4_4.end()) // go to the cone stack
+        st5 = auton.robot.drive.trajectoryBuilder(st5_0.end()) // go to the cone stack
                 .forward(3)
                 .addTemporalMarker(3,() -> {auton.robot.drive.followTrajectoryAsync(st6);})
                 .build();
