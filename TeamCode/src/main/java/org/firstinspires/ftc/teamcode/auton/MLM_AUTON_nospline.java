@@ -98,14 +98,14 @@ public class MLM_AUTON_nospline extends OpMode {
         auton.robot.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         intaking = true;
-        st0_0 = auton.robot.drive.trajectoryBuilder(new Pose2d(-4,0, 0)) // move forward
+        st0_0 = auton.robot.drive.trajectoryBuilder(new Pose2d(-4,0, 0)) // move forward to align
                 .addDisplacementMarker(() -> currLift = 6)
                 .forward(4)
                 .addTemporalMarker(6, () -> {
                     auton.robot.drive.followTrajectoryAsync(st1);
                 })
                 .build();
-        st0 = auton.robot.drive.trajectoryBuilder(st0_0.end()) // move to pole and drop preload
+        st0 = auton.robot.drive.trajectoryBuilder(st0_0.end()) // move to M pole and drop preload
                 .addDisplacementMarker(() -> currLift = 6)
                 .strafeRight(41)
                 .addTemporalMarker(3, () -> {
@@ -113,14 +113,14 @@ public class MLM_AUTON_nospline extends OpMode {
                 })
                 .build();
 
-        st1_1 = auton.robot.drive.trajectoryBuilder(st0.end())
+        st1_1 = auton.robot.drive.trajectoryBuilder(st0.end()) // align to drop
                 .forward(3)
                 .addTemporalMarker(3, () -> {
                     intaking = false;
                     auton.robot.drive.followTrajectoryAsync(st1_2);
                 })
                 .build();
-        st1_2 = auton.robot.drive.trajectoryBuilder(st1_1.end())
+        st1_2 = auton.robot.drive.trajectoryBuilder(st1_1.end()) // end of align to drop
                 .back(3)
                 .addTemporalMarker(6, () -> {
                     auton.robot.drive.followTrajectoryAsync(st2);
@@ -128,7 +128,7 @@ public class MLM_AUTON_nospline extends OpMode {
                 .build();
 
 
-        st2 = auton.robot.drive.trajectoryBuilder(st0.end()) // go right and turn to cone stack
+        st2 = auton.robot.drive.trajectoryBuilder(st0.end()) // move to cone stack
                 .addTemporalMarker(0.5,() -> currLift = 2)
                 .strafeRight(12)
                 .addTemporalMarker(5, () -> {
@@ -138,17 +138,17 @@ public class MLM_AUTON_nospline extends OpMode {
                 })
                 .build();
 
-        st2_1 = auton.robot.drive.trajectoryBuilder(st2.end()) // go right and turn to cone stack
+        st2_1 = auton.robot.drive.trajectoryBuilder(st2.end()) // turn right to cone stack
                 .lineToLinearHeading(new Pose2d(0, -52.01, Math.toRadians(185)))
                 .addTemporalMarker(4,() -> {auton.robot.drive.followTrajectoryAsync(st4);})
                 .build();
 
         st4 = auton.robot.drive.trajectoryBuilder(st2_1.end()) // go to the cone stack
                 .forward(22.5)
-                .addTemporalMarker(3,() -> {currLift = 7; auton.robot.drive.followTrajectoryAsync(st4_4);})
+                .addTemporalMarker(3,() -> {currLift = 2; auton.robot.drive.followTrajectoryAsync(st4_4);})
                 .build();
 
-        st4_4 = auton.robot.drive.trajectoryBuilder(st4.end()) // go back from cone stack
+        st4_4 = auton.robot.drive.trajectoryBuilder(st4.end()) // go back from cone stack to L goal
                 .back(4)
                 .addTemporalMarker(3,() -> {auton.robot.drive.followTrajectoryAsync(st5_0);})
                 .build();
