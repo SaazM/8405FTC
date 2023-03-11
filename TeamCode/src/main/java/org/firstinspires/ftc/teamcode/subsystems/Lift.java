@@ -163,9 +163,9 @@ public class Lift {
                     killTimer.reset();
 
                 }
-                if(killTimer.milliseconds() <= 1000)
+                if(killTimer.milliseconds() <= 300)
                 {
-                    setLiftPower(-0.1);
+                    setLiftPower(-0.3);
                 }
                 else
                 {
@@ -241,8 +241,8 @@ public class Lift {
 
 
     public void liftToMedium() {
-        holdingPosRight = 1860;
-        holdingPosLeft = 1860;
+        holdingPosRight = 1700;
+        holdingPosLeft = 1700;
         currentMode = LIFT_MODE.MACRO;
     }
 
@@ -270,8 +270,8 @@ public class Lift {
     }
 
     public void liftToHigh() {
-        holdingPosRight = 2630;
-        holdingPosLeft = 2630;
+        holdingPosRight = 2550;
+        holdingPosLeft = 2550;
         currentMode = LIFT_MODE.MACRO;
     }
     public void liftToBottom() {
