@@ -157,12 +157,12 @@ public class HH_nospline extends OpMode
                 .back(15)
                 .addTemporalMarker(2, () -> {
                     auton.robot.drive.followTrajectoryAsync(st4);
+                    auton.robot.aligner.alignAligner();
                 })
                 .build();
 
         st4 = auton.robot.drive.trajectoryBuilder(st3.end()) // move to cone stack
                 .lineToLinearHeading(new Pose2d(st3.end().getX(), st3.end().getY()+0.01, Math.toRadians(-26)))
-                .addTemporalMarker(0.5,() -> {auton.robot.aligner.alignAligner();})
                 .addTemporalMarker(4, () -> {
                     auton.robot.drive.followTrajectoryAsync(st5);
                 })

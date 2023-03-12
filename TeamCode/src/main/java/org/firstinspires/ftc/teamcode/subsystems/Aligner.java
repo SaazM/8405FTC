@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class Aligner {
     public static final double retractval = 1.0;
-    public static final double alignval = 0.1;
+    public static final double alignval = 0.12;
     public static final double outtakingval = 0;
 
 

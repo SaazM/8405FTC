@@ -99,13 +99,8 @@ public class ML_AUTON_nospline extends OpMode {
 
         intaking = true;
         st0_0 = auton.robot.drive.trajectoryBuilder(new Pose2d(0,0, 0)) // move forward to align
-                .addDisplacementMarker(() -> currLift = 6)
+                .forward(2)
 
-                .forward(1)
-                .addTemporalMarker(2.5, () -> {
-                    auton.robot.aligner.outAligner();
-                })
-                .addTemporalMarker(3.5, () -> auton.robot.aligner.retractAligner())
                 .addTemporalMarker(4, () -> {
                     auton.robot.drive.followTrajectoryAsync(st1);
                 })
@@ -113,7 +108,7 @@ public class ML_AUTON_nospline extends OpMode {
         st0 = auton.robot.drive.trajectoryBuilder(st0_0.end()) // move to M pole and drop preload
                 .addDisplacementMarker(() -> currLift = 6)
                 .addDisplacementMarker(()->auton.robot.aligner.alignAligner())
-                .strafeRight(41)
+                .strafeRight(40)
                 .addTemporalMarker(3.5, () -> {
 //                    auton.robot.aligner.outAligner();
                     auton.robot.drive.followTrajectoryAsync(st1_1);
@@ -130,7 +125,7 @@ public class ML_AUTON_nospline extends OpMode {
                 .build();
 
         st1_2 = auton.robot.drive.trajectoryBuilder(st1_1.end()) // end of align to drop
-                .addTemporalMarker(0.5, () ->{
+                .addTemporalMarker(1, () ->{
                     auton.robot.aligner.retractAligner();
                 })
                 .back(6)
@@ -143,7 +138,7 @@ public class ML_AUTON_nospline extends OpMode {
 
         st2 = auton.robot.drive.trajectoryBuilder(st0.end()) // move to cone stack
                 .addTemporalMarker(0.5,() -> currLift = 2)
-                .strafeRight(11)
+                .strafeRight(13)
                 .addTemporalMarker(2.5, () -> {
                     currLift=2;
                     intaking=true;
@@ -177,32 +172,32 @@ public class ML_AUTON_nospline extends OpMode {
                 .addTemporalMarker(1,() -> {intaking = false; auton.robot.drive.followTrajectoryAsync(st6);})
                 .build();
         st6 = auton.robot.drive.trajectoryBuilder(st5.end()) // move back from low goal
-                .back(1.5)
+                .back(2)
                 .addTemporalMarker(1,() -> {
                     currLift = 2;
-//                    auton.robot.aligner.retractAligner();
+                    auton.robot.drive.followTrajectoryAsync(park);
                 })
                 .build();
         currLift = 1;
-/*
+
         if (parkingZone == 1) {
-            park = auton.robot.drive.trajectoryBuilder(st4_4.end())
+            park = auton.robot.drive.trajectoryBuilder(st6.end())
                     .addTemporalMarker(1, () -> currLift = 5)
-                    .lineToLinearHeading(new Pose2d(22.5, -54.01, Math.toRadians(0)))
+                    .strafeLeft(5)
                     .build();
         } else if (parkingZone == 2) {
-            park = auton.robot.drive.trajectoryBuilder(st4_4.end())
+            park = auton.robot.drive.trajectoryBuilder(st6.end())
                     .addTemporalMarker(1, () -> currLift = 5)
-                    .lineToLinearHeading(new Pose2d(0, -54.01, Math.toRadians(0)))
+                    .strafeRight(5)
                     .build();
         } else {
-            park = auton.robot.drive.trajectoryBuilder(st4_4.end())
+            park = auton.robot.drive.trajectoryBuilder(st6.end())
                     .addTemporalMarker(1, () -> currLift = 5)
-                    .lineToLinearHeading(new Pose2d(-22.5, -54.01, Math.toRadians(0)))
+                    .strafeRight(12)
                     .build();
         }
 
- */
+
 
         auton.robot.drive.followTrajectoryAsync(st0);
 
