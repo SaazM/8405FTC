@@ -103,20 +103,20 @@ public class HH_nospline extends OpMode
                 .addDisplacementMarker(() -> currLift = 1)
                 .addDisplacementMarker(()->auton.robot.aligner.alignAligner())
                 .strafeRight(53.8)
-                .addTemporalMarker(3.5, () -> {
+                .addTemporalMarker(4.5, () -> {
 //                    auton.robot.aligner.outAligner();
                     auton.robot.drive.followTrajectoryAsync(st0_0);
                 })
                 .build();
         st0_0 = auton.robot.drive.trajectoryBuilder(st0.end()) // move to M pole and drop preload
-                .lineToLinearHeading(new Pose2d(st0.end().getX(), st0.end().getY()-0.01, Math.toRadians(-24)))
-                .addTemporalMarker(4, () -> {
+                .lineToLinearHeading(new Pose2d(st0.end().getX(), st0.end().getY()-0.01, Math.toRadians(-28)))
+                .addTemporalMarker(3, () -> {
                     auton.robot.drive.followTrajectoryAsync(st1_1);
                 })
                 .build();
 
         st1_1 = auton.robot.drive.trajectoryBuilder(st0_0.end()) // align to drop
-                .forward(8)
+                .forward(9.5)
                 .addTemporalMarker(1.5, () ->{
                     auton.robot.aligner.outAligner();
                     intaking = false;
@@ -156,8 +156,8 @@ public class HH_nospline extends OpMode
         st3 = auton.robot.drive.trajectoryBuilder(st2_1.end()) // turn right to cone stack
                 .back(15)
                 .addTemporalMarker(2, () -> {
-                    auton.robot.drive.followTrajectoryAsync(st4);
                     auton.robot.aligner.alignAligner();
+                    auton.robot.drive.followTrajectoryAsync(st4);
                 })
                 .build();
 

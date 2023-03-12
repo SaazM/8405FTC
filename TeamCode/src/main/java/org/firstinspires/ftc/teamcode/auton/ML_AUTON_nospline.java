@@ -36,6 +36,7 @@ public class ML_AUTON_nospline extends OpMode {
         init = new aprilTagsInit(hardwareMap, telemetry);
         init.initialize();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        auton.robot.aligner.retractAligner();
     }
     @Override
     public void init_loop()
@@ -108,8 +109,8 @@ public class ML_AUTON_nospline extends OpMode {
         st0 = auton.robot.drive.trajectoryBuilder(st0_0.end()) // move to M pole and drop preload
                 .addDisplacementMarker(() -> currLift = 6)
                 .addDisplacementMarker(()->auton.robot.aligner.alignAligner())
-                .strafeRight(40)
-                .addTemporalMarker(3.5, () -> {
+                .strafeRight(42)
+                .addTemporalMarker(4, () -> {
 //                    auton.robot.aligner.outAligner();
                     auton.robot.drive.followTrajectoryAsync(st1_1);
                 })
@@ -138,7 +139,7 @@ public class ML_AUTON_nospline extends OpMode {
 
         st2 = auton.robot.drive.trajectoryBuilder(st0.end()) // move to cone stack
                 .addTemporalMarker(0.5,() -> currLift = 2)
-                .strafeRight(13)
+                .strafeRight(18)
                 .addTemporalMarker(2.5, () -> {
                     currLift=2;
                     intaking=true;
