@@ -241,8 +241,9 @@ public class Lift {
 
 
     public void liftToMedium() {
-        holdingPosRight = 1700;
-        holdingPosLeft = 1700;
+        holdingPosRight = 1725;
+        holdingPosLeft = 1725;
+        ;
         currentMode = LIFT_MODE.MACRO;
     }
 

@@ -91,6 +91,7 @@ public class MLM_AUTON_nospline extends OpMode {
     @Override
     public void start()
     {
+
         telemetry.update();
         auton = new AutonAsync(0, hardwareMap, telemetry, gamepad1);
         auton.robot.drive.auton();
@@ -102,92 +103,96 @@ public class MLM_AUTON_nospline extends OpMode {
                 .addDisplacementMarker(() -> currLift = 6)
 
                 .forward(1)
-                .addTemporalMarker(2.5, () -> {
-                    auton.robot.aligner.outAligner();
-                })
-                .addTemporalMarker(3.5, () -> auton.robot.aligner.retractAligner())
-                .addTemporalMarker(4, () -> {
-                    auton.robot.drive.followTrajectoryAsync(st1);
+                .addTemporalMarker(0.5, () -> {
+                    auton.robot.aligner.alignAligner();})
+                .addTemporalMarker(0.5, () -> {
+                    auton.robot.drive.followTrajectoryAsync(st0);
                 })
                 .build();
         st0 = auton.robot.drive.trajectoryBuilder(st0_0.end()) // move to M pole and drop preload
                 .addDisplacementMarker(() -> currLift = 6)
-                .addDisplacementMarker(()->auton.robot.aligner.alignAligner())
-                .strafeRight(38)
-                .addTemporalMarker(2.5, () -> {
+                .strafeRight(42)
+                .addTemporalMarker(3, () -> {
 //                    auton.robot.aligner.outAligner();
                     auton.robot.drive.followTrajectoryAsync(st1_1);
                 })
                 .build();
 
         st1_1 = auton.robot.drive.trajectoryBuilder(st0.end()) // align to drop
-                .forward(7)
-                .addTemporalMarker(1, () ->{
-                    auton.robot.aligner.outAligner();
-                    intaking = false;
+                .forward(8)
+                .addTemporalMarker(1, () -> intaking=false)
+                .addTemporalMarker(1.3, () -> auton.robot.aligner.outAligner())
+                .addTemporalMarker(1.75, () ->{
+
                     auton.robot.drive.followTrajectoryAsync(st1_2);
                 })
                 .build();
 
         st1_2 = auton.robot.drive.trajectoryBuilder(st1_1.end()) // end of align to drop
-                .addTemporalMarker(0.5, () ->{
+                .addTemporalMarker(1.5, () ->{
                     auton.robot.aligner.retractAligner();
                 })
                 .back(6)
-                .addTemporalMarker(1, () -> {
-//                    auton.robot.aligner.retractAligner();
-                    auton.robot.drive.followTrajectoryAsync(st2);
-                })
-                .build();
-
-
-        st2 = auton.robot.drive.trajectoryBuilder(st0.end()) // move to cone stack
-                .addTemporalMarker(0.5,() -> currLift = 2)
-                .strafeRight(11)
                 .addTemporalMarker(1.5, () -> {
-                    currLift=2;
-                    intaking=true;
+//                    auton.robot.aligner.retractAligner();
                     auton.robot.drive.followTrajectoryAsync(st2_1);
                 })
                 .build();
+//
+//
+//        st2 = auton.robot.drive.trajectoryBuilder(st0.end()) // move to cone stack
+//                .addTemporalMarker(0.5,() -> currLift = 2)
+//                .strafeRight(14)
+//                .addTemporalMarker(1.5, () -> {
+//                    currLift=2;
+//                    intaking=true;
+//                    auton.robot.drive.followTrajectoryAsync(st2_1);
+//                })
+//                .build();
 
-        st2_1 = auton.robot.drive.trajectoryBuilder(st2.end()) // turn right to cone stack
-                .lineToLinearHeading(new Pose2d(2, -52.01, Math.toRadians(183)))
+        st2_1 = auton.robot.drive.trajectoryBuilder(st1_2.end()) // turn right to cone stack
+                .addTemporalMarker(0.5,() -> currLift = 2)
+                .addTemporalMarker(1.5, () -> {
+                    currLift=2;
+                    intaking=true;
+                })
+                .lineToLinearHeading(new Pose2d(2, -52.01, Math.toRadians(185)))
                 .addTemporalMarker(4,() -> {auton.robot.drive.followTrajectoryAsync(st4);})
                 .build();
 
         st4 = auton.robot.drive.trajectoryBuilder(st2_1.end()) // go to the cone stack
-                .forward(21)
-                .addTemporalMarker(2.5,() -> {currLift=7; auton.robot.drive.followTrajectoryAsync(st4_4);})
+                .forward(22)
+                .addTemporalMarker(2,() -> {currLift=7; auton.robot.drive.followTrajectoryAsync(st4_4);})
                 .build();
 
         st4_4 = auton.robot.drive.trajectoryBuilder(st4.end()) // go back from cone stack to L goal
-                .back(13)
-                .addTemporalMarker(2,() -> {auton.robot.drive.followTrajectoryAsync(st5_0);})
+                .back(16)
+                .addTemporalMarker(1.5,() -> {auton.robot.drive.followTrajectoryAsync(st5_0);})
                 .build();
         st5_0 = auton.robot.drive.trajectoryBuilder(st4_4.end()) // turn to low goal
-                .lineToLinearHeading(new Pose2d(st4_4.end().getX(), st4_4.end().getY()+0.01, Math.toRadians(90)))
-                .addTemporalMarker(2.5,() -> {
+                .lineToLinearHeading(new Pose2d(st4_4.end().getX(), st4_4.end().getY()+0.01, Math.toRadians(93)))
+                .addTemporalMarker(1.5,() -> {
 //                    auton.robot.aligner.outAligner();
                     auton.robot.drive.followTrajectoryAsync(st5);
                 })
                 .build();
         st5 = auton.robot.drive.trajectoryBuilder(st5_0.end()) // move forward to low goal and outtake
-                .forward(3)
-                .addTemporalMarker(1,() -> {intaking = false; auton.robot.drive.followTrajectoryAsync(st6);})
+                .forward(2.25)
+                .addTemporalMarker(0.5,() -> {intaking = false;})
+                .addTemporalMarker(1.25,()-> auton.robot.drive.followTrajectoryAsync(st6))
                 .build();
         st6 = auton.robot.drive.trajectoryBuilder(st5.end()) // move back from low goal
-                .back(3)
+                .back(2)
                 .addTemporalMarker(1,() -> {
-                    currLift = 3;
-//                    auton.robot.aligner.retractAligner();
+                    currLift = 2;
                     auton.robot.drive.followTrajectoryAsync(st7);
                 })
                 .build();
         st7 = auton.robot.drive.trajectoryBuilder(st6.end()) // turn towards cone stack
-                .lineToLinearHeading(new Pose2d(-7.5, -52.01, Math.toRadians(183)))
-                .addTemporalMarker(4, () -> {
-                    intaking=true;
+                .lineToLinearHeading(new Pose2d(-7.5, -53.01, Math.toRadians(185)))
+                .addTemporalMarker(1, () -> intaking=true)
+                .addTemporalMarker(1.5, () -> {
+
                     auton.robot.drive.followTrajectoryAsync(st8);
                 })
                 .build();
@@ -203,50 +208,54 @@ public class MLM_AUTON_nospline extends OpMode {
                 .addTemporalMarker(2.5,() -> {auton.robot.aligner.alignAligner(); auton.robot.drive.followTrajectoryAsync(st10);})
                 .build();
         st10 = auton.robot.drive.trajectoryBuilder(st9.end()) // turn to medium goal
-                .lineToLinearHeading(new Pose2d(st9.end().getX(), st9.end().getY()+0.01, Math.toRadians(55)))
+                .lineToLinearHeading(new Pose2d(st9.end().getX(), st9.end().getY()+0.01, Math.toRadians(50)))
                 .addTemporalMarker(1.5,() -> {
 //                    auton.robot.aligner.outAligner();
                     auton.robot.drive.followTrajectoryAsync(st11);
                 })
                 .build();
         st11 = auton.robot.drive.trajectoryBuilder(st10.end()) // move forward to medium goal and outtake
-                .forward(8)
-                .addTemporalMarker(1.5,() -> {auton.robot.aligner.outAligner(); intaking = false; auton.robot.drive.followTrajectoryAsync(st12);})
+                .forward(13)
+                .addTemporalMarker(1, () -> {intaking = false;auton.robot.aligner.outAligner();})
+                .addTemporalMarker(1.5,() -> {  auton.robot.drive.followTrajectoryAsync(park);})
                 .build();
-        st12 = auton.robot.drive.trajectoryBuilder(st11.end()) // move back from medium goal
-                .addTemporalMarker(1, () ->{
-                    auton.robot.aligner.retractAligner();
-                })
-                .back(8)
-                //.addTemporalMarker(3,() -> {currLift = 2; auton.robot.drive.followTrajectoryAsync(st7);})
-                .addTemporalMarker(3,() -> {
-                    currLift = 2;
+//        st12 = auton.robot.drive.trajectoryBuilder(st11.end()) // move back from medium goal
+//                .addTemporalMarker(1, () ->{
 //                    auton.robot.aligner.retractAligner();
-                })
-                .build();
+//                })
+//                .back(8)
+//                //.addTemporalMarker(3,() -> {currLift = 2; auton.robot.drive.followTrajectoryAsync(st7);})
+//                .addTemporalMarker(3,() -> {
+//                    currLift = 5;
+//                    auton.robot.drive.followTrajectoryAsync(park);
+//                })
+//                .build();
 
-        currLift = 1;
-/*
+
+
         if (parkingZone == 1) {
-            park = auton.robot.drive.trajectoryBuilder(st4_4.end())
-                    .addTemporalMarker(1, () -> currLift = 5)
-                    .lineToLinearHeading(new Pose2d(22.5, -54.01, Math.toRadians(0)))
+            park = auton.robot.drive.trajectoryBuilder(st11.end())
+                    .addTemporalMarker(0.5, () -> auton.robot.aligner.retractAligner())
+                    .addTemporalMarker(1, () -> {currLift = 5; })
+                    .lineToLinearHeading(new Pose2d(24, -54.01, Math.toRadians(-90)))
                     .build();
         } else if (parkingZone == 2) {
-            park = auton.robot.drive.trajectoryBuilder(st4_4.end())
+            park = auton.robot.drive.trajectoryBuilder(st11.end())
+                    .addTemporalMarker(0.5, () -> auton.robot.aligner.retractAligner())
                     .addTemporalMarker(1, () -> currLift = 5)
                     .lineToLinearHeading(new Pose2d(0, -54.01, Math.toRadians(0)))
                     .build();
         } else {
-            park = auton.robot.drive.trajectoryBuilder(st4_4.end())
+            park = auton.robot.drive.trajectoryBuilder(st11.end())
+                    .addTemporalMarker(0.5, () -> auton.robot.aligner.retractAligner())
                     .addTemporalMarker(1, () -> currLift = 5)
-                    .lineToLinearHeading(new Pose2d(-22.5, -54.01, Math.toRadians(0)))
+                    .lineToLinearHeading(new Pose2d(-18, -54.01, Math.toRadians(0)))
                     .build();
         }
 
- */
 
-        auton.robot.drive.followTrajectoryAsync(st0);
+
+        auton.robot.drive.followTrajectoryAsync(st0_0);
 
         activated = true;
         telemetry.addData("activated? ", activated);

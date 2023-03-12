@@ -5,15 +5,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class Aligner {
-    public static final double retractval = 1.0;
-    public static final double alignval = 0.12;
-    public static final double outtakingval = 0;
+    public static final double retractval = 0.99;
+    public static final double alignval = 0.05;
+    public static final double outtakingval = 0.01;
 
 
     public Servo aligner;
     public Aligner(HardwareMap hardwareMap)
     {
         this.aligner = hardwareMap.get(Servo.class, "aligner");
+
         aligner.setPosition(retractval);
     }
     public void retractAligner()

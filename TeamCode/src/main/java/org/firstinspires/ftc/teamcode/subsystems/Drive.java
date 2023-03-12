@@ -106,8 +106,8 @@ public class Drive extends MecanumDrive {
 
     public static double xThres = 0.125;
     public static double yThres = 0.125;
-    public static double headingThres = 0.5;
-    public static double correctionTimeout = 20;
+    public static double headingThres = 0.1;
+    public static double correctionTimeout = 3;
     public Drive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
         setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));

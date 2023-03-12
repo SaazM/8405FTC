@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.apriltags.aprilTagsInit;
+import org.firstinspires.ftc.teamcode.subsystems.Aligner;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 
@@ -25,6 +26,7 @@ public class HH_nospline extends OpMode
     double parkingZone = 2.0;
     int currLift = 0;
     boolean intaking = true;
+    int aligner = 0;
 
     @Override
     public void init() {
@@ -49,6 +51,31 @@ public class HH_nospline extends OpMode
         else
         {
             auton.robot.intake.outtake();
+        }
+    }
+    public void alignerAsync()
+    {
+        switch(aligner)
+        {
+
+            case 0:
+                if(auton.robot.aligner.aligner.getPosition() != Aligner.retractval)
+                {
+                    auton.robot.aligner.retractAligner();
+                }
+                break;
+            case 1:
+                if(auton.robot.aligner.aligner.getPosition() != Aligner.alignval)
+                {
+                    auton.robot.aligner.alignAligner();
+                }
+                break;
+            case 2:
+                if(auton.robot.aligner.aligner.getPosition() != Aligner.outtakingval)
+                {
+                    auton.robot.aligner.outAligner();
+                }
+                break;
         }
     }
     public void liftAsync()
@@ -101,7 +128,7 @@ public class HH_nospline extends OpMode
 
         st0 = auton.robot.drive.trajectoryBuilder(st00.end()) // move to M pole and drop preload
                 .addDisplacementMarker(() -> currLift = 1)
-                .addDisplacementMarker(()->auton.robot.aligner.alignAligner())
+                .addDisplacementMarker(()->aligner = 1)
                 .strafeRight(53.8)
                 .addTemporalMarker(4.5, () -> {
 //                    auton.robot.aligner.outAligner();
@@ -118,7 +145,7 @@ public class HH_nospline extends OpMode
         st1_1 = auton.robot.drive.trajectoryBuilder(st0_0.end()) // align to drop
                 .forward(9.5)
                 .addTemporalMarker(1.5, () ->{
-                    auton.robot.aligner.outAligner();
+                    aligner = 2;
                     intaking = false;
                     auton.robot.drive.followTrajectoryAsync(st1_2);
                 })
@@ -126,7 +153,7 @@ public class HH_nospline extends OpMode
 
         st1_2 = auton.robot.drive.trajectoryBuilder(st1_1.end()) // end of align to drop
                 .addTemporalMarker(1, () ->{
-                    auton.robot.aligner.retractAligner();
+                    aligner = 0;
                 })
                 .back(14)
                 .addTemporalMarker(1.5, () -> {
@@ -142,6 +169,7 @@ public class HH_nospline extends OpMode
                 .addTemporalMarker(3.5, () -> {
                     currLift=2;
                     intaking=true;
+
                     auton.robot.drive.followTrajectoryAsync(st2_1);
                 })
                 .build();
@@ -155,8 +183,11 @@ public class HH_nospline extends OpMode
                 .build();
         st3 = auton.robot.drive.trajectoryBuilder(st2_1.end()) // turn right to cone stack
                 .back(15)
+                .addTemporalMarker(1, () -> {
+                    aligner = 2;
+                })
+                .addTemporalMarker(1.5, () -> aligner = 1)
                 .addTemporalMarker(2, () -> {
-                    auton.robot.aligner.alignAligner();
                     auton.robot.drive.followTrajectoryAsync(st4);
                 })
                 .build();
@@ -169,19 +200,20 @@ public class HH_nospline extends OpMode
                 .build();
         st5 = auton.robot.drive.trajectoryBuilder(st4.end()) // move to cone stack
                 .forward(17)
-                .addTemporalMarker(1.5, () ->{
-                    auton.robot.aligner.outAligner();
-                    intaking = false;
+                .addTemporalMarker(3, () -> intaking = false)
+                .addTemporalMarker(3.5, () ->{
+                    aligner = 2;
+
                     auton.robot.drive.followTrajectoryAsync(st6);
                 })
                 .build();
         st6 = auton.robot.drive.trajectoryBuilder(st5.end()) // end of align to drop
                 .addTemporalMarker(1, () ->{
-                    auton.robot.aligner.retractAligner();
+                    aligner = 0;
                 })
                 .back(11)
                 .addTemporalMarker(2, () -> {
-                    auton.robot.aligner.retractAligner();
+                    aligner = 0;
                 })
                 .build();
 //
@@ -202,13 +234,14 @@ public class HH_nospline extends OpMode
             telemetry.addData("X: ", auton.robot.drive.getPoseEstimate().getX());
             telemetry.addData("Y: ", auton.robot.drive.getPoseEstimate().getY());
             telemetry.addData("Heading: ", auton.robot.drive.getPoseEstimate().getHeading());
-
+            telemetry.addData("Aligner Position: ", auton.robot.aligner.aligner.getPosition());
 
             auton.robot.drive.getLocalizer().update();
             auton.robot.drive.update();
 
             intakeAsync();
             liftAsync();
+            alignerAsync();
             auton.robot.lift.autonRequest();
             telemetry.update();
         }
