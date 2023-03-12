@@ -36,7 +36,7 @@ public class OfficialTeleOpWithToggle extends LinearOpMode {
         Robot robot = new Robot(hardwareMap, gamepad1);
 
         robot.lift.newBotStart();
-
+        robot.aligner.retractAligner();
         waitForStart();
 //        robot.drive.odomRetraction.setPosition(0);
 
