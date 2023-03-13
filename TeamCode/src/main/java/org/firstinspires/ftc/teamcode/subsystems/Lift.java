@@ -243,13 +243,18 @@ public class Lift {
     public void liftToMedium() {
         holdingPosRight = 1725;
         holdingPosLeft = 1725;
-        ;
+        currentMode = LIFT_MODE.MACRO;
+    }
+
+    public void liftToMediumTwo() {
+        holdingPosRight = 1750;
+        holdingPosLeft = 1750;
         currentMode = LIFT_MODE.MACRO;
     }
 
     public void liftToLow() {
-        holdingPosRight = 970;
-        holdingPosLeft = 970;
+        holdingPosRight = 980;
+        holdingPosLeft = 980;
         currentMode = LIFT_MODE.MACRO;
     }
 
@@ -271,8 +276,8 @@ public class Lift {
     }
 
     public void liftToHigh() {
-        holdingPosRight = 2550;
-        holdingPosLeft = 2550;
+        holdingPosRight = 2525;
+        holdingPosLeft = 2525;
         currentMode = LIFT_MODE.MACRO;
     }
     public void liftToBottom() {

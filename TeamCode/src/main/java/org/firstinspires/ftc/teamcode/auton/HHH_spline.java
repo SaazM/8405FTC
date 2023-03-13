@@ -76,7 +76,7 @@ public class HHH_spline extends OpMode
                 auton.robot.lift.currentMode = Lift.LIFT_MODE.RESET;
                 break;
             case 6:
-                auton.robot.lift.liftToMedium();
+                auton.robot.lift.liftToMediumTwo();
                 break;
         }
     }
@@ -101,18 +101,18 @@ public class HHH_spline extends OpMode
                     auton.robot.drive.followTrajectoryAsync(st0);
                 })
                 .build();
-        st0 = auton.robot.drive.trajectoryBuilder(new Pose2d(0,0, 0)) // move to H pole and drop preload
+        st0 = auton.robot.drive.trajectoryBuilder(new Pose2d(0,0, 0)) // move to H pole
                 .addDisplacementMarker(() -> currLift = 1)
                 .addDisplacementMarker(() -> auton.robot.aligner.alignAligner())
 
-                .lineToLinearHeading(new Pose2d(2,-51.5, Math.toRadians(-40)))
+                .lineToLinearHeading(new Pose2d(2,-51.5, Math.toRadians(-46)))
 
                 .addTemporalMarker(5, () -> {
                     auton.robot.drive.followTrajectoryAsync(st1);
                 })
                 .build();
-        st1 = auton.robot.drive.trajectoryBuilder(st0.end()) // move to H pole and drop preload
-                .forward(12)
+        st1 = auton.robot.drive.trajectoryBuilder(st0.end()) // move forward and drop +1 H
+                .forward(9.5)
                 .addTemporalMarker(1.25, () -> {intaking=false;auton.robot.aligner.outAligner();})
                 .addTemporalMarker(2,() -> {
 
@@ -122,7 +122,7 @@ public class HHH_spline extends OpMode
 
 //                .addTemporalMarker(3, () -> auton.robot.drive.followTrajectoryAsync(st2))
                 .build();
-        st2 = auton.robot.drive.trajectoryBuilder(st1.end()) // go back and turn
+        st2 = auton.robot.drive.trajectoryBuilder(st1.end()) // go back and turn, AIM for stack
                 .addTemporalMarker(0.5,() -> currLift = 2)
                 .lineToLinearHeading(new Pose2d(0, -50.5, Math.toRadians(180)))
                 .addTemporalMarker(3, () -> {
@@ -135,12 +135,12 @@ public class HHH_spline extends OpMode
 
 
         st2_1 = auton.robot.drive.trajectoryBuilder(st2.end()) // go to the cone stack
-                .forward(20)
-                .addTemporalMarker(1.5,() -> { currLift = 1; auton.robot.drive.followTrajectoryAsync(st3);})
+                .forward(21.5)
+                .addTemporalMarker(2,() -> { currLift = 1; auton.robot.drive.followTrajectoryAsync(st3);})
                 .build();
 
 
-        st3 = auton.robot.drive.trajectoryBuilder(st2_1.end()) // turn right to cone stack
+        st3 = auton.robot.drive.trajectoryBuilder(st2_1.end()) // spline back to H
                 .lineToLinearHeading(new Pose2d(4,-51.5, Math.toRadians(-35)))
                 .addTemporalMarker(1, () -> auton.robot.aligner.alignAligner())
                 .addTemporalMarker(3, () -> {
@@ -149,8 +149,8 @@ public class HHH_spline extends OpMode
                 })
                 .build();
 
-        st4 = auton.robot.drive.trajectoryBuilder(st3.end()) // move to cone stack
-                .forward(10)
+        st4 = auton.robot.drive.trajectoryBuilder(st3.end()) // go TO H +2
+                .forward(10.5)
                 .addTemporalMarker(1.25, () -> {intaking=false; auton.robot.aligner.outAligner();})
                 .addTemporalMarker(1.75,() -> {
 
@@ -158,8 +158,8 @@ public class HHH_spline extends OpMode
                     auton.robot.drive.followTrajectoryAsync(st5);
                 })
                 .build();
-        st5 = auton.robot.drive.trajectoryBuilder(st4.end()) // move to cone stack
-                .addTemporalMarker(0.5,() -> currLift = 3)
+        st5 = auton.robot.drive.trajectoryBuilder(st4.end()) // aim at cone stack
+                .addTemporalMarker(0.5,() -> currLift = 4)
                 .lineToLinearHeading(new Pose2d(0, -52.01, Math.toRadians(180)))
                 .addTemporalMarker(3, () -> {
                     currLift=2;
@@ -169,25 +169,21 @@ public class HHH_spline extends OpMode
                 })
 
                 .build();
-        st6 = auton.robot.drive.trajectoryBuilder(st5.end()) // end of align to drop
-                .forward(20)
-                .addTemporalMarker(1.5,() -> { currLift = 1; auton.robot.drive.followTrajectoryAsync(st8);})
+        st6 = auton.robot.drive.trajectoryBuilder(st5.end()) // move to cone stack
+                .forward(21)
+                .addTemporalMarker(2.5,() -> { currLift = 1; auton.robot.drive.followTrajectoryAsync(st8);})
                 .build();
-//
-//
-        st8 = auton.robot.drive.trajectoryBuilder(st6.end()) // turn right to cone stack
+        st8 = auton.robot.drive.trajectoryBuilder(st6.end()) // turn back to H
                 .lineToLinearHeading(new Pose2d(5,-51.5, Math.toRadians(-35)))
-                .addTemporalMarker(1, () -> auton.robot.aligner.alignAligner())
+                .addTemporalMarker(1.25, () -> auton.robot.aligner.alignAligner())
                 .addTemporalMarker(3, () -> {
                     auton.robot.drive.followTrajectoryAsync(st9);
                 })
                 .build();
-        st9 = auton.robot.drive.trajectoryBuilder(st8.end()) // turn right to cone stack
+        st9 = auton.robot.drive.trajectoryBuilder(st8.end()) // drop H +3
                 .forward(10)
-                .addTemporalMarker(1, () -> {intaking=false; auton.robot.aligner.outAligner();})
-                .addTemporalMarker(1.75,() -> {
-
-
+                .addTemporalMarker(2, () -> {intaking=false; auton.robot.aligner.outAligner();})
+                .addTemporalMarker(2.75,() -> {
                     auton.robot.drive.followTrajectoryAsync(park);
                 })
                 .build();
@@ -195,22 +191,32 @@ public class HHH_spline extends OpMode
 
         currLift = 1;
 
-//       if (parkingZone == 1) {
-//           park = auton.robot.drive.trajectoryBuilder(st4_4.end())
-//                .addTemporalMarker(1, () -> currLift = 5)
-//                .lineToLinearHeading(new Pose2d(22.5, -54.01, Math.toRadians(0)))
-//                .build();
-//       } else if (parkingZone == 2) {
-//            park = auton.robot.drive.trajectoryBuilder(st4_4.end())
-//                .addTemporalMarker(1, () -> currLift = 5)
-//                .lineToLinearHeading(new Pose2d(0, -54.01, Math.toRadians(0)))
-//                .build();
-//       } else {
-//            park = auton.robot.drive.trajectoryBuilder(st4_4.end())
-//                .addTemporalMarker(1, () -> currLift = 5)
-//                .lineToLinearHeading(new Pose2d(-22.5, -54.01, Math.toRadians(0)))
-//                .build();
-//       }
+       if (parkingZone == 1) {
+           park = auton.robot.drive.trajectoryBuilder(st9.end())
+                .addTemporalMarker(1, () -> {
+                    currLift = 5;
+                    auton.robot.aligner.retractAligner();
+                })
+                .lineToLinearHeading(new Pose2d(22.5, -54.01, Math.toRadians(0)))
+                .build();
+       } else if (parkingZone == 2) {
+            park = auton.robot.drive.trajectoryBuilder(st9.end())
+                .addTemporalMarker(1, () -> {
+                    currLift = 5;
+                    auton.robot.aligner.retractAligner();
+                })
+                .lineToLinearHeading(new Pose2d(0, -54.01, Math.toRadians(0)))
+                .build();
+       } else {
+            park = auton.robot.drive.trajectoryBuilder(st9.end())
+                .addTemporalMarker(1, () -> {
+                    currLift = 5;
+                    auton.robot.aligner.retractAligner();
+
+                })
+                .lineToLinearHeading(new Pose2d(-22.5, -54.01, Math.toRadians(0)))
+                .build();
+       }
 
         auton.robot.drive.followTrajectoryAsync(st0);
 
